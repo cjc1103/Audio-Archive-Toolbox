@@ -1,0 +1,262 @@
+Audio Archive Toolbox
+Program history
+ 
+1.0  2016-12-15
+     Project initially called AARCO (Audio Archive Compression)
+     Initial release (python), incorporating flac, mp3 compression, m3u playlists
+
+1.1  2017-05-22
+     Allow argv options from command line
+     Checked for incompatible options, compress, decompress, verify, delete
+     Reordered processing to immediately read in all files in a folder,
+     determine their type, and enumerate them in the appropriate list
+     Added aac compression (.m4a file extension), using faac, qaac, and nero
+
+1.2  2017-06-06
+     Added ogg vorbis compression (.ogg file extension)
+     Rewrote program logic to allow more flexibility in processing compressed audio
+     e.g. --m4a=24-48 will compress only 24-48 wav files to aac (m4a) format
+
+1.3  2017-06-12
+     Added opus compression (.opus file extension), opusinfo to calculate song duration.
+     Rewrote GetTrackDuration module to use three different external utilities to
+     calculate song duration in seconds for flac, wav, mp3, m4a, ogg, and opus files
+
+2.0  2018-03-15
+     Converted to C#, complete rewrite. Converted log functions to public class.
+     Used C# walkdirectory function to walk directory tree recursively. Used
+     DirectoryInfo and FileInfo types as much as possible, static (global) vars
+     where necessary.
+
+2.1  2018-05-24
+     Changed shntool location to the "16-44.flacf" subdir
+     Enabled decompress of both wav and raw audio files on same run
+     Enabled "overwrite" flag to overwrite existing files
+
+2.2  2018-06-02
+     Copies info.txt file from root directory to compressed subdirectory being created,
+     or being verified (with overwrite flag). Moved standalone playlist creation
+     function under "Verify" option. Replaced obsolete faac codec with fdkaac codec
+     Rewrote GetTrackDuration procedure to use mediainfo utility for all formats
+
+2.3  2018-06-07
+     Created AATB_DirInfo class to consolidate all directory metadata in one location
+     AATB_DirInfo is instantiated every time WalkDirectoryTree procedure is executed,
+     and a constructor initializes the metadata for each directory traversed
+
+2.4  2018-06-17
+     Replaced input argument flags for format and bitrate with a boolean array
+     Changed argument parsing to pass option directly to SetFormatBitrate procedure
+     The <bitrate> option in the command line is now the wav audio directory name,
+     and should have a dash, e.g "16-44". The default directory names/bit rates are
+     specified in the AudioFormats array.
+     Added "allformats" and "allbitrates" options to command line
+     Created separate PrintHelp procedure, checked for invalid command line arguments
+     Rewrote IsFileUnix procedure to use the unix2dos information-conversion mode
+     Changed logging procedure to write header and footer to console and log file
+     Changed the "Delete WAV Audio" section to use the AudioFormatBitrate flag array
+
+2.5  2018-07-02
+     Replaced faac compression with Apple AAC Win64 (qaac64.exe)
+     Recompiled fdkaac from ffmpeg sources for Win64 (fdkaac64.exe)
+     Added capability to change compression level from command line:
+       MP3 Variable Bit Rate Level  --mp3-level
+       AAC Compression Type --aacCompType
+       AAC quality --aacQuality --fdkaacQuality 
+       OGG Quality -ogg-quality
+       OPUS Bitrate --opus-bitrate
+       FLAC compression level --flac-level
+     Rewrote format conversion procedures to use FileInfo[], and moved metadata
+       (MD5, FFP, SHN) creation to main procedure
+     Moved log time stamp to after the user accepts (enters "y") the command inputs
+     Moved command line check code to separate procedure "CheckCommandLineInput"
+     Added procedure to parse info.txt file for metadata (artist, album, track names)
+
+2.6  2019-05-09
+     Added 24 to 16 bit conversion option using the sox utility
+     Changed AATB_DirInfo constructor to search for a date string 1xxx-xx-xx or 2xxx-xx-xx
+       when calculating directory metadata
+     Remove prefix numeric chars and spaces from audio compression subdirectory names
+     Metadata still uses spaces from parent directory names, if they are present
+
+3.0  2019-10-14
+     Renamed project to "Audio Archive Toolbox" AATB
+     Changed Log Init, Start, and Close to use the common Write and WriteLine procedures
+     Changed Log Write and WriteLine procedures to throw an exception if log file was unwriteable
+     ALLBITRATES switch now sets flags for all bitrates except RAW, which is set separately
+       for wav->flac compression/flac->wav decompression of raw audio files
+
+3.1  2019-11-02
+     Fixed bug: raw audio files (RAW directory) would be compressed to lossy formats
+     Fixed bug: flac raw audio files would not be decompressed
+     Fixed bug: Artist and Album indexes off by one for commercial recordings (Artist - Title)
+     Changed remove number prefix code in CreateDirName method to use Regex
+     Fixed bug: Removed number prefix from Artist name, if present
+     Rewrote ConvertBitrate method to correctly build output filenames and do bitrate comparisons
+     Added Date metadata tag for all compressed audio file utility arguments
+
+3.2  2019-12-11
+     Added GetMetaData method to parse *info.txt file (if it exists) for live recording metadata
+       (Artist, Album, Venue, Location, Date, track titles), and to use this metadata
+       to tag compressed files. This is restricted to <bitrate> audio file directories, the 
+       info.txt file must be located in the parent directory.
+     Added method to join tracked wav files into a combined wav file, using the shntool app
+     Removed nero aac compression methods, as it is not supported by developer any longer
+     Rewrote compressed audio file quality parameter handling, CheckQBounds, PrintQBounds
+
+3.3  2020-01-08
+     Fixed metaflac tagging, tags are now added correctly to flac files
+     Added a rolling "Track..<tracknbr>.." log entry to provide user with feedback on conversion
+       status for all compressed file conversion methods, mp3, m4a, ogg, opus, flac, wav
+     Added log messages for creating/verifying checksum, ffp, shntool files
+     Changed Verify code to correctly overwrite shn, ffp, md5 files when using boolOverwrite flag
+     Changed external process exception handling to a generic exception, this will catch
+      any error resulting from the external program and write the error message to the log.
+
+3.4  2020-01-18
+     Changed Convert code to get target bitrate from argument --convert=<bitrate>, and
+       get input bitrate for wav files in <bitrate> directory --wav=<bitrate>
+     Changed command line checking code to:
+       (1) abort if more than one primary option selected
+       (2) check only one WAV bitrate is set for Convert option
+     Initialized audio compression q defaults at beginning of Main method
+     Changed input section to check audio compression q bounds immediately after parsing q value
+     Changed "help" method to display q values and defaults as variables
+
+3.5  2020-03-11
+     Separated metadata handling method into two parts
+       GetDirMetadata to populate Dir variables (all directories traversed except for root directory)
+       GetTrackMetadata to populate Track and TrackDuration lists for Compress and Verify sections
+     Metadata handling now allows import of metadata using an info.txt information file
+     Moved some metadata initialation from the AATB_Dir constructor to the GetDirMetaData method
+     Added TrackDurationList string list to AATB_Dir class
+     Removed GetSongTitle method, as its function was incorporated into GetTrackMetaData
+     Removed fdkaac aac compression function, as it is not as compatible as qaac
+     Changed all ConvertWAVToXXX methods to get song duration data from the Dir.TrackDurationList list
+     Added boolCreateCuesheet method to create a CD cuesheet for each compressed audio directory
+     boolCreateM3UPlaylist now rounds TrackDuration to nearest integer instead of truncating
+
+3.6  2020-04-08
+     Separated methods into files, using the partial class attribute
+     Created RunProcess method to run external processes, and changed all calls to external programs
+       to use RunProcess method. RunProcess will redirect Standard Output and Error messages, which
+       requires flac to suppress all output, as encoding 24 bit files results in an error message,
+     GetDirMetadata and GetTrackData methods - changed to identify recordings as Live, Commercial or
+       Other, remove spaces from live recording directory names, correctly read data from info file
+       and remove prefix/suffixes from Artist name, song titles. GetDirMetaData is called for every
+       directory in tree. GetTrackmetaData is only called when needed by Compress and Verify sections
+       to identify song metadata
+     Rewrote CheckCommandLine method to streamline code and created PrintCompressionOptions method
+       to combine all printing of command line compression options
+     Created -v|--verify --tag option, to rewrite all tags for each audio track in a directory
+       this requires updating the md5 checksums. The ffp checksums and shntool reports for flac files
+       are not updated, as they do not change (ffp is the checksum of all audio without metadata).
+       However they can be rewritten if desired using the --ffp and --shn options respectively.
+
+4.0  2020-05-02
+     Updated GetDirMetadata and GetTrackMetadata methods to read metadata from cue sheets,
+       using the CD cuesheet standard as implemented by Exact Audio Copy
+     Added Dir.ArtistList data structure as string[], to store Artist names for each track. This list
+       is populated with Artist data from the cuesheet, if used, otherwise all entries use AlbumArtist
+     Modified all audio compression methods to use the Dir.ArtistList list
+     Various variable renaming and code cleanup. Rewrote SplitString method.
+     Added command line options
+       --info-metadata (live format only) use info.txt file in root directory for album and track metadata
+       --cue-metadata (CD format only) use cuesheet in wav file directory <bitrate> for track metadata
+       these two options are mutually exclusive, can't use both at once
+       --create-cue (subordinate to verify function) creates cue file in wav file directory <bitrate>
+
+4.1  2020-06-06
+     Separated GetTrackMetadata into four separate methods: primary, info file, cuesheet, filename
+       the primary method will decide which sub methods to call. This enables info and cuesheet methods
+       to call the default filename method in case of input error
+     Fixed bug in GetDirMetadata to account for parent directory name starting with a date yyyy-mm-dd
+     Changed Dir class to add "Comment" string
+     Changed GetDirInfoFromInfotext method to accept a comment in line 4, and date in line 5 (changed in 4.3)
+     Modified GetTrackMetadataFromInfotext to recognize various track numbering schemes in info.txt file:
+       d.  Title
+       dd. Title
+       dd Title
+     Removed redundant ParseArg method, command line parsing now uses SplitString method with "=" delimiter
+
+4.2  2021-04-26
+     Changed verify function to allow checking/creating md5/ffp/shn checksums and music tags independently
+     Moved Create Cuesheet from a verify option to a primary function
+     Fixed GetMetadataFromInfotext method to stop adding titles when the track count equals the file count
+       if the track count is less than the file count, then it reverts to using filenames for metadata
+     Fixed GetMetadataFromInfotext method to ignore all characters in song title after a left parent "("
+       Comments in parentheses are ignored even if other trailing characters are present
+     Changed GetMetaData method to always use parent directory name for subdirectories even if using
+       info.txt or cuesheet files. Artist, Venue, Stage, Location from info files is used for metadata. 
+     Changed incrementing TrackNbr to start of loop in each method using this counter
+     Streamlined and corrected bugs in ConvertBitrate method, now uses Regex to build output filenames
+     Changed command line input to accept any bitrate for mp3's, although the resultant files for bitrates
+       greater than 16-44 will be increased (e.g. 24-48 mp3's are about 4% bigger than 16-44 equivalents)
+
+4.3  2021-05-20
+     Fixed bugs in GetDirMetadata to work correctly with info file using Compress and Verify functions
+     Changed GetTrackMetadataFromInfotext to detect blank titles in info file, and change them to "Track dd"
+     Changed GetDirMetadata to remove index number (at least one decimal number followed by space) from
+       the beginning of Artist Name
+     Fixed bug in VerifySHNReport method, where program would read past EOF
+
+4.4	 2021-06-10
+     Changed GetDirMetadatafromInfotext and GetDirMetadataFromCuesheet methods to search for labels using a
+       common method called SearchFile. Label names are hard coded into these methods.
+     Fixed CreateCuesheet method to use info.txt file for track metadata and output to info.cue file
+     Rewrote VerifyMD5Checksum and VerifyFFPChecksum methods to correct a problem where checksums would
+       not be verified unless the -o|--overwrite flag was set.
+     Cleaned up VerifyMD5Checksum, VerifyFFPChecksum, VerifySHNReport to assume FileList is non-zero and
+       replace case statement with if-then-else
+     Changed GetTrackDuration method to exit program if Mediainfo returns null. This probably means the
+       user is using the Windows GUI version of the program, not the CLI version
+     Removed -i|--use-infotext option requirement for creating cuesheets. If an info file is not present
+       track metadata will be derived from filenames
+
+4.5  2021-06-26	   
+     Various code cleanups and variable renaming for consistency
+	 Removed MD5FileName, FFPFileName, SHNFileName variables as they were redundant
+	 Removed --cd option and changed VerifySHNTReport method to check for bitrate 16-44 for CDR errors
+	 Fixed off by one errors in VerifySHNReport method:
+       when starting data checking, now starts at line=1, WAV problem flags now start at char=44
+	 Deleted null filename checks in CopyTextFile method as it was redundant
+	 
+4.6	 2021-09-17
+	 Updated .NET to 5.0 (required recreating project from backup files using .NET 5.0 template)
+
+4.7  2021-11-30
+	 Changed Verify functions to print "Verifying xxxx.." without a linefeed, then when verification is
+       complete, print "OK" on the same line to give feedback to the user.
+     Created compression, decompression, and tag files and combined all related methods into the appropriate
+       file. Changed these methods to include the string "CompType" which is used in a case statement
+       to assign the correct external program name and argument string
+
+4.8	 2021-12-12
+	 Corrected inconsistencies in CheckUserInput
+	 Fixed external parameter errors in Compression, Decompression, and Tag Audio methods from 4.7 update
+	 Fixed status message inconsistencies throughout entire program
+	 Changed Verify Audio section to only copy info file to those folders that were actually verified
+	 Changed InnoSetup code to only show checkboxes for installing optional programs initially selected
+	 
+4.9  2022-01-10
+	 Updated project to .NET 6.0
+	 Added ALAC (Apple Lossless Audio Codec)
+	 Changed GetDirMetadata method to allow different directory naming conventions for live recording,
+	   and allow embedded spaces in artist name and stage name, non-word delimiters in directory names
+	 Added input option -s|--title-case to optionally convert artist and stage name to title case
+     Added input option -l|--lower-case to optionally convert artist and stage name to lower case
+	 Added ConvertCase method to check the new flags and convert case as appropriate for directory names
+     Changed GetDirMetadata method for logging messages when getting metadata from infotext and cuesheet
+
+5.0  2022-03-07
+     Changed and consolidated algorithm logic for compress, verify, and decompress audio sections
+     Replaced duplicative code with a loop to check all compression formats, and only operate on formats
+     and bitrates that are selected through the command line for each mode.
+     Added additional info file header format for live recordings in GetDirMetadata method
+     Consolidated album metadata code in GetDirMetadata method from either directory name, infotext or cuesheet
+
+5.1  2022-04-10
+     Updated .NET runtime to 6.0.3
+     Removed decompression code for ALAC, even though it is a lossless compression format
+     Added checks to ensure raw is only valid for FLAC format
+     Enabled printout of flac q values in CheckUserInput method

@@ -1,0 +1,255 @@
+/*
+ * Audio Archive Toolbox
+ * Author: Christopher J. Cantwell
+ * 
+ * Released under the GPL 3.0 software license
+ * https://www.gnu.org/licenses/gpl-3.0.en.html
+ * 
+ * Overview
+ * Audio Archive Toolbox (AATB) is a command line utility to perform audio file compression,
+ * decompression, tagging, and conversion from one bitrate to another. It must be started from
+ * the command line in the parent directory to the directory(s) containing the input wav files.
+ * The program walks the directory tree under the starting directory to find and operate on
+ * relevant audio files in various formats.
+ * 
+ * Description
+ * AATB has six mutually exclusive primary modes:
+ * (1) Create compressed audio files from WAV format audio files. Current audio compression formats
+ *     are MP3, AAC/M4A, OGG, OPUS, ALAC, and FLAC, but others may be added.
+ *     Secondary functions include:
+ *     o Create MD5 checksum for all compressed audio files
+ *     o Create FLAC fingerprint (FFP) files for all FLAC files
+ *     o Create shntool track length report for 16-44 FLAC files only
+ *     o Create M3U playlists for all compressed audio files
+ *     o Copy information file (info.txt) to compressed audio subdirectories
+ *     o Create tags for audio tracks using info.txt file, or directory name
+ *     Note: Only the first parent directory info.txt file is used, others are ignored
+ *     Note: Only WAV files in the <bitrate> directories are processed, other files are ignored
+ *     Note: If the appropriate subdirectory does not exist, then it is created
+ *     Note: If the compressed subdirectory exists, then wav files are not converted to the
+ *       appropriate format. This behavior may be overridden with overwrite option
+ * (2) Verify existing compressed audio files and metadata
+ *     o create M3U playlists if they don't exist
+ *     o MD5 checksum file for all compressed audio directories
+ *     o FFP checksum file for all FLAC directories
+ *     o shntool track length reports for 16 bit FLAC directory only
+ *     Note: When verifying a compressed directory, the overwrite option is required
+ *       to replace existing files
+ *     o Information (info.txt) file will be recopied to subdirs with overwrite option
+ *     o rewrite tags for all compressed audio formats (except opus and alac)
+ * (3) Decompress FLAC format audio files to WAV format
+ *     o Wav files will be output to the appropriate <bitrate> directory
+ *     o Raw audio files will be output to the input directory
+ *     o Existing files may be overwritten using the overwrite option.
+ *     Note: Only FLAC files in the <bitrate> and <raw> directories are processed,
+ *       other files are ignored
+ * (4) Delete source WAV directories ("<bitrate>") and raw WAV audio directory ("Audio")
+ *     Note: A FLAC backup copy of each wav file is verified before the wav
+ *     file is deleted
+ * (5) Create Cuesheet files from WAV audio files in a "<bitrate>" directory
+ *     Note: Hydrogen audio has a complete definition of the cuesheet format
+ *     This program only uses a subset, enough to read track splits by CD Wave utility
+ * (6) Convert bitrate of WAV files into another bitrate format using the sox utility.
+ *     e.g. convert wav files in 24-48 format into 16-44 format
+ *
+ * Note: default lossy compression parameters have been set to get roughly >=200kbps
+ *   Options allow some adjustment of compression parameters
+ *
+ * Audio compression formats
+ * Currently supports the following audio compression formats, in order of quality:
+ *   flac (lossless, biggest file size, best quality)
+ *   opus (best lossy codec)
+ *   ogg (better performance than aac)
+ *   aac (Apple Advanced Codec) (m4a extension)
+ *   mp3 (use only for backward compatibility for older devices)
+ *   Note: program could be extended to support other audio compression formats by
+ *      modifying the AudioFormatBitrate array and adding code to handle the new format
+ *      
+ * Required file input
+ *   PCM wav format audio files
+ *   Note: Valid bitrates are hard coded in AudioFormatBitrate array as follows:
+ *      16 bit, 44.1 kHz (16-44)
+ *      16 bit, 48.0 kHz (16-48)
+ *      24 bit, 44.1 kHz (24-44)
+ *      24 bit, 48.0 kHz (24-48)
+ *      24 bit, 88.0 kHz (24-88)
+ *      24 bit, 96.0 kHz (24-96)
+ *      Entering in a non-supported bitrate will result in no processing
+ *   Note: program could be extended to support other audio bitrates by
+ *      modifying the AudioFormatBitrate array
+ *
+ * Directory naming conventions
+ *
+ * Input directory and file structure format
+ *   Commercial recording
+ *   <D><artist> - <album>
+ *      <D>16-44 (Note: only valid bitrate, ripped from commercial CDs)
+ *      
+ *   Live recording [optional stage info]
+ *   <D><artist> <date>[.<stage>]
+ *   <D><artist>_<date>[.<stage>]
+ *   <D><artist><date>[.<stage>]
+ *      concert information file <dirname>.info.txt (optional)
+ *      cue file for tracking songs <dirname>.info.cue (optional)
+ *      <D><bitdepth-samplerate> e.g 16-44, 24-48, etc.
+ *        Contains the uncompressed wav audio files with bitrate equal to the dir name
+ *      <D>Audio: contains "raw" (unedited) wav audio files
+ *
+ * Output directory name formats for compressed files, created under the input directory
+ *   Commercial recording
+ *      <D><artist> - <album>.<bitrate>.<compressiontype>f
+ *   Live recording
+ *      <D><artist>_<date>.<bitrate>.<compressiontype>f
+ *      <D><Artist>_<date>.<stage>.<bitrate>.<compressiontype>f
+ *   <artist>: artist name
+ *   <album>: album name
+ *   <stage>: stage name (optional)
+ *   <bitrate>: bitdepth-samplerate
+ *      e.g 16-44, 24-48, etc.
+ *   <compressiontype>
+ *      mp3, m4a, ogg, opus, alac, or flac
+ *   f: the letter f is appended to the name to signify a "folder" (directory)
+ *   
+ * Info file format
+ *   (info header format #1 - no labels):
+ *   Artist
+ *   Venue
+ *   Location
+ *   Date
+ *   
+ *   (info header format #2 - no labels):
+ *   Artist
+ *   Event
+ *   Stage
+ *   Location
+ *   Date
+ *   
+ *   (alternate header format - labels as follows):
+ *   Artist: <Artist name>
+ *   Event: <Event name>
+ *   Venue: <Venue name>
+ *   Stage: <Stage name>
+ *   Location: <Location>
+ *   Date: <yyyy-mm-dd>
+ *
+ *   Artist lineup info
+ *   
+ *   Recording technical data and credits
+ *   
+ *   Track List
+ *   (track number can be in the format dd<sp>, dd.<sp> with/without leading zeroes)
+ *   dd
+ *   dd
+ *   :
+ *   :
+ *   dd
+ *   
+ * Cuesheet format: (ref. Hydrogen Audio wiki, amended):
+ *   PERFORMER "My Bloody Valentine"
+ *   TITLE "Loveless"
+ *   EVENT "Vampire Festival"
+ *   VENUE "Castle Dracula"
+ *   STAGE "Dungeon"
+ *   LOCATION "Translyvania"
+ *   DATE "Date"
+ *   FILE "My Bloody Valentine - Loveless.wav" WAVE
+ *     TRACK 01 AUDIO
+ *       TITLE "Shallow Grave"
+ *       PERFORMER "Herman Munster"
+ *       INDEX 01 00:00:00
+ *     TRACK 02 AUDIO
+ *       TITLE "Wait For Me"
+ *       PERFORMER "Cruella de Ville"
+ *       INDEX 01 04:32:67
+ *   Notes:
+ *     Index time is cumulative Min:Sec:Frames (CD Frame = 1/75 sec)
+ *     First track INDEX 01 is always 00:00:0
+ *   
+ * Command line switches
+ * basic operations (mutually exclusive)
+ *   -c|--compress          compress wav PCM format audio to a compressed audio format
+ *       -u|--m3u           create m3u playlist file for all audio files in directory
+ *       -i|--use-infotext  read metadata from an info.txt concert information file for live recordings
+ *       -e|--use-cuesheet  read metadata from cuesheet (.cue) for commercial recordings
+ *   -v|--verify            verify flac files are correct by checking md5 and ffp checksum files
+ *       --md5              creates/updates md5 checksum files
+ *       --ffp              creates/updates ffp checksum files
+ *       --shn              creates/updates shntool report files
+ *       -a|--all           combines --md5 --ffp --shn options
+ *   -d|--decompress        decompress lossless files to wav format
+ *      --flac=<bitrate>|raw|all Freeware Lossless Audio Compresson
+ *   -x|--delete            delete redundant files after compression is complete
+ *      --wav=<bitrate>|raw|all  Delete all input wav directories for the specified bitrate
+ *   -r|--create-cuesheet   create cuesheet from wav files
+ *   -z|--convert-to-bitrate   convert wav files to bitrate
+ *      --wav=<bitrate>     convert wav files from bitrate
+ * compression and verification arguments
+ *   --mp3=<bitrate>        compress wav to mp3 format (.mp3)
+ *   --mp3-quality=<value>  mp3 compression parameter
+ *   --m4a=<bitrate>        compress wav to aac format, mp4 audio container (.m4a)
+ *   --aac=<bitrate>        same as above 
+ *   --m4a-quality=<value>  aac compression parameter
+ *   --aac-quality=<value>  same as above
+ *   --ogg=<bitrate>        compress wav to vorbis format, ogg container (.ogg)
+ *   --ogg-quality=<value>  ogg compression parameter
+ *   --opus=<bitrate>       compress wav to opus format (.opus)
+ *   --opus-quality=<value> opus compression parameter
+ *   --alac=<bitrate>|raw|all Apple Lossless Audio Codec (.alac)
+ *   --alac-quality=<value> placeholder, not currently implemented in qaac64
+ *   --flac=<bitrate>|raw|all Freeware Lossless Audio Codec (.flac)
+ *   --flac-quality=<value> flac compression parameter
+ * 
+ * compression <bitrate>
+ *   =<bitdepth>-<samplerate> e.g =16-44, =24-48, etc.
+ *   =raw                   raw audio format
+ *   =all or no option      all bitrates
+ *   
+ * additional options
+ *   -l|--lower-case        convert subdirectory names to lower case
+ *   -s|--title-case        convert subdirectory names to title case (capitalize first letter of each word)
+ *   -o|--overwrite         overwrite existing files
+ *   -h|--help              display options list on console
+ *   --debug                switch to write debug files to console
+ *
+ * Dependencies and limitations
+ * This program requires .NET 6.0 runtime or later, and is compiled as a x64 Windows binary
+ *
+ * External Windows programs called from this script (must be in path). The installation script will
+ * create a directory "c:\Program Files (x86)\Audio Tools" to install these programs.
+ *   flac            Freeware Lossless Audic Codec
+ *   fdkaac          Frauhoefer AAC encoder
+ *   id3             Tagging program for mp3 files
+ *   lame            LAME Ain't an MP3 Encoder MP3 encoder (.mp3)
+ *   md5sums         Creates/verifies md5 checksums (this program can output md5 in unix format)
+ *   MediaInfo       Multipurpose utility to get metadata for audio files, CLI version only
+ *   metaflac        Multipurpose metadata editing utility for flac files
+ *   NeroEncAac      Nero AAC encoder (not developed any longer, but still useful)
+ *   NeroTagAac      Tagging program for aac encoded audio files
+ *   oggenc2         Ogg Vorbis audio encoder (.ogg)
+ *   opusenc         Opus audio encoder (.opus)
+ *   qaac64          Freeware implementation of Apple's Advanced Audio Codec, x64 version  
+ *                   Requires CoreBoxAudio.dll (installed using AppleApplicationSupport.msi)
+ *                   compresses wav file to aac (.m4a) and ALAC (.alac) formats
+ *   shntool         Multi-purpose sound utility. Calculates CD sector boundaries (16 bit flacs only)
+ *   sox             SOund eXchange utility to change file formats and calculate audio file bitrate
+ *   vorbiscomment   Utility for modifying metadata of Vorbis encoded audio files (OGG format)
+ *   
+ * Setup scripts were created by using InnoSetup
+ * 
+ * Installation script (Audio Archive Toolbox x.x.x Setup.exe):
+ *   Copies program files and external tools (above) to Windows
+ *   installs the following required programs which have separate installation scripts:
+ *     Apple Application Support 64bit
+ *     Microsoft .Net Framework 64bit
+ *     Sound Exchange utility (sox) 32bit
+ *   Adds aatb and sox program locations to the Windows environment path
+ * 
+ * Uninstallation script (uninst000.exe):
+ *   Removes all required programs and exteranl tools (above)
+ *   Does not remove the following programs, as they may be used by other programs. These
+ *   may be uninstalled manually if desired:
+ *     Apple Application Support 64bit
+ *     Microsoft .Net Framework 64bit
+ *     Sound Exchange utility (sox) 32bit
+ *   Removes aatb and sox program locations from the Windows environment path
+ */

@@ -1,0 +1,297 @@
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+
+namespace AATB
+{
+    public partial class AATB_Main
+    {
+        static void GetTrackMetadata(AATB_DirInfo Dir, FileInfo[] FileList, string InfotextPath, string CuesheetPath)
+        {
+            /* Extract track metadata
+             * Use info.txt information file if it exists (generally for live concerts)
+             * Use cuesheet if it exists (generally for commercial CDs)
+             * Otherwise get metadata from file names
+             * Inputs:
+             *   Dir            Directory as AATB_DirInfo class instance
+             *   FileList       List of files in directory
+             *   InfoSheetPath  Path to info.txt file
+             *   CuesheetPath   Path to .cue file
+             * Outputs:
+             *   None - called methods will populate metadata
+             */
+
+            // clear any entries from Dir lists
+            Dir.TitleList.Clear();
+            Dir.TrackDurationList.Clear();
+
+            // UseInfotext and UseCuesheet flags are mutually exclusive
+            // if UseInfotext flag is set, read metadata from info.txt file
+            if (UseInfotext
+                && File.Exists(InfotextPath)
+                && Dir.Name != RAW)
+                GetTrackMetadataFromInfotext(Dir, FileList, InfotextPath);
+
+            // if UseCuesheet flag is set, read metadata from cuesheet
+            else if (UseCuesheet
+                && File.Exists(CuesheetPath)
+                && Dir.Name != RAW)
+                GetTrackMetadataFromCuesheet(Dir, FileList, CuesheetPath);
+
+            // otherwise derive metadata from file names in FileList
+            else
+                GetTrackMetadataFromFileNames(Dir, FileList);
+        } // end GetTrackMetadata
+
+        static void GetTrackMetadataFromInfotext(AATB_DirInfo Dir, FileInfo[] FileList, string InfotextPath)
+        {
+            /* Get track metadata from "info.txt" information file if it exists
+             *   otherwise get metadata from file names
+             * Inputs: 
+             *   Dir            Current directory class
+             *   FileList       List of files in directory
+             *   InfoSheetPath  Path to info.txt file
+             * Outputs:
+             *   Dir            Current directory class
+             * Note: the Artist for each track is assumed to be the Album Artist.
+             */
+            int
+                i,
+                TrackNumber = 0,
+                DataListLineCount,
+                FileListCount;
+            string[]
+                DataList;
+            string
+                InfotextName,
+                FilePath,
+                DataStr,
+                TrackNumberStr,
+                TrackTitle,
+                TrackFilePath;
+            Match
+                TrackPatternMatch;
+
+            // get info file name, discard path
+            (FilePath, InfotextName) = SplitPath(InfotextPath);
+            Log.WriteLine("  Reading track metadata from info file: " + InfotextName);
+            DataList = ReadTextFile(InfotextPath);
+            DataListLineCount = DataList.Count();
+            FileListCount = FileList.Count();
+
+            // read info file line by line, ignoring concert info on first 5 lines)
+            for (i = 5; i < DataListLineCount; i++)
+            {
+                DataStr = DataList[i];
+                // track format is: "{d} title", "{d}. title", where d is one or two digits 0-9
+                // each track is assumed to be in sequence, information is added to next position in list
+                // track numbers in info file can restart for multiple sets/discs, and tracks may not
+                // be on contiguous lines, so "TrackNumber" variable counts tracks instead
+                // limitations: track numbers can be 1-99 or 01-99 only
+
+                // check for track number prefix (one or two digits at beginning of line)
+                TrackPatternMatch = Regex.Match(DataStr, @"^\d{1,2}");
+
+                if (TrackPatternMatch.Success)
+                {
+                    // increment track number and convert to two place string
+                    TrackNumber++;
+                    TrackNumberStr = TrackNumber.ToString("00");
+                    // extract track title from each line
+                    TrackTitle = DataStr;
+                    // remove track number prefix with optional period and spaces (allows for blank title)
+                    TrackTitle = Regex.Replace(TrackTitle, @"^\d{1,2}\.?\s*", "");
+                    // remove comments starting with a left bracket and ending with a right bracket
+                    TrackTitle = Regex.Replace(TrackTitle, @"\(.*\)", "");
+                    // remove characters except: alphanumeric, special characters, space
+                    TrackTitle = Regex.Replace(TrackTitle, @"[^a-zA-Z0-9\.\,\!\?\-\<\>\'\s]", "");
+                    // remove any remaining trailing spaces
+                    TrackTitle = Regex.Replace(TrackTitle, @"\s*$", "");
+                    // if TrackTitle is empty, change it to "Track dd"
+                    if (TrackTitle == String.Empty)
+                        TrackTitle = "Track " + TrackNumberStr;
+                    // write extracted track info to log
+                    Log.WriteLine("    " + TrackNumberStr + SPACE + TrackTitle);
+                    // add extracted track title to Dir TitleList
+                    Dir.TitleList.Add(TrackTitle);
+                    // add artist name to Dir ArtistList
+                    // (note: use cuesheet to specify a different artist for each track)
+                    Dir.ArtistList.Add(Dir.AlbumArtist);
+                    // find corresponding audio file in FileList and add track duration to Dir TrackDurationList
+                    TrackFilePath = FileList[TrackNumber - 1].FullName;
+                    Dir.TrackDurationList.Add(GetTrackDuration(TrackFilePath));
+                }
+                // exit loop when TrackNumber = FileListCount so remainder of file is not read
+                if (TrackNumber == FileListCount)
+                    break;
+            }
+            // check track number is correct, otherwise revert to directory metadata
+            // (Note: track number will be one more than actual number) 
+            if (TrackNumber < FileListCount)
+            {
+                Log.WriteLine("*** Info file tracks: " + Convert.ToString(TrackNumber - 1)
+                            + "; Actual number of tracks: " + Convert.ToString(FileListCount));
+                GetTrackMetadataFromFileNames(Dir, FileList);
+            }
+        }  // end GetTrackMetadataFromInfotext
+
+        static void GetTrackMetadataFromCuesheet(AATB_DirInfo Dir, FileInfo[] FileList, string CuesheetPath)
+        {
+            /* Get track metadata from cuesheet *.cue if it exists
+             *   otherwise get metadata from file names
+             * Inputs: 
+             *   Dir            Current directory class
+             *   FileList       List of files in directory
+             *   CuesheetPath   Path to .cue file
+             * Outputs:
+             *   Dir            Current directory class
+             */
+            bool
+                TitleFound,
+                ArtistFound;
+            int
+                i,
+                TrackNumber = 0,
+                CueTrackNumber = 0,
+                CuesheetLineCount,
+                FileListCount;
+            string[]
+                DataList;
+            string
+                CuesheetName,
+                FilePath,
+                DataStr,
+                CueTrackNumberStr = null,
+                TrackNumberStr,
+                TrackTitle = null,
+                TrackFilePath,
+                Artist = null;
+            Match
+                PatternMatch;
+
+            // get cuesheet filename, discard path
+            (FilePath, CuesheetName) = SplitPath(CuesheetPath);
+            Log.WriteLine("  Reading track metadata from cuesheet: " + CuesheetName);
+            DataList = ReadTextFile(CuesheetPath);
+            CuesheetLineCount = DataList.Count();
+            FileListCount = FileList.Count();
+            // initialize title and artist flags
+            TitleFound = ArtistFound = false;
+            // search cuesheet data for keywords
+            for (i = 0; i < CuesheetLineCount; i++)
+            {
+                DataStr = DataList[i];
+                // remove any trailing spaces
+                DataStr = Regex.Replace(DataStr, @"\s*$", "");
+                // search for next track
+                PatternMatch = Regex.Match(DataStr, @"TRACK \d{2} AUDIO");
+                if (PatternMatch.Success)
+                {
+                    if (TitleFound | ArtistFound)
+                        Log.WriteLine("*** Track information is out of order at line no. " + Convert.ToString(i));
+                    // extract track number
+                    CueTrackNumberStr = DataStr.Substring(PatternMatch.Index + 6, 2);
+                    CueTrackNumber = Convert.ToInt32(CueTrackNumberStr);
+                    // skip to next line
+                    break;
+                }
+                // search for title
+                PatternMatch = Regex.Match(DataStr, @"TITLE ");
+                if (PatternMatch.Success)
+                {
+                    if (TitleFound)
+                        Log.WriteLine("*** Two successive title entries in cuesheet");
+                    TrackTitle = DataStr.Substring(PatternMatch.Index + 6);
+                    // remove "dd " or "dd. " track number prefix
+                    TrackTitle = Regex.Replace(TrackTitle, @"^\d{2}\.?\s", "");
+                    // remove 3 - 5 character extension
+                    TrackTitle = Regex.Replace(TrackTitle, @"\.[a-z0-9]{3,5}$", "");
+                    // remove prefix and suffix quotes
+                    TrackTitle = Regex.Replace(TrackTitle, @"^\""", "");
+                    TrackTitle = Regex.Replace(TrackTitle, @"\""$", "");
+                    // populate track  and track duration metadata
+                    Dir.TitleList.Add(TrackTitle);
+                    TitleFound = true;
+                }
+                // search for track artist (performer) - may be different than the album artist
+                PatternMatch = Regex.Match(DataStr, @"PERFORMER ");
+                if (PatternMatch.Success)
+                {
+                    if (ArtistFound)
+                        Log.WriteLine("*** Two successive performer entries in cuesheet");
+                    Artist = DataStr.Substring(PatternMatch.Index + 10);
+                    // remove prefix and suffix quotes
+                    Artist = Regex.Replace(Artist, @"^\""", "");
+                    Artist = Regex.Replace(Artist, @"\""$", "");
+                    // populate Artist metadata
+                    Dir.ArtistList.Add(Artist);
+                    ArtistFound = true;
+                }
+                // both title and artist information for this track have been found
+                if (TitleFound && ArtistFound)
+                {
+                    // increment track number
+                    TrackNumber++;
+                    TrackNumberStr = TrackNumber.ToString("00");
+                    // FileList bounds check
+                    if (TrackNumber <= FileListCount)
+                    {
+                        // find corresponding audio file and populate track duration
+                        TrackFilePath = FileList[TrackNumber - 1].FullName;
+                        Dir.TrackDurationList.Add(GetTrackDuration(TrackFilePath));
+                        // write track info to log
+                        Log.WriteLine("    " + CueTrackNumberStr + SPACE + TrackTitle
+                                    + " [" + Artist + "]");
+                        if (CueTrackNumber != TrackNumber)
+                            Log.WriteLine("*** Track number mismatch, track number should be " + TrackNumberStr);
+                    }
+                    // reset title and artist flags
+                    TitleFound = ArtistFound = false;
+                }
+            }
+            // end of cuesheet - check track number is correct, otherwise revert to directory metadata
+            // (Note: track number will be one more than actual number)
+            if (TrackNumber != FileListCount)
+            {
+                Log.WriteLine("*** Cuesheet tracks: " + Convert.ToString(TrackNumber - 1)
+                            + "; Actual number of tracks: " + Convert.ToString(FileListCount));
+                GetTrackMetadataFromFileNames(Dir, FileList);
+            }
+        }  // end GetTrackMetadataFromCuesheet
+
+        static void GetTrackMetadataFromFileNames(AATB_DirInfo Dir, FileInfo[] FileList)
+        {
+            /* Extract concert metadata from file names
+             * Inputs: 
+             *   Dir        Current directory class
+             *   FileList   List of files in directory
+             * Outputs:
+             *   Dir        Current directory class
+             */
+            int i;
+            string
+                TrackTitle,
+                TrackFilePath;
+
+            Log.WriteLine("  Deriving track metadata from file names");
+            // build title for each track from basename, ignore prefix, extension
+            // artist name will be the same for each track
+            for (i = 0; i < FileList.Length; i++)
+            {
+                // get filename
+                TrackTitle = FileList[i].Name;
+                // remove "dd " or "dd. " track number prefix
+                TrackTitle = Regex.Replace(TrackTitle, @"^\d{2}\.?\s", "");
+                // remove 3 - 5 letter extension
+                TrackTitle = Regex.Replace(TrackTitle, @"\.[a-z0-9]{3,5}$", "");
+                // populate track metadata
+                Dir.TitleList.Add(TrackTitle);
+                TrackFilePath = FileList[i].FullName;
+                Dir.TrackDurationList.Add(GetTrackDuration(TrackFilePath));
+                Dir.ArtistList.Add(Dir.AlbumArtist);
+                Log.WriteLine("    " + (i + 1).ToString("00") + SPACE + TrackTitle);
+            }
+        }  // end GetTrackMetadataFromFileNames
+    }
+}
