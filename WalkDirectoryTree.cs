@@ -297,9 +297,9 @@ namespace AATB
                            + "  Dir bitrate: " + Dir.Bitrate);
 
                 // compressed audio directories
-                if ((Dir.Type == COMPAUDIO)
-                        && (Dir.AudioCompressionFormat == FLAC)
-                        && (CheckFormatBitrate(FLAC, Dir.Bitrate)))
+                if (Dir.Type == COMPAUDIO
+                    && Dir.AudioCompressionFormat == FLAC
+                    && CheckFormatBitrate(FLAC, Dir.Bitrate))
                 {
                     // FLACFileList is populated during initialization for each traversal of WalkDirectory
                     if (FLACFileList != null)
@@ -322,7 +322,8 @@ namespace AATB
                 }
 
                 // raw audio directory
-                else if (Dir.Type == RAWAUDIO)
+                else if (Dir.Type == RAWAUDIO
+                        && CheckFormatBitrate(FLAC, Dir.Bitrate))
                 {
                     // FLACFileList is populated during initialization for each traversal of WalkDirectory
                     if (FLACFileList != null)
