@@ -19,8 +19,9 @@ namespace AATB
               + Convert.ToInt32(VerifyAudio )
               + Convert.ToInt32(DecompressAudio)
               + Convert.ToInt32(DeleteAudio )
-              + Convert.ToInt32(CreateCuesheet)
-              + Convert.ToInt32(ConvertAudioBitrate) != 1)
+              + Convert.ToInt32(JoinWAV)
+              + Convert.ToInt32(ConvertAudioBitrate)
+              + Convert.ToInt32(CreateCuesheet) != 1)
             {
                 Log.WriteLine("Error: Conflicting options\n"
                    + "Choose compress, verify, decompress, delete, create cuesheet, or convert wav bitrate");
@@ -80,18 +81,18 @@ namespace AATB
                     && !CheckFormatBitrate(ANYFORMAT, RAW))
                     SetFormatBitrate(ALLFORMATS, ALLBITRATES);
 
-                if (VerifyMD5 || VerifyFFP || VerifySHN || CreateTags || CreateM3U)
+                if (CreateMD5 || CreateFFP || CreateSHN || CreateTags || CreateM3U)
                 {
                     PrintCompressionOptions();
                     // MD5 Checksum
-                    if (VerifyMD5) Log.WriteLine("  MD5 checksum");
+                    if (CreateMD5) Log.WriteLine("  MD5 checksum");
                     // FFP and shntool otions, excluding RAW 
                     if (CheckFormatBitrate(FLAC, ANYBITRATE))
                     {
                         // FLAC Fingerprint Checksum
-                        if (VerifyFFP) Log.WriteLine("  FLAC Fingerprint (FFP)");
+                        if (CreateFFP) Log.WriteLine("  FLAC Fingerprint (FFP)");
                         // shntool report
-                        if (VerifySHN) Log.WriteLine("  SHNTool report (SHN)");
+                        if (CreateSHN) Log.WriteLine("  SHNTool report (SHN)");
                     }
                     // ID3 tags
                     if (CreateTags)
@@ -135,15 +136,10 @@ namespace AATB
                 PrintCompressionOptions();
             }
 
-            if (CreateCuesheet)
+            if (JoinWAV)
             {
-                Log.WriteLine("  Create cuesheet from WAV audio files");
+                Log.WriteLine("Join tracked WAV audio files");
                 PrintCompressionOptions();
-                if (!CheckUniqueBitrate(WAV))
-                {
-                    Log.WriteLine("Input error: specify only one WAV bitrate to create a cuesheet from");
-                    Environment.Exit(0);
-                }
             }
 
             if (ConvertAudioBitrate)
@@ -181,6 +177,17 @@ namespace AATB
                 else
                     Log.WriteLine("Convert WAV audio files from "
                         + ConversionFromBitrate + " to " + ConversionToBitrate);
+            }
+
+            if (CreateCuesheet)
+            {
+                Log.WriteLine("  Create cuesheet from WAV audio files");
+                PrintCompressionOptions();
+                if (!CheckUniqueBitrate(WAV))
+                {
+                    Log.WriteLine("Input error: specify only one WAV bitrate to create a cuesheet from");
+                    Environment.Exit(0);
+                }
             }
 
             // Secondary options

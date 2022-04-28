@@ -77,8 +77,8 @@ namespace AATB
             (FilePath, InfotextName) = SplitPath(InfotextPath);
             Log.WriteLine("  Reading track metadata from info file: " + InfotextName);
             DataList = ReadTextFile(InfotextPath);
-            DataListLineCount = DataList.Count();
-            FileListCount = FileList.Count();
+            DataListLineCount = DataList.Length;
+            FileListCount = FileList.Length;
 
             // read info file line by line, ignoring concert info on first 5 lines)
             for (i = 5; i < DataListLineCount; i++)
@@ -106,7 +106,7 @@ namespace AATB
                     TrackTitle = Regex.Replace(TrackTitle, @"\(.*\)", "");
                     // remove characters except: alphanumeric, special characters, space
                     TrackTitle = Regex.Replace(TrackTitle, @"[^a-zA-Z0-9\.\,\!\?\-\<\>\'\s]", "");
-                    // remove any remaining trailing spaces
+                    // remove any trailing spaces
                     TrackTitle = Regex.Replace(TrackTitle, @"\s*$", "");
                     // if TrackTitle is empty, change it to "Track dd"
                     if (TrackTitle == String.Empty)
@@ -174,8 +174,8 @@ namespace AATB
             (FilePath, CuesheetName) = SplitPath(CuesheetPath);
             Log.WriteLine("  Reading track metadata from cuesheet: " + CuesheetName);
             DataList = ReadTextFile(CuesheetPath);
-            CuesheetLineCount = DataList.Count();
-            FileListCount = FileList.Count();
+            CuesheetLineCount = DataList.Length;
+            FileListCount = FileList.Length;
             // initialize title and artist flags
             TitleFound = ArtistFound = false;
             // search cuesheet data for keywords

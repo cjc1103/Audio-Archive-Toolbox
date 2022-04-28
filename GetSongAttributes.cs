@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace AATB
 {
@@ -40,7 +41,7 @@ namespace AATB
                               + SPACE + DBLQ + AudioFilePath + DBLQ;
             ExternalOutput = RunProcess(ExternalProgram, ExternalArguments);
             // extract first two characters to get sample rate in thousands
-            SampleRate = ExternalOutput.Substring(0, 2);
+            SampleRate = ExternalOutput[..2];
 
             // assemble bitrate
             BitRate = BitLength + HYPHEN + SampleRate;
@@ -49,41 +50,46 @@ namespace AATB
 
         static string GetTrackDuration(string AudioFilePath)
         {
-            /* Calculates the duration of an audio file in seconds
+            /* Calculates the duration of an audio file
              * Inputs:
-             *   AudioFilePath  Compressed audio file path
+             *   AudioFilePath  input audio file path
              *   Note: This procedure does not verify input audio file format. If input
              *   file is in an unsupported format, it will fail gracefully and return null
              * Calls external program:
-             *   MediaInfo utility
+             *   MediaInfo utility (CLI version)
              *     --Inform=Audio;%Duration% : returns duration of audio file in milliseconds
              *       (e.g. "68567" = 68.567 secs) An invalid input returns nothing
              * Outputs:
-             *   Returns the the number of seconds as a string (truncated, not rounded)
+             *   Returns audio file duration in seconds
              */
             string
-                DurationMSec = null,
                 ExternalProgram = "Mediainfo.exe",
                 ExternalArguments,
-                ExternalOutput;
+                ExternalOutput,
+                DurationSec;
+            decimal
+                decDurationSec;
 
             ExternalArguments = "--Inform=Audio;%Duration%"
                               + SPACE + DBLQ + AudioFilePath + DBLQ;
             // run external program
+            // output is a string representing song duration in milliseconds
             ExternalOutput = RunProcess(ExternalProgram, ExternalArguments);
 
-            // check for invalid output - probably using GUI version of MediaInfo
+            // check for invalid output - perhaps using GUI instead of CLI version of MediaInfo
             if (ExternalOutput == null)
             {
                 Log.WriteLine("*** MediaInfo returns null, are you using the CLI version?");
                 Environment.Exit(0);
             }
-            // External Output is song duration in milliseconds with three trailing spaces
-            if (ExternalOutput.Length >= 3)
-                DurationMSec = ExternalOutput.Substring(0, ExternalOutput.Length - 2);
+            // remove trailing spaces
+            ExternalOutput = Regex.Replace(ExternalOutput, @"\s*$", "");
+            // convert to decimal seconds
+            decDurationSec = Convert.ToDecimal(ExternalOutput) / 1000;
+            // round file duration to nearest second and convert back to string
+            DurationSec = Convert.ToString(Decimal.Round(decDurationSec));
 
-            // return duration in milliseconds
-            return DurationMSec;
+            return DurationSec;
         } // end GetTrackDuration
     }
 }

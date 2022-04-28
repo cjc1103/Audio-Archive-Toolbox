@@ -14,7 +14,7 @@ namespace AATB
              *   FLACFileList  list of all FLAC files to include in report
              * Calls external programs:
              *   shntool
-             *     len  produces shntool "length" report for all files in input list
+             *     len mode produces shntool "length" report for all files in input list
              * Outputs:
              *   Produces a text file to stdout
              */
@@ -38,11 +38,16 @@ namespace AATB
                 {
                     // build string containing FLAC file names from list
                     foreach (FileInfo fi in FLACFileList)
-                        FLACFileNames += (SPACE + DBLQ + fi.FullName + DBLQ);
+                        FLACFileNames = FLACFileNames + SPACE + DBLQ + fi.FullName + DBLQ;
+
+                    // create argument string
                     ExternalArguments = "len"   // no extra space needed here
                                       + FLACFileNames;
+                    if (Debug) Console.WriteLine(ExternalArguments);
+
                     // run shntool program
                     ExternalOutput = RunProcess(ExternalProgram, ExternalArguments);
+
                     // raw output includes entire path for filenames
                     // split output into lines using linefeed/CR as delimiters
                     DataList = ExternalOutput.Split
@@ -60,7 +65,7 @@ namespace AATB
                         }
                         else if (li.Length > 0)
                         {
-                            // split data line - file pathname starts at col 66
+                            // split data line - file pathname starts at column 66
                             Data1 = li.Substring(0, 65);
                             Data2 = li.Substring(65);
                             // extract filename from filepath
@@ -82,7 +87,7 @@ namespace AATB
              *   SHNReportPath pathname of SHN report file
              *      column / description
              *      0              32-34 38-39 43-47        65
-             *      length expsize cbs   WAVE  problems fmt filename
+             *      length exp32size cbs   WAVE  problems fmt filename
              *      ("x" character may be reported if shntool can't recognize wav format
              *       e.g., 24bit wav files, but are not treated as errors in this program)
              *   SHNReportlist  List of all SHN report files in input directory
@@ -102,7 +107,7 @@ namespace AATB
             string[]
                 DataList;
 
-            SHNReportCount = SHNReportList.Count();
+            SHNReportCount = SHNReportList.Length;
             if (SHNReportCount == 1)
             {
                 Log.Write("    Verifying shntool report..");
@@ -115,7 +120,7 @@ namespace AATB
                 // read SHN data, ignore first line, read until one less then the line count
                 // Note all character numbers referenced start at 0 to match substring index
                 DataList = ReadTextFile(SHNReportPath);
-                for (i = 1; i < DataList.Count(); i++)
+                for (i = 1; i < DataList.Length; i++)
                 {
                     // get line i from list
                     li = DataList[i];

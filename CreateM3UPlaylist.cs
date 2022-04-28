@@ -23,8 +23,6 @@ namespace AATB
              */
             int
                 TrackNumber = 0;
-            decimal
-                decTrackDuration;
             string
                 TrackDuration;
 
@@ -36,10 +34,8 @@ namespace AATB
                 {
                     // increment track number
                     TrackNumber++;
-                    // read track duration and convert to decimal seconds
-                    decTrackDuration = Convert.ToDecimal(GetTrackDuration(fi.FullName));
-                    // round track duration to nearest second
-                    TrackDuration = Convert.ToString(Decimal.Round(decTrackDuration / 1000));
+                    // get track duration in seconds
+                    TrackDuration = GetTrackDuration(fi.FullName);
                     File.AppendAllText(M3UFilePath,
                                        "#EXTINF:"
                                        + TrackDuration + ","

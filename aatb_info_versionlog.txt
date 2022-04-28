@@ -216,7 +216,7 @@ Program history
 4.5  2021-06-26	   
      Various code cleanups and variable renaming for consistency
 	 Removed MD5FileName, FFPFileName, SHNFileName variables as they were redundant
-	 Removed --cd option and changed VerifySHNTReport method to check for bitrate 16-44 for CDR errors
+	 Removed --cd option and changed VerifySHNReport method to check for bitrate 16-44 for CDR errors
 	 Fixed off by one errors in VerifySHNReport method:
        when starting data checking, now starts at line=1, WAV problem flags now start at char=44
 	 Deleted null filename checks in CopyTextFile method as it was redundant
@@ -260,3 +260,13 @@ Program history
      Removed decompression code for ALAC, even though it is a lossless compression format
      Added checks to ensure raw is only valid for FLAC format
      Enabled printout of flac q values in CheckUserInput method
+     Removed concert date from Album string, as it was superfluous
+
+5.2  2022-04-27
+     Dir structure changed to add TrackDuration list
+     Changed GetSongDuration method to use Dir.TrackDuration values and return duration in seconds
+     Changed CreateM3UPlaylist method to use duration output in seconds from GetSongDuration
+     Add join function using SoX utility to concatenate wav or flac audio files into one joined file
+     Updated Program CheckUserInput and PrintHelp methods to add join command input
+     Modified Compress function to only generate MD5 FFP and SHN reports if the appropriate flag is set
+     SHN function (shntool len report) requires FLAC 1.3.2 for 24 bit FLACs, does not work with 1.3.4

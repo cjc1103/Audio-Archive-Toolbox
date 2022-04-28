@@ -79,11 +79,12 @@ namespace AATB
             VerifyAudio = false,
             DeleteAudio = false,
             DecompressAudio = false,
+            JoinWAV = false,
             ConvertAudioBitrate = false,
             Overwrite = false,
-            VerifyMD5 = false,
-            VerifyFFP = false,
-            VerifySHN = false,
+            CreateMD5 = false,
+            CreateFFP = false,
+            CreateSHN = false,
             CreateM3U = false,
             CreateCuesheet = false,
             CreateTags = false,
@@ -167,6 +168,7 @@ namespace AATB
                 (arg, opt) = SplitString(s, EQUALS);
                 switch (arg)
                 {
+                    // primary modes
                     case "-c":
                     case "--compress":
                         CompressAudio  = true;
@@ -179,24 +181,13 @@ namespace AATB
                     case "--verify":
                         VerifyAudio  = true;
                         break;
-                    case "--md5":
-                        VerifyMD5 = true;
+                    case "-x":
+                    case "--delete":
+                        DeleteAudio = true;
                         break;
-                    case "--ffp":
-                        VerifyFFP = true;
-                        break;
-                    case "--shn":
-                        VerifySHN = true;
-                        break;
-                    case "-a":
-                    case "--all":
-                        VerifyMD5 = true;
-                        VerifyFFP = true;
-                        VerifySHN = true;
-                        break;
-                    case "-u":
-                    case "--m3u":
-                        CreateM3U = true;
+                    case "-j":
+                    case "--join":
+                        JoinWAV = true;
                         break;
                     case "-z":
                     case "--convert-to-bitrate":
@@ -211,11 +202,7 @@ namespace AATB
                                 break;
                         }
                         break;
-                    case "-x":
-                    case "--delete":
-                        DeleteAudio  = true;
-                        break;
-                    // secondary modes
+                    // compressed audio flags
                     case "--mp3":
                         switch (opt)
                         {
@@ -328,6 +315,27 @@ namespace AATB
                                 break;
                         }
                         break;
+                    // checksum and playlist flags
+                    case "--md5":
+                        CreateMD5 = true;
+                        break;
+                    case "--ffp":
+                        CreateFFP = true;
+                        break;
+                    case "--shn":
+                        CreateSHN = true;
+                        break;
+                    case "-a":
+                    case "--all":
+                        CreateMD5 = true;
+                        CreateFFP = true;
+                        CreateSHN = true;
+                        break;
+                    case "-u":
+                    case "--m3u":
+                        CreateM3U = true;
+                        break;
+                    // other flags
                     case "-i":
                     case "--use-infotext":
                         // extract metadata from info.txt file 
@@ -360,11 +368,14 @@ namespace AATB
                     // other options
                     case "--cjc":
                         // that's my initials.. :-)
-                        // shortcut for -c --m4a=all --flac=all -u
+                        // shortcut for -c --m4a=all --flac=all --all -u
                         CompressAudio  = true;
                         SetFormatBitrate(M4A, ALLBITRATES);
                         SetFormatBitrate(FLAC, ALLBITRATES);
                         SetFormatBitrate(FLAC, RAW);
+                        CreateMD5 = true;
+                        CreateFFP = true;
+                        CreateSHN = true;
                         CreateM3U = true;
                         break;
                     case "-h":

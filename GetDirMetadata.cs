@@ -85,6 +85,9 @@ namespace AATB
 
             if (Debug) Console.WriteLine("dbg: GetDirMetadata method");
 
+            // print out directory name for directories being processed
+            Log.WriteLine("Directory: " + Dir.Path);
+
             // parent base name will be used to create compressed audio subdirectories
             // remove prefix number if it exists
             // (from beginning of line: one or more digits, optional period, one or more spaces)
@@ -177,8 +180,9 @@ namespace AATB
                     Dir.Album += (SPACE + Dir.Venue);
                 if (Dir.Stage != null)
                     Dir.Album += (SPACE + Dir.Stage);
-                if (Dir.ConcertDate != null)
-                    Dir.Album += (SPACE + Dir.ConcertDate);
+                // adding date is redundant
+                // if (Dir.ConcertDate != null)
+                //     Dir.Album += (SPACE + Dir.ConcertDate);
                 // remove any leading space
                 Dir.Album = Regex.Replace(Dir.Album, @"^\s", "");
 
@@ -231,7 +235,7 @@ namespace AATB
                 // read data from text file
                 DataList = ReadTextFile(InfotextPath);
 
-                if (DataList.Count() > 4)
+                if (DataList.Length > 4)
                 {
                     // check for date on 4th and 5th lines
                     // Regex expression to match date format 1xxx-xx-xx or 2xxx-xx-xx
@@ -344,7 +348,7 @@ namespace AATB
             Match
                 PatternMatch;
 
-            for (i = 0; i < DataList.Count(); i++)
+            for (i = 0; i < DataList.Length; i++)
             {
                 // search for pattern at beginning of string
                 PatternMatch = Regex.Match(DataList[i], @"^"+Name);

@@ -65,7 +65,7 @@ namespace AATB
                 NewMD5FilePath,
                 ExistingMD5FilePath;
 
-            MD5FileCount = MD5FileList.Count();
+            MD5FileCount = MD5FileList.Length;
             if (MD5FileCount == 1)
             {
                 Log.Write("    Verifying MD5 checksum file..");
@@ -157,7 +157,7 @@ namespace AATB
                 NewFFPFilePath,
                 ExistingFFPFilePath;
 
-            FFPFileCount = FFPFileList.Count();
+            FFPFileCount = FFPFileList.Length;
             if (FFPFileCount == 1)
             {
                 Log.Write("    Verifying FLAC Fingerprint (FFP) file..");
