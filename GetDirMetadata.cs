@@ -85,9 +85,6 @@ namespace AATB
 
             if (Debug) Console.WriteLine("dbg: GetDirMetadata method");
 
-            // print out directory name for directories being processed
-            Log.WriteLine("Directory: " + Dir.Path);
-
             // parent base name will be used to create compressed audio subdirectories
             // remove prefix number if it exists
             // (from beginning of line: one or more digits, optional period, one or more spaces)
@@ -178,11 +175,11 @@ namespace AATB
                 Dir.Album = Dir.Event;
                 if (Dir.Venue != null)
                     Dir.Album += (SPACE + Dir.Venue);
+                if (Dir.ConcertDate != null)
+                    Dir.Album += (SPACE + Dir.ConcertDate);
                 if (Dir.Stage != null)
                     Dir.Album += (SPACE + Dir.Stage);
-                // adding date is redundant
-                // if (Dir.ConcertDate != null)
-                //     Dir.Album += (SPACE + Dir.ConcertDate);
+
                 // remove any leading space
                 Dir.Album = Regex.Replace(Dir.Album, @"^\s", "");
 

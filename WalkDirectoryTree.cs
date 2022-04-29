@@ -98,6 +98,7 @@ namespace AATB
                     {
                         CompAudioFormat = AudioFormats[index];
                         CompAudioDirExtension = CompressedDirExtensions[index];
+
                         // check format and bitrate (directory name) flag is set
                         if (CheckFormatBitrate(CompAudioFormat, Dir.Name))
                         {
@@ -192,7 +193,8 @@ namespace AATB
                 if (Debug) Console.WriteLine("dbg: Verify Section");
 
                 // compressed audio directory
-                if (Dir.Type == COMPAUDIO)
+                if (Dir.Type == COMPAUDIO
+                    || Dir.Type == RAWAUDIO)
                 {
                     if (Debug) Console.WriteLine("dbg: Dir compression Format: " + Dir.AudioCompressionFormat
                            + "  Dir bitrate: " + Dir.Bitrate);
@@ -290,11 +292,6 @@ namespace AATB
             else if (DecompressAudio)
             {
                 if (Debug) Console.WriteLine("dbg: Decompress Section");
-
-                // populate directory metadata
-                GetDirMetadata(Dir, ParentInfotextPath, ParentCuesheetPath);
-                if (Debug) Console.WriteLine("dbg: Dir compression Format: " + Dir.AudioCompressionFormat
-                           + "  Dir bitrate: " + Dir.Bitrate);
 
                 // compressed audio directories
                 if (Dir.Type == COMPAUDIO
@@ -528,7 +525,7 @@ namespace AATB
             foreach (DirectoryInfo dirname in SubDirs)
             {
                 // Recursive call to walk the directory tree for each subdirectory
-                if (Debug) Log.WriteLine("(dbg) Traversing directory: " + dirname);
+                Log.WriteLine("Directory: " + dirname.Name);
                 WalkDirectoryTree(dirname);
             }
 
