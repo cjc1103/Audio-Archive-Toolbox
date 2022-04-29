@@ -116,7 +116,7 @@ namespace AATB
                 ExternalArguments;
 
             if (WriteLogMessage)
-                Log.WriteLine("    Creating FLAC Fingerprint (FFP) file");
+                Log.WriteLine("    Creating FFP checksum file");
 
             if (FLACFileList != null)
             {
