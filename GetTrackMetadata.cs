@@ -90,10 +90,11 @@ namespace AATB
                 // be on contiguous lines, so "TrackNumber" variable counts tracks instead
                 // limitations: track numbers can be 1-99 or 01-99 only
 
-                // check for track number prefix (one or two digits at beginning of line)
-                TrackPatternMatch = Regex.Match(DataStr, @"^\d{1,2}");
+                // check for track number prefix
+                // one or two digits at beginning of line, optional period, one or more spaces
+                TrackPatternMatch = Regex.Match(@"^\d{1,2}\.?\s+", "");
 
-                if (TrackPatternMatch.Success)
+            if (TrackPatternMatch.Success)
                 {
                     // increment track number and convert to two place string
                     TrackNumber++;
@@ -104,8 +105,8 @@ namespace AATB
                     TrackTitle = Regex.Replace(TrackTitle, @"^\d{1,2}\.?\s*", "");
                     // remove comments starting with a left bracket and ending with a right bracket
                     TrackTitle = Regex.Replace(TrackTitle, @"\(.*\)", "");
-                    // remove characters except: alphanumeric, special characters, space
-                    TrackTitle = Regex.Replace(TrackTitle, @"[^a-zA-Z0-9\.\,\!\?\-\<\>\'\s]", "");
+                    // remove characters except: alphanumeric, special characters, spaces
+                    // TrackTitle = Regex.Replace(TrackTitle, @"[^a-zA-Z0-9\.\,\!\?\-\<\>\'\s]", "");
                     // remove any trailing spaces
                     TrackTitle = Regex.Replace(TrackTitle, @"\s*$", "");
                     // if TrackTitle is empty, change it to "Track dd"

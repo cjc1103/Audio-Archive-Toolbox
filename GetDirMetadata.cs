@@ -131,6 +131,15 @@ namespace AATB
                 }
                 // remove any remaining embedded spaces in basename
                 Dir.ParentBaseName = Regex.Replace(Dir.ParentBaseName, @"\s", "");
+
+                // build album string
+                Dir.Album = Dir.Event;
+                if (Dir.Venue != null)
+                    Dir.Album += (SPACE + Dir.Venue);
+                if (Dir.ConcertDate != null)
+                    Dir.Album += (SPACE + Dir.ConcertDate);
+                if (Dir.Stage != null)
+                    Dir.Album += (SPACE + Dir.Stage);
             }
 
             // commercial recording format
@@ -148,6 +157,9 @@ namespace AATB
             else
             {
                 Dir.RecordingType = OTHER;
+                Dir.AlbumArtist = TempBaseName;
+                Dir.Album = TempBaseName;
+                Dir.ParentBaseName = TempBaseName;
                 // no further metadata or parent base name required
             }
             if (Debug) Console.WriteLine("dbg: ParentBasename = " + Dir.ParentBaseName);
@@ -170,15 +182,6 @@ namespace AATB
                 // if Dir.MetadataSource has not changed, the metadata source reverts to directory name
                 if (Dir.MetadataSource == DIRNAME)
                     Log.WriteLine("  Deriving album metadata from directory name");
-
-                // build album string
-                Dir.Album = Dir.Event;
-                if (Dir.Venue != null)
-                    Dir.Album += (SPACE + Dir.Venue);
-                if (Dir.ConcertDate != null)
-                    Dir.Album += (SPACE + Dir.ConcertDate);
-                if (Dir.Stage != null)
-                    Dir.Album += (SPACE + Dir.Stage);
 
                 // remove any leading space
                 Dir.Album = Regex.Replace(Dir.Album, @"^\s", "");
