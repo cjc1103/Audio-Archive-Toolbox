@@ -260,7 +260,6 @@ Program history
      Removed decompression code for ALAC, even though it is a lossless compression format
      Added checks to ensure raw is only valid for FLAC format
      Enabled printout of flac q values in CheckUserInput method
-     Removed concert date from Album string, as it was superfluous
 
 5.2  2022-04-27
      Dir structure changed to add TrackDuration list

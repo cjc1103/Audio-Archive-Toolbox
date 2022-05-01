@@ -502,6 +502,9 @@ namespace AATB
                     && CheckFormatBitrate(WAV, Dir.Name)
                     && WAVExists)
                 {
+                    // populate directory metadata
+                    GetDirMetadata(Dir, ParentInfotextPath, ParentCuesheetPath);
+
                     // populate track metadata
                     // this is obtained from parent info.txt file, if it exists
                     // otherwise from track filenames
