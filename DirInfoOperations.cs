@@ -27,7 +27,9 @@ namespace AATB
             Stage,
             ConcertDate,
             Comment,
-            MetadataSource;
+            MetadataSource,
+            ParentInfotextPath,
+            ParentCuesheetPath;
         public Match
             PatternMatchDate,
             PatternMatchSHS;

@@ -30,9 +30,6 @@ namespace AATB
                 MD5FilePath,
                 FFPFilePath,
                 SHNReportPath,
-                ParentCuesheetName,
-                ParentCuesheetPath = null,
-                ParentInfotextPath = null,
                 JoinedWAVFilename;
 
             // Populate filelists for each type of file in this directory
@@ -70,10 +67,10 @@ namespace AATB
             {
                 // use only the first info.txt file, others are ignored
                 if (ParentInfotextExists)
-                    ParentInfotextPath = ParentInfotextList[0].FullName;
+                    Dir.ParentInfotextPath = ParentInfotextList[0].FullName;
                 // use only the first cue file, others are ignored
                 if (ParentCuesheetExists)
-                    ParentCuesheetPath = ParentCuesheetList[0].FullName;
+                    Dir.ParentCuesheetPath = ParentCuesheetList[0].FullName;
                 // populate directory information
                 GetDirInformation(Dir);
             }
@@ -103,10 +100,10 @@ namespace AATB
                         if (CheckFormatBitrate(CompAudioFormat, Dir.Name))
                         {
                             // populate directory metadata
-                            GetDirMetadata(Dir, ParentInfotextPath, ParentCuesheetPath);
+                            GetDirMetadata(Dir);
 
                             // populate track metadata
-                            GetTrackMetadata(Dir, WAVFileList, ParentInfotextPath, ParentCuesheetPath);
+                            GetTrackMetadata(Dir, WAVFileList);
 
                             // compressed audio formats
                             if (Dir.Type == WAVAUDIO)
@@ -152,7 +149,7 @@ namespace AATB
 
                                     // copy info file, if it exists, to destination directory
                                     if (UseInfotext && ParentInfotextExists)
-                                        CopyTextFile(ParentInfotextPath, CompAudioDirPath);
+                                        CopyTextFile(Dir.ParentInfotextPath, CompAudioDirPath);
                                 }
                                 else
                                     Log.WriteLine("*** " + CompAudioFormat.ToUpper()
@@ -219,10 +216,10 @@ namespace AATB
                             if (CompAudioFileList != null)
                             {
                                 // populate directory metadata
-                                GetDirMetadata(Dir, ParentInfotextPath, ParentCuesheetPath);
+                                GetDirMetadata(Dir);
 
                                 // populate track metadata
-                                GetTrackMetadata(Dir, CompAudioFileList, ParentInfotextPath, ParentCuesheetPath);
+                                GetTrackMetadata(Dir, CompAudioFileList);
 
                                 // Create ID3 tags
                                 // Note: This also changes MD5 checksums, recreate them
@@ -276,7 +273,7 @@ namespace AATB
 
                                 // Copy info.txt File from parent directory
                                 if (UseInfotext && ParentInfotextExists)
-                                    CopyTextFile(ParentInfotextPath, Dir.Path);
+                                    CopyTextFile(Dir.ParentInfotextPath, Dir.Path);
                             }
                             else
                                 Log.WriteLine("*** No " + CompAudioFormat.ToUpper() + " format files found");
@@ -356,7 +353,7 @@ namespace AATB
                 if (Debug) Console.WriteLine("dbg: Delete Section");
 
                 // populate directory metadata
-                GetDirMetadata(Dir, ParentInfotextPath, ParentCuesheetPath);
+                GetDirMetadata(Dir);
 
                 // check appropriate format flag is set (WAV, <bitrate>|RAW)
                 if (CheckFormatBitrate(WAV, Dir.Name))
@@ -465,7 +462,7 @@ namespace AATB
                     && WAVExists)
                 {
                     // populate directory metadata
-                    GetDirMetadata(Dir, ParentInfotextPath, ParentCuesheetPath);
+                    GetDirMetadata(Dir);
 
                     JoinedWAVFilename = Dir.ParentBaseName + PERIOD + Dir.Bitrate + PERIOD + WAV;
                     ConcatentateWAVFiles(Dir, WAVFileList, JoinedWAVFilename);
@@ -503,22 +500,17 @@ namespace AATB
                     && WAVExists)
                 {
                     // populate directory metadata
-                    GetDirMetadata(Dir, ParentInfotextPath, ParentCuesheetPath);
+                    GetDirMetadata(Dir);
 
                     // populate track metadata
-                    // this is obtained from parent info.txt file, if it exists
+                    // this is obtained from parent infotext file or cuesheet, if specified
                     // otherwise from track filenames
-                    GetTrackMetadata(Dir, WAVFileList, ParentInfotextPath, null);
+                    GetTrackMetadata(Dir, WAVFileList);
 
-                    // build cuesheet filename
-                    ParentCuesheetName = Dir.ParentBaseName + PERIOD + INFOCUE;
-                    ParentCuesheetPath = Dir.ParentPath + BACKSLASH + ParentCuesheetName;
+                    // create cuesheet
+                    // cuesheet name is calcuated, if it exists, overwrite to replace.
+                    CreateCuesheetFile(Dir);
 
-                    if (!File.Exists(ParentCuesheetPath)
-                        || (File.Exists(ParentCuesheetPath) && Overwrite))
-                        CreateCuesheetFile(Dir, ParentCuesheetPath);
-                    else
-                        Log.WriteLine("*** Cuesheet already exists, use overwrite option to replace: " + ParentCuesheetName);
                 }
             } // end Create Cuesheet section
 

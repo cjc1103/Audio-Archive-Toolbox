@@ -60,7 +60,7 @@ namespace AATB
                 }
         } //end GetDirInformation
 
-        static void GetDirMetadata(AATB_DirInfo Dir, string InfotextPath, string CuesheetPath)
+        static void GetDirMetadata(AATB_DirInfo Dir)
         {
             /* extract directory metadata
              * Inputs:
@@ -174,10 +174,10 @@ namespace AATB
                 && (Dir.Name != RAW))
             {
                 if (UseInfotext)
-                    GetDirMetadataFromInfotext(Dir, InfotextPath);
+                    GetDirMetadataFromInfotext(Dir);
 
                 else if (UseCuesheet)
-                    GetDirMetadataFromCuesheet(Dir, CuesheetPath);
+                    GetDirMetadataFromCuesheet(Dir);
 
                 // if Dir.MetadataSource has not changed, the metadata source reverts to directory name
                 if (Dir.MetadataSource == DIRNAME)
@@ -200,7 +200,7 @@ namespace AATB
             }
         }  // end GetDirMetadata
 
-        static void GetDirMetadataFromInfotext(AATB_DirInfo Dir, string InfotextPath)
+        static void GetDirMetadataFromInfotext(AATB_DirInfo Dir)
         {
             /* Extract directory metadata from Info File
              * Note: will overwrite existing metadata derived from directory name
@@ -217,8 +217,8 @@ namespace AATB
              *   Dir.ConcertDate
              */
             string
-                FilePath,
-                InfotextName;
+                InfotextFilePath,
+                InfotextFileName;
             string[]
                 DataList;
             Match
@@ -226,14 +226,14 @@ namespace AATB
                 DateMatchLine5;
 
             if (Debug) Console.WriteLine("dbg: GetDirMetadataFromInfotext method");
-            (FilePath, InfotextName) = SplitPath(InfotextPath);
-            if (File.Exists(InfotextPath))
+            (InfotextFilePath, InfotextFileName) = SplitPath(Dir.ParentInfotextPath);
+
+            if (File.Exists(Dir.ParentInfotextPath))
             {
-                (FilePath, InfotextName) = SplitPath(InfotextPath);
-                Log.WriteLine("  Reading album metadata from info file: " + InfotextName);
+                Log.WriteLine("  Reading album metadata from info file: " + InfotextFileName);
 
                 // read data from text file
-                DataList = ReadTextFile(InfotextPath);
+                DataList = ReadTextFile(Dir.ParentInfotextPath);
 
                 if (DataList.Length > 4)
                 {
@@ -280,10 +280,10 @@ namespace AATB
                     Log.WriteLine("*** Artist and concert date missing from info file");
             }
             else
-                Log.WriteLine("*** Info file not found: " + InfotextName);
+                Log.WriteLine("*** Info file not found: " + InfotextFileName);
         } // end GetDirMetadataFromInfotext
 
-        static void GetDirMetadataFromCuesheet(AATB_DirInfo Dir, string CuesheetPath)
+        static void GetDirMetadataFromCuesheet(AATB_DirInfo Dir)
         {
             /* Extract directory metadata from Cuesheet
              * Note: will overwrite existing metadata derived from directory name
@@ -300,20 +300,21 @@ namespace AATB
              *   Dir.ConcertDate
              */
             string
-                FilePath,
-                CuesheetName;
+                CuesheetFilePath,
+                CuesheetFileName;
             string[]
                 DataList;
 
             if (Debug) Console.WriteLine("dbg: GetDirMetadataFromCuesheet method");
-            (FilePath, CuesheetName) = SplitPath(CuesheetPath);
-            if (File.Exists(CuesheetPath))
+            // get parent directory cueshee filepath
+            (CuesheetFilePath, CuesheetFileName) = SplitPath(Dir.ParentCuesheetPath);
+
+            if (File.Exists(Dir.ParentCuesheetPath))
             {
-                (FilePath, CuesheetName) = SplitPath(CuesheetPath);
-                Log.WriteLine("  Reading album metadata from cuesheet: " + CuesheetName);
+                Log.WriteLine("  Reading album metadata from cuesheet: " + CuesheetFileName);
 
                 // read data from text file
-                DataList = ReadTextFile(CuesheetPath);
+                DataList = ReadTextFile(Dir.ParentCuesheetPath);
 
                 // search for metadata labels
                 Dir.AlbumArtist = SearchList(DataList, "PERFORMER ");
@@ -331,7 +332,7 @@ namespace AATB
                     Log.WriteLine("*** Artist and concert date missing from cuesheet");
             }
             else
-                Log.WriteLine("*** Cuesheet not found: " + CuesheetName);
+                Log.WriteLine("*** Cuesheet not found: " + CuesheetFileName);
         } // end GetDirMetadataFromCuesheet
 
         static string SearchList(string[] DataList, string Name)

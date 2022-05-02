@@ -59,6 +59,7 @@ namespace AATB
              *   MediaInfo utility (CLI version)
              *     --Inform=Audio;%Duration% : returns duration of audio file in milliseconds
              *       (e.g. "68567" = 68.567 secs) An invalid input returns nothing
+             *     Note from command line: MediaInfo --Inform=Audio;"%Duration"
              * Outputs:
              *   Returns audio file duration in seconds
              */
@@ -66,9 +67,7 @@ namespace AATB
                 ExternalProgram = "Mediainfo.exe",
                 ExternalArguments,
                 ExternalOutput,
-                DurationSec;
-            decimal
-                decDurationSec;
+                DurationMsec;
 
             ExternalArguments = "--Inform=Audio;%Duration%"
                               + SPACE + DBLQ + AudioFilePath + DBLQ;
@@ -83,13 +82,9 @@ namespace AATB
                 Environment.Exit(0);
             }
             // remove trailing spaces
-            ExternalOutput = Regex.Replace(ExternalOutput, @"\s*$", "");
-            // convert to decimal seconds
-            decDurationSec = Convert.ToDecimal(ExternalOutput) / 1000;
-            // round file duration to nearest second and convert back to string
-            DurationSec = Convert.ToString(Decimal.Round(decDurationSec));
+            DurationMsec = Regex.Replace(ExternalOutput, @"\s*$", "");
 
-            return DurationSec;
+            return DurationMsec;
         } // end GetTrackDuration
     }
 }

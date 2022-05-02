@@ -22,9 +22,13 @@ namespace AATB
              *     Track Filename
              */
             int
-                TrackNumber = 0;
+                TrackNumber = 0,
+                intTrackDurationSec;
+            decimal
+                decTrackDurationSec;
             string
-                TrackDuration;
+                TrackDuration,
+                TrackDurationSec;
 
             Log.WriteLine("    Creating M3U Playlist");
             if (CreateFile(M3UFilePath))
@@ -34,8 +38,12 @@ namespace AATB
                 {
                     // increment track number
                     TrackNumber++;
-                    // get track duration in seconds
+                    // get track duration in milliseconds
                     TrackDuration = GetTrackDuration(fi.FullName);
+                    // convert to seconds
+                    decTrackDurationSec = (decimal)Convert.ToDouble(TrackDuration) / 1000;
+                    intTrackDurationSec = (int)Decimal.Round(decTrackDurationSec);
+                    TrackDurationSec = Convert.ToString(intTrackDurationSec);
                     File.AppendAllText(M3UFilePath,
                                        "#EXTINF:"
                                        + TrackDuration + ","
