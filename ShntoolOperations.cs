@@ -21,7 +21,6 @@ namespace AATB
             string
                 Data1, Data2,
                 FileName,
-                FilePath,
                 FLACFileNames = null,
                 ExternalProgram = "shntool.exe",
                 ExternalArguments,
@@ -68,8 +67,8 @@ namespace AATB
                             // split data line - file pathname starts at column 66
                             Data1 = li.Substring(0, 65);
                             Data2 = li.Substring(65);
-                            // extract filename from filepath
-                            (FilePath, FileName) = SplitPath(Data2);
+                            // extract filename from Data2
+                            FileName = SplitFileName(Data2);
                             File.AppendAllText(SHNReportPath, Data1 + FileName + Environment.NewLine);
                         }
                     }

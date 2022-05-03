@@ -260,12 +260,14 @@ Program history
      Removed decompression code for ALAC, even though it is a lossless compression format
      Added checks to ensure raw is only valid for FLAC format
      Enabled printout of flac q values in CheckUserInput method
+     Changed Dir structure to add TrackDuration list
+     Changed GetSongDuration method to use Dir.TrackDuration values
 
 5.2  2022-05-02
-     Dir structure changed to add TrackDuration list
-     Changed GetSongDuration method to use Dir.TrackDuration values
      Added join function using SoX utility to concatenate wav or flac audio files into one joined file
      Modified Compress function to only generate MD5 FFP and SHN reports if the appropriate flag is set
      SHN function (shntool len report) requires FLAC 1.3.2 for 24 bit FLACs, does not work with 1.3.4
-     Changed dir structure to add ParentInfotextPath and ParentCuesheetPath
+     Changed Dir structure to add ParentInfotextPath and ParentCuesheetPath
      Changed all references to these variables to Dir.ParentInfotextPath and Dir.ParentCuesheetPath
+     Enforced standard naming scheme for parent infotext and cuesheet files
+     Added SplitFileName method, as the SplitFilePath method returned the pathname which was not been used

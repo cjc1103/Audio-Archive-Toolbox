@@ -41,39 +41,22 @@ namespace AATB
                 MD5FileList = CurrentDir.GetFiles(ALLMD5),
                 FFPFileList = CurrentDir.GetFiles(ALLFFP),
                 SHNReportList = CurrentDir.GetFiles(ALLSHN),
-                M3UFileList = CurrentDir.GetFiles(ALLM3U),
                 ParentInfotextList = CurrentDir.Parent.GetFiles(ALLINFOTXT),
                 ParentCuesheetList = CurrentDir.Parent.GetFiles(ALLINFOCUE);
             bool
-                FLACFileFound,
-                WAVFileBackupExists,
                 WAVExists = WAVFileList.Any(),
                 FLACExists = FLACFileList.Any(),
-                MD5Exists = MD5FileList.Any(),
-                FFPExists = FFPFileList.Any(),
-                SHNExists = SHNReportList.Any(),
-                M3UExists = M3UFileList.Any(),
-                ParentInfotextExists = ParentInfotextList.Any(),
-                ParentCuesheetExists = ParentCuesheetList.Any();
-            
+                FLACFileFound,
+                WAVFileBackupExists;
+
             // = = = = = = = = Initialization = = = = = = = =
             // Instantiate AATB_DirInfo class for current directory
             // Constructor will populate directory information
             AATB_DirInfo Dir = new (CurrentDir);
 
-            // Get metadata information from directory names
-            // Exclude starting directory
+            // Populate directory metadata - exclude root directory
             if (Dir.Path != RootDir)
-            {
-                // use only the first info.txt file, others are ignored
-                if (ParentInfotextExists)
-                    Dir.ParentInfotextPath = ParentInfotextList[0].FullName;
-                // use only the first cue file, others are ignored
-                if (ParentCuesheetExists)
-                    Dir.ParentCuesheetPath = ParentCuesheetList[0].FullName;
-                // populate directory information
-                GetDirInformation(Dir);
-            }
+                GetDirInformation(Dir, ParentInfotextList, ParentCuesheetList);
 
             // = = = = = = = = Compress Audio section = = = = = = = =
             // Compress WAV audio files to various compressed formats
@@ -148,7 +131,7 @@ namespace AATB
                                     }
 
                                     // copy info file, if it exists, to destination directory
-                                    if (UseInfotext && ParentInfotextExists)
+                                    if (UseInfotext)
                                         CopyTextFile(Dir.ParentInfotextPath, CompAudioDirPath);
                                 }
                                 else
@@ -234,7 +217,7 @@ namespace AATB
                                     // Verify MD5 Checksum file
                                     if (CreateMD5)
                                     {
-                                        if (MD5Exists && !Overwrite)
+                                        if (File.Exists(MD5FilePath) && !Overwrite)
                                             VerifyMD5ChecksumFile(MD5FilePath, MD5FileList, CompAudioFileList);
                                         else
                                             CreateMD5ChecksumFile(MD5FilePath, CompAudioFileList, WriteLogMessage);
@@ -245,7 +228,7 @@ namespace AATB
                                 if (FLACExists && CreateFFP)
                                 {
                                     FFPFilePath = Dir.Path + BACKSLASH + Dir.Name + PERIOD + FFP;
-                                    if (FFPExists && !Overwrite)
+                                    if (File.Exists(FFPFilePath) && !Overwrite)
                                         VerifyFFPChecksumFile(FFPFilePath, FFPFileList, CompAudioFileList);
                                     else
                                         CreateFFPChecksumFile(FFPFilePath, CompAudioFileList, WriteLogMessage);
@@ -255,7 +238,7 @@ namespace AATB
                                 if (FLACExists && CreateSHN)
                                 {
                                     SHNReportPath = Dir.Path + BACKSLASH + Dir.Name + PERIOD + SHN;
-                                    if (SHNExists && !Overwrite)
+                                    if (File.Exists(SHNReportPath) && !Overwrite)
                                         VerifySHNReport(SHNReportPath, SHNReportList, Dir.Bitrate);
                                     else
                                         CreateSHNReport(SHNReportPath, CompAudioFileList);
@@ -265,14 +248,15 @@ namespace AATB
                                 if (CreateM3U)
                                 {
                                     M3UFilePath = Dir.Path + BACKSLASH + Dir.Name + PERIOD + M3U;
-                                    if (!M3UExists || (M3UExists && Overwrite))
+                                    if (!File.Exists(M3UFilePath)
+                                        || (File.Exists(M3UFilePath) && Overwrite))
                                         CreateM3UPlaylist(Dir, M3UFilePath, CompAudioFileList);
                                     else
                                         Log.WriteLine("*** M3U playlist exists, use overwrite option to replace");
                                 }
 
                                 // Copy info.txt File from parent directory
-                                if (UseInfotext && ParentInfotextExists)
+                                if (UseInfotext)
                                     CopyTextFile(Dir.ParentInfotextPath, Dir.Path);
                             }
                             else

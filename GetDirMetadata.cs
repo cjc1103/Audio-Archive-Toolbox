@@ -7,7 +7,7 @@ namespace AATB
 {
     public partial class AATB_Main
     {
-        static void GetDirInformation(AATB_DirInfo Dir)
+        static void GetDirInformation(AATB_DirInfo Dir, FileInfo[] ParentInfotextList, FileInfo[] ParentCuesheetList)
         {
             /* populate basic directory information
              * Inputs:
@@ -37,7 +37,7 @@ namespace AATB
                 Dir.Type = OTHER;
             if (Debug) Console.WriteLine("dbg: Dir type = " + Dir.Type);
 
-            // Get audio compression format from directory extension
+            // get audio compression format from directory extension
             // ignore last entry in list = WAV
             if (Dir.Extension != null)
                 for (i = 0; i <= AudioFormats.Length - 2; i++)
@@ -48,7 +48,7 @@ namespace AATB
                         break;
                     }
                 }
-            // Get audio bitrate (if exists) from directory name
+            // get audio bitrate (if exists) from directory name
             if (Dir.BaseName != null)
                 for (i = 0; i <= AudioBitrates.Length - 1; i++)
                 {
@@ -58,6 +58,23 @@ namespace AATB
                         break;
                     }
                 }
+
+            // get parent directory infotext file
+            // if list is empty or contains more than one entry
+            //   then Dir.ParentinfotextPath remains empty
+            if (ParentInfotextList.Length == 1)
+                Dir.ParentInfotextPath = ParentInfotextList[0].FullName;
+            else if (ParentInfotextList.Length > 1)
+                Log.WriteLine("*** Multiple info.txt files exist, and are ignored");
+
+            // get parent directory cuesheet
+            // if list is empty or contains more than one entry
+            //   then Dir.ParentCuesheetPath remains empty
+            if (ParentCuesheetList.Length == 1)
+                Dir.ParentCuesheetPath = ParentCuesheetList[0].FullName;
+            else if (ParentCuesheetList.Length > 1)
+                Log.WriteLine("*** Multiple info.cue files exist, and are ignored");
+
         } //end GetDirInformation
 
         static void GetDirMetadata(AATB_DirInfo Dir)
@@ -81,7 +98,10 @@ namespace AATB
              *   Commercial recording: <artist> - <album>
              *   Other: all other formats
              */
-            string TempBaseName;
+            string
+                TempBaseName,
+                TargetInfotextFilePath,
+                TargetCuesheetFilePath;
 
             if (Debug) Console.WriteLine("dbg: GetDirMetadata method");
 
@@ -164,6 +184,26 @@ namespace AATB
             }
             if (Debug) Console.WriteLine("dbg: ParentBasename = " + Dir.ParentBaseName);
 
+            // check info files
+            // if infotext filename is not in correct format move it
+            TargetInfotextFilePath = Dir.ParentBaseName + PERIOD + INFOTXT;
+            if (File.Exists(Dir.ParentInfotextPath)
+                && Dir.ParentInfotextPath != TargetInfotextFilePath)
+            {
+                Log.WriteLine("  Renaming infotext file to: " + TargetInfotextFilePath);
+                MoveFile(Dir.ParentInfotextPath, TargetInfotextFilePath);
+                Dir.ParentInfotextPath = TargetInfotextFilePath;
+            }
+            // if cuesheet filepath is not in correct format move it
+            TargetCuesheetFilePath = Dir.ParentBaseName + PERIOD + INFOTXT;
+            if (File.Exists(Dir.ParentCuesheetPath)
+                && Dir.ParentCuesheetPath != TargetCuesheetFilePath)
+            {
+                Log.WriteLine("  Renaming cuesheet file to: " + TargetCuesheetFilePath);
+                MoveFile(Dir.ParentCuesheetPath, TargetCuesheetFilePath);
+                Dir.ParentCuesheetPath = TargetCuesheetFilePath;
+            }
+
             // for wav or compressed audio directories only
             // if infotext or cuesheet flags are set, and the infotext or cuesheet files exist
             // metadata from these sources will overwrite existing directory metadata
@@ -217,7 +257,6 @@ namespace AATB
              *   Dir.ConcertDate
              */
             string
-                InfotextFilePath,
                 InfotextFileName;
             string[]
                 DataList;
@@ -226,7 +265,7 @@ namespace AATB
                 DateMatchLine5;
 
             if (Debug) Console.WriteLine("dbg: GetDirMetadataFromInfotext method");
-            (InfotextFilePath, InfotextFileName) = SplitPath(Dir.ParentInfotextPath);
+            InfotextFileName = SplitFileName(Dir.ParentInfotextPath);
 
             if (File.Exists(Dir.ParentInfotextPath))
             {
@@ -300,14 +339,14 @@ namespace AATB
              *   Dir.ConcertDate
              */
             string
-                CuesheetFilePath,
                 CuesheetFileName;
             string[]
                 DataList;
 
             if (Debug) Console.WriteLine("dbg: GetDirMetadataFromCuesheet method");
-            // get parent directory cueshee filepath
-            (CuesheetFilePath, CuesheetFileName) = SplitPath(Dir.ParentCuesheetPath);
+
+            // get parent directory cuesheet filename
+            CuesheetFileName = SplitFileName(Dir.ParentCuesheetPath);
 
             if (File.Exists(Dir.ParentCuesheetPath))
             {

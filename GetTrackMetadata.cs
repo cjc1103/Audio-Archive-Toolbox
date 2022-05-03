@@ -59,13 +59,12 @@ namespace AATB
             int
                 i,
                 TrackNumber = 0,
-                FileListLineCount,
+                FileListCount,
                 InfotextLineCount;
             string[]
                 InfotextList;
             string
                 InfotextFileName,
-                InfotextFilePath,
                 DataLine,
                 TrackNumberStr,
                 TrackTitle,
@@ -77,13 +76,13 @@ namespace AATB
             if (File.Exists(Dir.ParentInfotextPath))
             {
                 // get info file name, discard path
-                (InfotextFilePath, InfotextFileName) = SplitPath(Dir.ParentInfotextPath);
+                InfotextFileName = SplitFileName(Dir.ParentInfotextPath);
                 Log.WriteLine("  Reading track metadata from info file: " + InfotextFileName);
                 // read infotext file
                 InfotextList = ReadTextFile(Dir.ParentInfotextPath);
                 InfotextLineCount = InfotextList.Length;
-                FileListLineCount = FileList.Length;
-                if (Debug) Console.WriteLine("(dbg) FileList Count {0} ", FileListLineCount);
+                FileListCount = FileList.Length;
+                if (Debug) Console.WriteLine("(dbg) FileList Count {0} ", FileListCount);
                 // read info file line by line, ignoring concert info on first 5 lines)
                 for (i = 5; i < InfotextLineCount; i++)
                 {
@@ -124,16 +123,16 @@ namespace AATB
                         TrackFilePath = FileList[TrackNumber - 1].FullName;
                         Dir.TrackDurationList.Add(GetTrackDuration(TrackFilePath));
                     }
-                    // exit loop when TrackNumber = FileListCount so remainder of file is not read
-                    if (TrackNumber == InfotextLineCount)
+                    // exit loop when TrackNumber = FileListLineCount so remainder of file is not read
+                    if (TrackNumber == FileListCount)
                         break;
                 }
                 // check track number is correct, otherwise revert to directory metadata
                 // (Note: track number will be one more than actual number) 
-                if (TrackNumber != FileListLineCount)
+                if (TrackNumber != FileListCount)
                 {
                     Log.WriteLine("*** Info file tracks: " + Convert.ToString(TrackNumber)
-                                + "; Actual number of tracks: " + Convert.ToString(FileListLineCount));
+                                + "; Actual number of tracks: " + Convert.ToString(FileListCount));
                     GetTrackMetadataFromFileNames(Dir, FileList);
                 }
             }
@@ -160,12 +159,11 @@ namespace AATB
                 i,
                 TrackNumber = 0,
                 CueTrackNumber = 0,
-                CuesheetLineCount,
-                FileListLineCount;
+                FileListCount,
+                CuesheetLineCount;
             string[]
                 CuesheetList;
             string
-                CuesheetFilePath,
                 CuesheetFileName,
                 DataLine,
                 CueTrackNumberStr = null,
@@ -180,13 +178,13 @@ namespace AATB
             if (File.Exists(Dir.ParentCuesheetPath))
             {
                 // get cuesheet filename, discard path
-                (CuesheetFilePath, CuesheetFileName) = SplitPath(Dir.ParentCuesheetPath);
+                CuesheetFileName = SplitFileName(Dir.ParentCuesheetPath);
                 Log.WriteLine("  Reading track metadata from cuesheet: " + CuesheetFileName);
                 // read cuesheet
                 CuesheetList = ReadTextFile(Dir.ParentCuesheetPath);
                 CuesheetLineCount = CuesheetList.Length;
-                FileListLineCount = FileList.Length;
-                if (Debug) Console.WriteLine("(dbg) FileList Count {0} ", FileListLineCount);
+                FileListCount = FileList.Length;
+                if (Debug) Console.WriteLine("(dbg) FileList Count {0} ", FileListCount);
                 // initialize title and artist flags
                 TitleFound = ArtistFound = false;
                 // search cuesheet data for keywords
@@ -215,7 +213,7 @@ namespace AATB
                             Log.WriteLine("*** Two successive title entries in cuesheet");
                         TrackTitle = DataLine.Substring(PatternMatch.Index + 6);
                         // remove "dd " or "dd. " track number prefix
-                        TrackTitle = Regex.Replace(TrackTitle, @"^\d{2}\.?\s", "");
+                        TrackTitle = Regex.Replace(TrackTitle, @"^\d{2}\.?\s?", "");
                         // remove 3 - 5 character extension
                         TrackTitle = Regex.Replace(TrackTitle, @"\.[a-z0-9]{3,5}$", "");
                         // remove prefix and suffix quotes
@@ -246,7 +244,7 @@ namespace AATB
                         TrackNumber++;
                         TrackNumberStr = TrackNumber.ToString("00");
                         // FileList bounds check
-                        if (TrackNumber <= FileListLineCount)
+                        if (TrackNumber <= FileListCount)
                         {
                             // find corresponding audio file and populate track duration
                             TrackFilePath = FileList[TrackNumber - 1].FullName;
@@ -263,10 +261,10 @@ namespace AATB
                 }
                 // end of cuesheet - check track number is correct, otherwise revert to directory metadata
                 // (Note: track number will be one more than actual number)
-                if (TrackNumber != FileListLineCount)
+                if (TrackNumber != FileListCount)
                 {
                     Log.WriteLine("*** Cuesheet tracks: " + Convert.ToString(TrackNumber)
-                                + "; Actual number of tracks: " + Convert.ToString(FileListLineCount));
+                                + "; Actual number of tracks: " + Convert.ToString(FileListCount));
                     GetTrackMetadataFromFileNames(Dir, FileList);
                 }
             }

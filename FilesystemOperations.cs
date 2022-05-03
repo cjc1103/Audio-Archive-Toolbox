@@ -164,12 +164,11 @@ namespace AATB
              *   CopyFile method writes file to the destination directory
              */
             string
-                FilePath,
                 SourceFileName,
                 DestFilePath;
 
             // build destination file path
-            (FilePath, SourceFileName) = SplitPath(SourceFilePath);
+            SourceFileName = SplitFileName(SourceFilePath);
             DestFilePath = DestDirPath + BACKSLASH + SourceFileName;
             
             // CopyFile method will catch errors
@@ -198,7 +197,7 @@ namespace AATB
             }
             return Data;
         } // end ReadTextFile
-
+        
         static bool FilesAreEquivalent(string FilePath1, string FilePath2)
         {
             /* Checks if input files are equivalent

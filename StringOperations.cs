@@ -4,7 +4,29 @@ namespace AATB
 {
     public partial class AATB_Main
     {
-        static (string, string) SplitPath(string InputPath)
+        static string SplitFileName(string FilePath)
+        {
+            /* Separates filename from the input filepath
+             * Inputs:
+             *   Directory or file path
+             * Output:
+             *   FileName - characters after last backslash (\)
+             */
+            int
+                index;
+            string
+                FileName = null;
+
+            if (FilePath != null)
+            {
+                index = FilePath.LastIndexOf(BACKSLASH);
+                if (index > 0)
+                    FileName = FilePath.Substring(index + 1);
+            }
+            return FileName;
+        } // end SplitFileName
+
+        static (string, string) SplitFilePath(string InputPath)
         {
             /* Separates input path into two strings separated by the last occurrence
              *   of the delimiter BACKSLASH
@@ -36,7 +58,7 @@ namespace AATB
                 }
             }
             return (Path, FileName);
-        } // end SplitPath
+        } // end SplitFilePath
 
         static (string, string) SplitString(string InputName, string Delimiter)
         {
