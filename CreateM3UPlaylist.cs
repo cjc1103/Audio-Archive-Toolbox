@@ -46,7 +46,7 @@ namespace AATB
                     TrackDurationSec = Convert.ToString(intTrackDurationSec);
                     File.AppendAllText(M3UFilePath,
                                        "#EXTINF:"
-                                       + TrackDuration + ","
+                                       + TrackDurationSec + ","
                                        + Dir.AlbumArtist + " - "
                                        + Dir.TitleList[TrackNumber - 1]
                                        + Environment.NewLine);

@@ -182,13 +182,13 @@ namespace AATB
             int i, j;
             Console.Write("Bitrate");
             for (i = 0; i <= AudioBitrates.Length - 1; i++)
-                Console.Write("  {0,8}", AudioBitrates[i]);
+                Console.Write("{0,8}", AudioBitrates[i]);
             Console.WriteLine();
             for (i = 0; i <= AudioFormats.Length - 1; i++)
             {
-                Console.Write("{0,4}: |", AudioFormats[i]);
+                Console.Write("{0,4}  |", AudioFormats[i]);
                 for (j = 0; j <= AudioBitrates.Length - 1; j++)
-                    Console.Write("  {0,8}", AudioFormatBitrate[i, j]);
+                    Console.Write("{0,8}", AudioFormatBitrate[i, j]);
                 Console.WriteLine();
             }
         } // end PrintFormatBitrate

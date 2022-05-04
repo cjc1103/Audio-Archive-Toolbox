@@ -83,7 +83,7 @@ namespace AATB
                     InputFilePath = fi.FullName;
                     // get bitrate
                     SongBitrate = GetTrackBitrate(InputFilePath);
-                    if (Debug) Console.WriteLine("dbg: Input File Bitrate=" + SongBitrate);
+                    if (Debug) Console.WriteLine("dbg: Input File Bitrate: {0}", SongBitrate);
                     // Compare actual bitrate of each file with the "conversion from" bitrate
                     ConversionBitrateComparison = String.Compare(SongBitrate, ConversionFromBitrate, comparisonType: StringComparison.OrdinalIgnoreCase);
                     if (ConversionBitrateComparison != 0)
@@ -94,7 +94,7 @@ namespace AATB
                     // build output file pathname
                     OutputFileName = Regex.Replace(InputFileName, @ConversionFromBitrate, ConversionToBitrate);
                     OutputFilePath = OutputDirPath + BACKSLASH + OutputFileName;
-                    if (Debug) Console.WriteLine("dbg: OutputFilePath= " + OutputFilePath);
+                    if (Debug) Console.WriteLine("dbg: OutputFilePath: {0}", OutputFilePath);
                     // check output file does not exist, or overwrite existing file
                     if ((!File.Exists(OutputFilePath))
                        || (File.Exists(OutputFilePath) && Overwrite))

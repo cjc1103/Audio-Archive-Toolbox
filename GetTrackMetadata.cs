@@ -29,13 +29,11 @@ namespace AATB
             // UseInfotext and UseCuesheet flags are mutually exclusive
             // if UseInfotext flag is set, read metadata from info.txt file
             if (UseInfotext
-                && File.Exists(Dir.ParentInfotextPath)
                 && Dir.Name != RAW)
                 GetTrackMetadataFromInfotext(Dir, FileList);
 
             // if UseCuesheet flag is set, read metadata from cuesheet
             else if (UseCuesheet
-                && File.Exists(Dir.ParentCuesheetPath)
                 && Dir.Name != RAW)
                 GetTrackMetadataFromCuesheet(Dir, FileList);
 
@@ -59,8 +57,7 @@ namespace AATB
             int
                 i,
                 TrackNumber = 0,
-                FileListCount,
-                InfotextLineCount;
+                FileListCount;
             string[]
                 InfotextList;
             string
@@ -75,16 +72,15 @@ namespace AATB
             // check infotext file exists
             if (File.Exists(Dir.ParentInfotextPath))
             {
-                // get info file name, discard path
+                // get info file name
                 InfotextFileName = SplitFileName(Dir.ParentInfotextPath);
                 Log.WriteLine("  Reading track metadata from info file: " + InfotextFileName);
                 // read infotext file
                 InfotextList = ReadTextFile(Dir.ParentInfotextPath);
-                InfotextLineCount = InfotextList.Length;
                 FileListCount = FileList.Length;
-                if (Debug) Console.WriteLine("(dbg) FileList Count {0} ", FileListCount);
-                // read info file line by line, ignoring concert info on first 5 lines)
-                for (i = 5; i < InfotextLineCount; i++)
+
+                // read info file, ignoring concert info on first 5 lines)
+                for (i = 5; i < InfotextList.Length; i++)
                 {
                     DataLine = InfotextList[i];
                     // track format is: "{dd} title", "{dd}. title", where dd is one or two digits 0-9
@@ -157,113 +153,118 @@ namespace AATB
                 ArtistFound;
             int
                 i,
-                TrackNumber = 0,
-                CueTrackNumber = 0,
-                FileListCount,
-                CuesheetLineCount;
+                CueTrackNumber,
+                FileListCount;
             string[]
                 CuesheetList;
             string
                 CuesheetFileName,
                 DataLine,
                 CueTrackNumberStr = null,
-                TrackNumberStr,
                 TrackTitle = null,
                 TrackFilePath,
-                Artist = null;
+                TrackArtist = null;
             Match
                 PatternMatch;
 
             // check infotext file exists
             if (File.Exists(Dir.ParentCuesheetPath))
             {
-                // get cuesheet filename, discard path
+                // get cuesheet filename
                 CuesheetFileName = SplitFileName(Dir.ParentCuesheetPath);
                 Log.WriteLine("  Reading track metadata from cuesheet: " + CuesheetFileName);
                 // read cuesheet
                 CuesheetList = ReadTextFile(Dir.ParentCuesheetPath);
-                CuesheetLineCount = CuesheetList.Length;
                 FileListCount = FileList.Length;
-                if (Debug) Console.WriteLine("(dbg) FileList Count {0} ", FileListCount);
                 // initialize title and artist flags
                 TitleFound = ArtistFound = false;
-                // search cuesheet data for keywords
-                for (i = 0; i < CuesheetLineCount; i++)
+                CueTrackNumberStr = String.Empty;
+                CueTrackNumber = 0;
+
+                // read cuesheet, search for keywords
+                for (i = 0; i < CuesheetList.Length; i++)
                 {
                     DataLine = CuesheetList[i];
-                    // remove any trailing spaces
-                    DataLine = Regex.Replace(DataLine, @"\s*$", "");
+                    // remove leading spaces
+                    DataLine = Regex.Replace(DataLine, @"^\s*", "");
+                    if (Debug) Console.WriteLine("dbg: Line {0} Data: {1}", i, DataLine);
+
                     // search for next track
-                    PatternMatch = Regex.Match(DataLine, @"TRACK \d{2} AUDIO");
+                    PatternMatch = Regex.Match(DataLine, @"^TRACK \d{2} AUDIO");
                     if (PatternMatch.Success)
                     {
-                        if (TitleFound | ArtistFound)
-                            Log.WriteLine("*** Track information is out of order at line no. " + Convert.ToString(i));
-                        // extract track number
-                        CueTrackNumberStr = DataLine.Substring(PatternMatch.Index + 6, 2);
+                        // write data from previous line number
+                        // Don't write data for first track number, FileList bounds check
+                        if (CueTrackNumber > 0 && CueTrackNumber <= FileListCount)
+                        {
+                            // find corresponding audio file and populate track duration
+                            // cue track numbers start at 01, subtract 1 to get correct index
+                            TrackFilePath = FileList[CueTrackNumber - 1].FullName;
+                            Dir.TrackDurationList.Add(GetTrackDuration(TrackFilePath));
+                            Dir.TitleList.Add(TrackTitle);
+                            Dir.ArtistList.Add(TrackArtist);
+                            // write track info to log
+                            Log.WriteLine("    " + CueTrackNumberStr + SPACE + TrackTitle
+                                        + " [" + TrackArtist + "]");
+                        }
+
+                        // extract track number for next track
+                        CueTrackNumberStr = DataLine.Substring(6, 2);
                         CueTrackNumber = Convert.ToInt32(CueTrackNumberStr);
-                        // skip to next line
-                        break;
+
+                        // reset title and artist flags
+                        TrackTitle = TrackArtist = String.Empty;
+                        TitleFound = ArtistFound = false;
                     }
                     // search for title
-                    PatternMatch = Regex.Match(DataLine, @"TITLE ");
+                    PatternMatch = Regex.Match(DataLine, @"^TITLE");
                     if (PatternMatch.Success)
                     {
                         if (TitleFound)
                             Log.WriteLine("*** Two successive title entries in cuesheet");
-                        TrackTitle = DataLine.Substring(PatternMatch.Index + 6);
-                        // remove "dd " or "dd. " track number prefix
-                        TrackTitle = Regex.Replace(TrackTitle, @"^\d{2}\.?\s?", "");
-                        // remove 3 - 5 character extension
-                        TrackTitle = Regex.Replace(TrackTitle, @"\.[a-z0-9]{3,5}$", "");
-                        // remove prefix and suffix quotes
-                        TrackTitle = Regex.Replace(TrackTitle, @"^\""", "");
-                        TrackTitle = Regex.Replace(TrackTitle, @"\""$", "");
-                        // populate track  and track duration metadata
-                        Dir.TitleList.Add(TrackTitle);
-                        TitleFound = true;
+                        else
+                            TitleFound = true;
+                        if (DataLine.Length > 5)
+                            TrackTitle = CleanData(DataLine.Substring(5));
+                        else
+                            TrackTitle = String.Empty;
                     }
-                    // search for track artist (performer) - may be different than the album artist
-                    PatternMatch = Regex.Match(DataLine, @"PERFORMER ");
+                    // search for track artist (performer) - this may be different than the album artist
+                    PatternMatch = Regex.Match(DataLine, @"^PERFORMER");
                     if (PatternMatch.Success)
                     {
                         if (ArtistFound)
                             Log.WriteLine("*** Two successive performer entries in cuesheet");
-                        Artist = DataLine.Substring(PatternMatch.Index + 10);
-                        // remove prefix and suffix quotes
-                        Artist = Regex.Replace(Artist, @"^\""", "");
-                        Artist = Regex.Replace(Artist, @"\""$", "");
-                        // populate Artist metadata
-                        Dir.ArtistList.Add(Artist);
-                        ArtistFound = true;
+                        else
+                            ArtistFound = true;
+                        if (DataLine.Length > 9)
+                            TrackArtist = CleanData(DataLine.Substring(9));
+                        else
+                            TrackArtist = String.Empty;
                     }
-                    // both title and artist information for this track have been found
-                    if (TitleFound && ArtistFound)
-                    {
-                        // increment track number
-                        TrackNumber++;
-                        TrackNumberStr = TrackNumber.ToString("00");
-                        // FileList bounds check
-                        if (TrackNumber <= FileListCount)
-                        {
-                            // find corresponding audio file and populate track duration
-                            TrackFilePath = FileList[TrackNumber - 1].FullName;
-                            Dir.TrackDurationList.Add(GetTrackDuration(TrackFilePath));
-                            // write track info to log
-                            Log.WriteLine("    " + CueTrackNumberStr + SPACE + TrackTitle
-                                        + " [" + Artist + "]");
-                            if (CueTrackNumber != TrackNumber)
-                                Log.WriteLine("*** Track number mismatch, track number should be " + TrackNumberStr);
-                        }
-                        // reset title and artist flags
-                        TitleFound = ArtistFound = false;
-                    }
-                }
-                // end of cuesheet - check track number is correct, otherwise revert to directory metadata
-                // (Note: track number will be one more than actual number)
-                if (TrackNumber != FileListCount)
+
+                } // end cuesheet read loop
+
+                // write last track data
+                if (CueTrackNumber > 0
+                    && CueTrackNumber <= FileListCount)
                 {
-                    Log.WriteLine("*** Cuesheet tracks: " + Convert.ToString(TrackNumber)
+                    // find corresponding audio file and populate track duration
+                    TrackFilePath = FileList[CueTrackNumber - 1].FullName;
+                    Dir.TrackDurationList.Add(GetTrackDuration(TrackFilePath));
+                    Dir.TitleList.Add(TrackTitle);
+                    Dir.ArtistList.Add(TrackArtist);
+                    // write track info to log
+                    Log.WriteLine("    " + CueTrackNumberStr + SPACE + TrackTitle
+                                + " [" + TrackArtist + "]");
+                }
+
+                // check track number is correct, otherwise revert to directory metadata
+                // (Note: track number will be one more than actual number)
+
+                if (CueTrackNumber != FileListCount)
+                {
+                    Log.WriteLine("*** Cuesheet tracks: " + CueTrackNumberStr
                                 + "; Actual number of tracks: " + Convert.ToString(FileListCount));
                     GetTrackMetadataFromFileNames(Dir, FileList);
                 }
@@ -306,5 +307,18 @@ namespace AATB
                 Log.WriteLine("    " + (i + 1).ToString("00") + SPACE + TrackTitle);
             }
         }  // end GetTrackMetadataFromFileNames
+
+        static string CleanData(string Data)
+        {
+            // remove leading spaces
+            Data = Regex.Replace(Data, @"^\s*", "");
+            // remove any trailing spaces
+            Data = Regex.Replace(Data, @"\s*$", "");
+            // remove prefix quotes
+            Data = Regex.Replace(Data, @"^\""", "");
+            // remove suffix quotes
+            Data = Regex.Replace(Data, @"\""$", "");
+            return Data;
+        }
     }
 }

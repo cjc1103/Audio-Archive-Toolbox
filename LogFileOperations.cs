@@ -19,7 +19,7 @@ namespace AATB
             string LogEntry =
                 "Audio Archival Toolbox " +
                 typeof(AATB_Main).Assembly.GetName().Version +
-                " Riverbend Music Productions";
+                " Riverbend Music Production";
             WriteLine(LogEntry);
         } // end constructor AATB_Log
 

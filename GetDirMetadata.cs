@@ -18,6 +18,8 @@ namespace AATB
              *   Dir.Type
              *   Dir.AudioCompressionFormat
              *   Dir.Bitrate
+             *   Dir.ParentInfotextPath
+             *   Dir.ParentCuesheetPath
              */
             int i;
 
@@ -35,7 +37,7 @@ namespace AATB
                 Dir.Type = COMPAUDIO;
             else
                 Dir.Type = OTHER;
-            if (Debug) Console.WriteLine("dbg: Dir type = " + Dir.Type);
+            if (Debug) Console.WriteLine("dbg: Dir type: {0}", Dir.Type);
 
             // get audio compression format from directory extension
             // ignore last entry in list = WAV
@@ -60,16 +62,12 @@ namespace AATB
                 }
 
             // get parent directory infotext file
-            // if list is empty or contains more than one entry
-            //   then Dir.ParentinfotextPath remains empty
             if (ParentInfotextList.Length == 1)
                 Dir.ParentInfotextPath = ParentInfotextList[0].FullName;
             else if (ParentInfotextList.Length > 1)
                 Log.WriteLine("*** Multiple info.txt files exist, and are ignored");
 
             // get parent directory cuesheet
-            // if list is empty or contains more than one entry
-            //   then Dir.ParentCuesheetPath remains empty
             if (ParentCuesheetList.Length == 1)
                 Dir.ParentCuesheetPath = ParentCuesheetList[0].FullName;
             else if (ParentCuesheetList.Length > 1)
@@ -151,15 +149,6 @@ namespace AATB
                 }
                 // remove any remaining embedded spaces in basename
                 Dir.ParentBaseName = Regex.Replace(Dir.ParentBaseName, @"\s", "");
-
-                // build album string
-                Dir.Album = Dir.Event;
-                if (Dir.Venue != null)
-                    Dir.Album += (SPACE + Dir.Venue);
-                if (Dir.ConcertDate != null)
-                    Dir.Album += (SPACE + Dir.ConcertDate);
-                if (Dir.Stage != null)
-                    Dir.Album += (SPACE + Dir.Stage);
             }
 
             // commercial recording format
@@ -182,11 +171,11 @@ namespace AATB
                 Dir.ParentBaseName = TempBaseName;
                 // no further metadata or parent base name required
             }
-            if (Debug) Console.WriteLine("dbg: ParentBasename = " + Dir.ParentBaseName);
+            if (Debug) Console.WriteLine("dbg: ParentBasename = {0}", Dir.ParentBaseName);
 
             // check info files
             // if infotext filename is not in correct format move it
-            TargetInfotextFilePath = Dir.ParentBaseName + PERIOD + INFOTXT;
+            TargetInfotextFilePath = Dir.ParentPath + BACKSLASH + Dir.ParentBaseName + PERIOD + INFOTXT;
             if (File.Exists(Dir.ParentInfotextPath)
                 && Dir.ParentInfotextPath != TargetInfotextFilePath)
             {
@@ -194,8 +183,8 @@ namespace AATB
                 MoveFile(Dir.ParentInfotextPath, TargetInfotextFilePath);
                 Dir.ParentInfotextPath = TargetInfotextFilePath;
             }
-            // if cuesheet filepath is not in correct format move it
-            TargetCuesheetFilePath = Dir.ParentBaseName + PERIOD + INFOTXT;
+            // if cuesheet filepath is not in correct format move it, then update Dir filepath
+            TargetCuesheetFilePath = Dir.ParentPath + BACKSLASH + Dir.ParentBaseName + PERIOD + INFOCUE;
             if (File.Exists(Dir.ParentCuesheetPath)
                 && Dir.ParentCuesheetPath != TargetCuesheetFilePath)
             {
@@ -209,7 +198,7 @@ namespace AATB
             // metadata from these sources will overwrite existing directory metadata
             // but will only be used for identifying tracks and not modify parent basename
             // if metadata source file is valid, metadata source is reset appropriately
-            if ( (CompressAudio && Dir.Type == WAVAUDIO)
+            if (((CompressAudio || CreateCuesheet) && Dir.Type == WAVAUDIO)
                 || (VerifyAudio && Dir.Type == COMPAUDIO)
                 && (Dir.Name != RAW))
             {
@@ -223,8 +212,8 @@ namespace AATB
                 if (Dir.MetadataSource == DIRNAME)
                     Log.WriteLine("  Deriving album metadata from directory name");
 
-                // remove any leading space
-                Dir.Album = Regex.Replace(Dir.Album, @"^\s", "");
+                // remove any leading spaces from Album string
+                Dir.Album = Regex.Replace(Dir.Album, @"^\s*", "");
 
                 // log metadata info
                 Log.WriteLine("    Artist: " + Dir.AlbumArtist);
@@ -249,7 +238,6 @@ namespace AATB
              *   InfotextPath   location of info.txt file with recording information
              * Outputs:
              *   Dir.AlbumArtist
-             *   Dir.Album
              *   Dir.Event
              *   Dir.Venue 
              *   Dir.Stage
@@ -270,10 +258,8 @@ namespace AATB
             if (File.Exists(Dir.ParentInfotextPath))
             {
                 Log.WriteLine("  Reading album metadata from info file: " + InfotextFileName);
-
                 // read data from text file
                 DataList = ReadTextFile(Dir.ParentInfotextPath);
-
                 if (DataList.Length > 4)
                 {
                     // check for date on 4th and 5th lines
@@ -300,7 +286,7 @@ namespace AATB
                         Dir.Location = DataList[3];
                         Dir.ConcertDate = DataList[4];
                     }
-                    // otherwise search for metadata labels
+                    // otherwise search for metadata labels, find first instance of each label
                     else
                     {
                         Dir.AlbumArtist = SearchList(DataList, "Artist: ");
@@ -311,6 +297,15 @@ namespace AATB
                         Dir.ConcertDate = SearchList(DataList, "Date: ");
                     }
                 }
+
+                // build album string
+                Dir.Album = Dir.Event;
+                if (Dir.Venue != null)
+                    Dir.Album += (SPACE + Dir.Venue);
+                if (Dir.ConcertDate != null)
+                    Dir.Album += (SPACE + Dir.ConcertDate);
+                if (Dir.Stage != null)
+                    Dir.Album += (SPACE + Dir.Stage);
 
                 // AlbumArtist and ConcertDate are minimum required to document concert
                 if (Dir.AlbumArtist != null && Dir.ConcertDate != null)
@@ -331,7 +326,6 @@ namespace AATB
              *   CuesheetPath   location of .cue file with recording information
              * Outputs:
              *   Dir.AlbumArtist
-             *   Dir.Album
              *   Dir.Event
              *   Dir.Venue 
              *   Dir.Stage
@@ -357,12 +351,24 @@ namespace AATB
 
                 // search for metadata labels
                 Dir.AlbumArtist = SearchList(DataList, "PERFORMER ");
-                Dir.Album = SearchList(DataList, "TITLE ");
+                Dir.Album = SearchList(DataList, "ALBUM");
                 Dir.Event = SearchList(DataList, "EVENT ");
                 Dir.Venue = SearchList(DataList, "VENUE ");
                 Dir.Stage = SearchList(DataList, "STAGE ");
                 Dir.Location = SearchList(DataList, "LOCATION ");
                 Dir.ConcertDate = SearchList(DataList, "DATE ");
+
+                // if album info not found in infotext file, build album string
+                if (Dir.Album == null)
+                {
+                    Dir.Album = Dir.Event;
+                    if (Dir.Venue != null)
+                        Dir.Album += (SPACE + Dir.Venue);
+                    if (Dir.ConcertDate != null)
+                        Dir.Album += (SPACE + Dir.ConcertDate);
+                    if (Dir.Stage != null)
+                        Dir.Album += (SPACE + Dir.Stage);
+                }
 
                 // AlbumArtist and ConcertDate are minimum required to document concert
                 if (Dir.AlbumArtist != null && Dir.ConcertDate != null)

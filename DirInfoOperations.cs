@@ -65,6 +65,8 @@ namespace AATB
             ConcertDate = null;
             Comment = null;
             MetadataSource = null;
+            ParentInfotextPath = null;
+            ParentCuesheetPath = null;
             TitleList = new List<string>();
             ArtistList = new List<string>();
             TrackDurationList = new List<string>();

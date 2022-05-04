@@ -4,7 +4,7 @@ namespace AATB
 {
     public partial class AATB_Main
     {
-        static string SplitFileName(string FilePath)
+        static string SplitFileName(string InputPath)
         {
             /* Separates filename from the input filepath
              * Inputs:
@@ -17,25 +17,27 @@ namespace AATB
             string
                 FileName = null;
 
-            if (FilePath != null)
+            if (InputPath != null)
             {
-                index = FilePath.LastIndexOf(BACKSLASH);
+                index = InputPath.LastIndexOf(BACKSLASH);
                 if (index > 0)
-                    FileName = FilePath.Substring(index + 1);
+                    FileName = InputPath.Substring(index + 1);
+                else
+                    FileName = InputPath;
             }
             return FileName;
         } // end SplitFileName
 
-        static (string, string) SplitFilePath(string InputPath)
+        static (string, string) SplitFilePathName(string InputPath)
         {
             /* Separates input path into two strings separated by the last occurrence
              *   of the delimiter BACKSLASH
              * Inputs:
              *   Directory or file path
-             * Returns:
-             *   Tuple (Path, BaseName) where
+             * Outputs:
+             *   Tuple (Path, FileName) where
              *     Path - characters before last delimiter
-             *     BaseName - characters after last delimter
+             *     FileName - characters after last delimter
              */
             int
                 index;
@@ -58,7 +60,7 @@ namespace AATB
                 }
             }
             return (Path, FileName);
-        } // end SplitFilePath
+        } // end SplitFilePathName
 
         static (string, string) SplitString(string InputName, string Delimiter)
         {
@@ -67,9 +69,10 @@ namespace AATB
              * Inputs:
              *   Directory or file name (e.g., filename.extension)
              *   Delimiter: character used to delimit name and extension
-             * Outputs: tuple (Prefix, Suffix) where
-             *   Prefix - characters before last delimiter
-             *   Suffix - characters after last delimiter
+             * Outputs:
+             *   Tuple (Prefix, Suffix) where
+             *     Prefix - characters before last delimiter
+             *     Suffix - characters after last delimiter
              */
             int 
                 index;
