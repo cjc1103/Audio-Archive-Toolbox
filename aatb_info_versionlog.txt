@@ -271,3 +271,4 @@ Program history
      Changed all references to these variables to Dir.ParentInfotextPath and Dir.ParentCuesheetPath
      Enforced standard naming scheme for parent infotext and cuesheet files
      Added SplitFileName method, as the SplitFilePath method returned the pathname which was not been used
+     Updated GetTrackMetadataFromCuesheet method, added CleanData method to strip spaces and quotes from data
