@@ -248,14 +248,14 @@ Program history
 	 Added ConvertCase method to check the new flags and convert case as appropriate for directory names
      Changed GetDirMetadata method for logging messages when getting metadata from infotext and cuesheet
 
-5.0  2022-03-07
+5.0  2022-02-07
      Changed and consolidated algorithm logic for compress, verify, and decompress audio sections
      Replaced duplicative code with a loop to check all compression formats, and only operate on formats
      and bitrates that are selected through the command line for each mode.
      Added additional info file header format for live recordings in GetDirMetadata method
      Consolidated album metadata code in GetDirMetadata method from either directory name, infotext or cuesheet
 
-5.1  2022-04-10
+5.1  2022-03-10
      Updated .NET runtime to 6.0.3
      Removed decompression code for ALAC, even though it is a lossless compression format
      Added checks to ensure raw is only valid for FLAC format
@@ -263,12 +263,19 @@ Program history
      Changed Dir structure to add TrackDuration list
      Changed GetSongDuration method to use Dir.TrackDuration values
 
-5.2  2022-05-02
+5.2  2022-04-14
      Added join function using SoX utility to concatenate wav or flac audio files into one joined file
      Modified Compress function to only generate MD5 FFP and SHN reports if the appropriate flag is set
      SHN function (shntool len report) requires FLAC 1.3.2 for 24 bit FLACs, does not work with 1.3.4
      Changed Dir structure to add ParentInfotextPath and ParentCuesheetPath
      Changed all references to these variables to Dir.ParentInfotextPath and Dir.ParentCuesheetPath
-     Enforced standard naming scheme for parent infotext and cuesheet files
+     Enforced standard naming scheme for parent infotext and cuesheet files, if they are not in the
+     correct format, the files are renamed.
+
+5.3  2022-05-04
      Added SplitFileName method, as the SplitFilePath method returned the pathname which was not been used
-     Updated GetTrackMetadataFromCuesheet method, added CleanData method to strip spaces and quotes from data
+     Revised GetTrackMetadataFromCuesheet method so Performer entry is optional for each track
+     Added CleanData method to strip spaces and quotes from data
+     Changed GetTrackMetadataFromInfotext and GetTrackMetadataFromCuesheet to only print track artist if
+     it is present (encased in square brackets)
+     

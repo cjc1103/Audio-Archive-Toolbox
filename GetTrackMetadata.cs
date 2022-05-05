@@ -54,6 +54,8 @@ namespace AATB
              *   Dir            Current directory class
              * Note: the Artist for each track is assumed to be the Album Artist.
              */
+            bool
+                ArtistFound = false;
             int
                 i,
                 TrackNumber = 0,
@@ -65,9 +67,11 @@ namespace AATB
                 DataLine,
                 TrackNumberStr,
                 TrackTitle,
-                TrackFilePath;
+                TrackFilePath,
+                TrackArtist;
             Match
-                TrackPatternMatch;
+                TrackPatternMatch,
+                ArtistPatternMatch;
 
             // check infotext file exists
             if (File.Exists(Dir.ParentInfotextPath))
@@ -103,21 +107,41 @@ namespace AATB
                         TrackTitle = Regex.Replace(TrackTitle, @"^\d{1,2}\.?\s*", "");
                         // remove comments starting with a left bracket and ending with a right bracket
                         TrackTitle = Regex.Replace(TrackTitle, @"\(.*\)", "");
+                        // search for "[..]" sequence with artist info
+                        ArtistPatternMatch = Regex.Match(DataLine, @"\[.*\]$");
+                        if (ArtistPatternMatch.Success)
+                        {
+                            // extract artist name from within brackets
+                            ArtistFound = true;
+                            TrackArtist = TrackTitle.Substring(ArtistPatternMatch.Index - 2);
+                            TrackArtist = Regex.Replace(TrackArtist, @"\[", "");
+                            TrackArtist = Regex.Replace(TrackArtist, @"\]\s*$", "");
+                            // remove artist name from track title
+                            TrackTitle = Regex.Replace(TrackTitle, @"\[.*\]", "");
+                        }
+                        else
+                        {
+                            // use album artist as track artist
+                            TrackArtist = Dir.AlbumArtist;
+                        }
+                        // add track artist to Dir ArtistList
+                        Dir.ArtistList.Add(TrackArtist);
                         // remove any trailing spaces
                         TrackTitle = Regex.Replace(TrackTitle, @"\s*$", "");
                         // if TrackTitle is empty, change it to "Track dd"
                         if (TrackTitle == String.Empty)
                             TrackTitle = "Track " + TrackNumberStr;
-                        // write extracted track info to log
-                        Log.WriteLine("    " + TrackNumberStr + SPACE + TrackTitle);
-                        // add extracted track title to Dir TitleList
+                        // add track title to Dir TitleList
                         Dir.TitleList.Add(TrackTitle);
-                        // add artist name to Dir ArtistList
-                        // (note: use cuesheet to specify a different artist for each track)
-                        Dir.ArtistList.Add(Dir.AlbumArtist);
                         // find corresponding audio file in FileList and add track duration to Dir TrackDurationList
                         TrackFilePath = FileList[TrackNumber - 1].FullName;
                         Dir.TrackDurationList.Add(GetTrackDuration(TrackFilePath));
+
+                        // write extracted track and artist info to log
+                        Log.Write("    " + TrackNumberStr + SPACE + TrackTitle);
+                        if (ArtistFound) Log.Write(" [" + TrackArtist + "]");
+                        Log.WriteLine();
+                        ArtistFound = false;
                     }
                     // exit loop when TrackNumber = FileListLineCount so remainder of file is not read
                     if (TrackNumber == FileListCount)
@@ -206,6 +230,11 @@ namespace AATB
                             // write track info to log
                             Log.WriteLine("    " + CueTrackNumberStr + SPACE + TrackTitle
                                         + " [" + TrackArtist + "]");
+
+                            // write extracted track and artist info to log
+                            Log.Write("    " + CueTrackNumberStr + SPACE + TrackTitle);
+                            if (ArtistFound) Log.Write(" [" + TrackArtist + "]");
+                            Log.WriteLine();
                         }
 
                         // extract track number for next track
@@ -213,7 +242,6 @@ namespace AATB
                         CueTrackNumber = Convert.ToInt32(CueTrackNumberStr);
 
                         // reset title and artist flags
-                        TrackTitle = TrackArtist = String.Empty;
                         TitleFound = ArtistFound = false;
                     }
                     // search for title
