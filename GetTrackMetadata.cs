@@ -26,20 +26,22 @@ namespace AATB
             Dir.TitleList.Clear();
             Dir.TrackDurationList.Clear();
 
-            // UseInfotext and UseCuesheet flags are mutually exclusive
-            // if UseInfotext flag is set, read metadata from info.txt file
+            // Determine where to get track metadata
+            // Dir.MetadataSource is previously set in GetDirMetadata
+            // from infotext source
             if (UseInfotext
+                && Dir.MetadataSource == INFOTXT
                 && Dir.Name != RAW)
                 GetTrackMetadataFromInfotext(Dir, FileList);
-
-            // if UseCuesheet flag is set, read metadata from cuesheet
+            // from cuesheet source
             else if (UseCuesheet
+                && Dir.MetadataSource == CUESHEET
                 && Dir.Name != RAW)
                 GetTrackMetadataFromCuesheet(Dir, FileList);
-
-            // otherwise derive metadata from file names in FileList
-            else
+            // from file names in FileList
+            else if (Dir.MetadataSource == DIRNAME)
                 GetTrackMetadataFromFileNames(Dir, FileList);
+
         } // end GetTrackMetadata
 
         static void GetTrackMetadataFromInfotext(AATB_DirInfo Dir, FileInfo[] FileList)
@@ -157,7 +159,7 @@ namespace AATB
                 }
             }
             else
-                Log.WriteLine("*** Infotext file not found: " + Dir.ParentInfotextPath);
+                Log.WriteLine("*** Infotext file not found");
 
         }  // end GetTrackMetadataFromInfotext
 
@@ -323,8 +325,9 @@ namespace AATB
             {
                 // get filename
                 TrackTitle = FileList[i].Name;
-                // remove "dd " or "dd. " track number prefix
-                TrackTitle = Regex.Replace(TrackTitle, @"^\d{2}\.?\s", "");
+                // remove track number prefix
+                // (one or more digits, optional period, one or more spaces)
+                TrackTitle = Regex.Replace(TrackTitle, @"^\d+\.?\s+", "");
                 // remove 3 - 5 letter extension
                 TrackTitle = Regex.Replace(TrackTitle, @"\.[a-z0-9]{3,5}$", "");
                 // populate track metadata
