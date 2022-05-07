@@ -85,12 +85,12 @@ namespace AATB
                             // populate directory metadata
                             GetDirMetadata(Dir);
 
-                            // populate track metadata
-                            GetTrackMetadata(Dir, WAVFileList);
-
                             // compressed audio formats
                             if (Dir.Type == WAVAUDIO)
                             {
+                                // populate track metadata
+                                GetTrackMetadata(Dir, WAVFileList);
+
                                 // Create subdir if it does not exist
                                 CompAudioDirName = Dir.ParentBaseName + PERIOD + Dir.Bitrate + PERIOD + CompAudioDirExtension;
                                 CompAudioDirPath = Dir.ParentPath + BACKSLASH + CompAudioDirName;
@@ -147,6 +147,7 @@ namespace AATB
                                 CompAudioDirPath = Dir.Path;
                                 if (!FLACExists || (FLACExists && Overwrite))
                                 {
+                                    if (Debug) PrintFileList(WAV, WAVFileList);
                                     Log.WriteLine("  Converting to FLAC: " + CompAudioDirName);
                                     // return list is discarded
                                     CompressWAV(FLAC, Dir, CompAudioDirPath, WAVFileList);
@@ -173,8 +174,7 @@ namespace AATB
                 if (Debug) Console.WriteLine("dbg: Verify Section");
 
                 // compressed audio directory
-                if (Dir.Type == COMPAUDIO
-                    || Dir.Type == RAWAUDIO)
+                if (Dir.Type == COMPAUDIO)
                 {
                     if (Debug) Console.WriteLine("dbg: Dir compression Format: {0}", Dir.AudioCompressionFormat
                            + "  Dir bitrate: " + Dir.Bitrate);

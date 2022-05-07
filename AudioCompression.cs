@@ -33,9 +33,9 @@ namespace AATB
                 ExternalArguments,
                 ExternalOutput;
             int
+                TrackNumber = 0,
                 CompTypeIndex,
-                QualityValue,
-                TrackNumber = 0;
+                QualityValue;
 
             Log.Write("    Track ");
             foreach (FileInfo fi in WAVFileList)
@@ -54,6 +54,7 @@ namespace AATB
                 CompFileList[TrackNumber - 1] = new FileInfo(CompFilePath);
                 CompTypeIndex = Array.IndexOf(AudioFormats, CompType);
                 QualityValue = CompressedAudioQuality[CompTypeIndex][ACTIVE];
+                ExternalProgram = ExternalArguments = null;
 
                 switch (CompType)
                 {
@@ -129,21 +130,27 @@ namespace AATB
                     case FLAC:
                     {
                         ExternalProgram = "flac.exe";
-                        ExternalArguments = "-" + QualityValue
-                                          + " --force"
-                                          + " --verify"
-                                          + " --tag=TITLE=" + DBLQ + Dir.TitleList[TrackNumber - 1] + DBLQ
-                                          + " --tag=ARTIST=" + DBLQ + Dir.ArtistList[TrackNumber - 1] + DBLQ
-                                          + " --tag=ALBUM=" + DBLQ + Dir.Album + DBLQ
-                                          + " --tag=DATE=" + DBLQ + Dir.ConcertDate + DBLQ
-                                          + " --tag=TRACKNUMBER=" + TrackNumberStr
-                                          + SPACE + DBLQ + WAVFilePath + DBLQ
-                                          + " --output-name " + DBLQ + CompFilePath + DBLQ;
-                        break;
-                    }
-                    default:
-                    {
-                        ExternalProgram = ExternalArguments = null;
+                        if (Dir.Type == WAVAUDIO)
+                        {
+                            ExternalArguments = "-" + QualityValue
+                                                + " --force"
+                                                + " --verify"
+                                                + " --tag=TITLE=" + DBLQ + Dir.TitleList[TrackNumber - 1] + DBLQ
+                                                + " --tag=ARTIST=" + DBLQ + Dir.ArtistList[TrackNumber - 1] + DBLQ
+                                                + " --tag=ALBUM=" + DBLQ + Dir.Album + DBLQ
+                                                + " --tag=DATE=" + DBLQ + Dir.ConcertDate + DBLQ
+                                                + " --tag=TRACKNUMBER=" + TrackNumberStr
+                                                + SPACE + DBLQ + WAVFilePath + DBLQ
+                                                + " --output-name " + DBLQ + CompFilePath + DBLQ;
+                        }
+                        else if (Dir.Type == RAWAUDIO)
+                        {
+                            ExternalArguments = "-" + QualityValue
+                                                + " --force"
+                                                + " --verify"
+                                                + SPACE + DBLQ + WAVFilePath + DBLQ
+                                                + " --output-name " + DBLQ + CompFilePath + DBLQ;
+                        }
                         break;
                     }
                 }

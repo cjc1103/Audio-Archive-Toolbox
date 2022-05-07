@@ -272,10 +272,11 @@ Program history
      Enforced standard naming scheme for parent infotext and cuesheet files, if they are not in the
      correct format, the files are renamed.
 
-5.3  2022-05-04
+5.3  2022-05-05
      Added SplitFileName method, as the SplitFilePath method returned the pathname which was not been used
      Revised GetTrackMetadataFromCuesheet method so Performer entry is optional for each track
      Added CleanData method to strip spaces and quotes from data
      Changed GetTrackMetadataFromInfotext and GetTrackMetadataFromCuesheet to only print track artist if
      it is present (encased in square brackets)
-     
+     Changed WalkDirectoryTree to not call GetTrackMetaData method for raw audio
+     Changed CompressWAV method to not use tags when compressing raw WAV files to FLAC

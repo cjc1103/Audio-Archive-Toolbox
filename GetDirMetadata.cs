@@ -21,11 +21,7 @@ namespace AATB
              *   Dir.ParentInfotextPath
              *   Dir.ParentCuesheetPath
              */
-            int
-                i;
-            string
-                TargetInfotextFilePath,
-                TargetCuesheetFilePath;
+            int i;
 
             if (Debug) Console.WriteLine("dbg: GetDirInformation method");
 
@@ -64,36 +60,19 @@ namespace AATB
                         break;
                     }
                 }
+            if (Debug) Console.WriteLine("dbg: Dir ext: {0}  Dir bitrate: {1}", Dir.Extension, Dir.Bitrate);
 
             // get parent directory infotext file
             if (ParentInfotextList.Length == 1)
                 Dir.ParentInfotextPath = ParentInfotextList[0].FullName;
             else if (ParentInfotextList.Length > 1)
                 Log.WriteLine("*** Multiple info.txt files exist, and are ignored");
-            
-            // if infotext filename is not in correct format move it
-            TargetInfotextFilePath = Dir.ParentPath + BACKSLASH + Dir.ParentBaseName + PERIOD + INFOTXT;
-            if (Dir.ParentInfotextPath != TargetInfotextFilePath)
-            {
-                Log.WriteLine("  Renaming info.txt file to: " + TargetInfotextFilePath);
-                MoveFile(Dir.ParentInfotextPath, TargetInfotextFilePath);
-                Dir.ParentInfotextPath = TargetInfotextFilePath;
-            }
 
             // get parent directory cuesheet
             if (ParentCuesheetList.Length == 1)
                 Dir.ParentCuesheetPath = ParentCuesheetList[0].FullName;
             else if (ParentCuesheetList.Length > 1)
                 Log.WriteLine("*** Multiple info.cue files exist, and are ignored");
-            // if cuesheet filepath is not in correct format move it, then update Dir filepath
-            TargetCuesheetFilePath = Dir.ParentPath + BACKSLASH + Dir.ParentBaseName + PERIOD + INFOCUE;
-            if (Dir.ParentCuesheetPath != TargetCuesheetFilePath)
-            {
-                Log.WriteLine("  Renaming cuesheet file to: " + TargetCuesheetFilePath);
-                MoveFile(Dir.ParentCuesheetPath, TargetCuesheetFilePath);
-                Dir.ParentCuesheetPath = TargetCuesheetFilePath;
-            }
-
 
         } //end GetDirInformation
 
@@ -119,53 +98,47 @@ namespace AATB
              *   Other: all other formats
              */
             string
-                TempBaseName;
+                BaseName,
+                TargetInfotextFilePath,
+                TargetCuesheetFilePath;
 
             if (Debug) Console.WriteLine("dbg: GetDirMetadata method");
 
             // parent base name will be used to create compressed audio subdirectories
             // remove prefix number if it exists
             // (from beginning of line: one or more digits, optional period, one or more spaces)
-            TempBaseName = Regex.Replace(Dir.ParentName, @"^\d+\.?\s+", "");
+            BaseName = Regex.Replace(Dir.ParentName, @"^\d+\.?\s+", "");
 
             // check for live recording format: embedded date "yyyy-mm-dd stage"
-            Dir.PatternMatchDate = Regex.Match(TempBaseName, @"[1-2]\d{3}-\d{2}-\d{2}");
+            Dir.PatternMatchDate = Regex.Match(BaseName, @"[1-2]\d{3}-\d{2}-\d{2}");
             // check for commercial CD format: embedded " - "
-            Dir.PatternMatchSHS = Regex.Match(TempBaseName, @SPACEHYPHENSPACE);
-
-            // first derive metadata from parent directory name
-            // infotext or cuesheet information may be used later to overwrite this
-            // metadata later, if the file is present and the information is correct
-            // initialize metadata source to parent directory name
-            Dir.MetadataSource = DIRNAME;
+            Dir.PatternMatchSHS = Regex.Match(BaseName, @SPACEHYPHENSPACE);
 
             // live recording format
             if (Dir.PatternMatchDate.Success)
             {
                 Dir.RecordingType = LIVE;
                 // extract album artist
-                Dir.AlbumArtist = TempBaseName.Substring(0, Dir.PatternMatchDate.Index);
-                // remove leading index number, if it exists ^ddd<sp>
-                Dir.AlbumArtist = Regex.Replace(Dir.AlbumArtist, @"^\d+\s", "");
+                Dir.BaseNameTemp1 = BaseName.Substring(0, Dir.PatternMatchDate.Index);
                 // remove trailing non-word [A-Z][a-z][0-9] character including whitespace
-                Dir.AlbumArtist = Regex.Replace(Dir.AlbumArtist, @"[^A-Za-z0-9]$", "");
+                Dir.BaseNameTemp1 = Regex.Replace(Dir.BaseNameTemp1, @"[^A-Za-z0-9]$", "");
                 // convert to title case/lower case if appropriate
-                Dir.AlbumArtist = ConvertCase(Dir.AlbumArtist);
+                Dir.BaseNameTemp1 = ConvertCase(Dir.BaseNameTemp1);
                 // extract concert date, 10 chars long (yyyy-mm-dd)
-                Dir.ConcertDate = TempBaseName.Substring(Dir.PatternMatchDate.Index, 10);
+                Dir.BaseNameTemp2 = BaseName.Substring(Dir.PatternMatchDate.Index, 10);
                 // build album name
                 Dir.Album = Dir.AlbumArtist + SPACE + Dir.ConcertDate;
                 // build parent basename = <artist>_<date>.<stage>
-                Dir.ParentBaseName = Dir.AlbumArtist + UNDERSCORE + Dir.ConcertDate;
+                Dir.ParentBaseName = Dir.BaseNameTemp1 + UNDERSCORE + Dir.BaseNameTemp2;
                 // extract stage name if it exists (skip char 11 delimiter between date and stage name)
-                if (TempBaseName.Length > Dir.PatternMatchDate.Index + 11)
+                if (BaseName.Length > Dir.PatternMatchDate.Index + 11)
                 {
-                    Dir.Stage = TempBaseName.Substring(Dir.PatternMatchDate.Index + 11);
+                    Dir.BaseNameTemp3 = BaseName.Substring(Dir.PatternMatchDate.Index + 11);
                     // convert to title case/lower case if appropriate
-                    Dir.Stage = ConvertCase(Dir.Stage);
+                    Dir.BaseNameTemp3 = ConvertCase(Dir.BaseNameTemp3);
                     // concatentate to album and parent base name
-                    Dir.Album += (SPACE + Dir.Stage);
-                    Dir.ParentBaseName += (PERIOD + Dir.Stage);
+                    // Dir.Album += (SPACE + Dir.Stage);
+                    Dir.ParentBaseName += (PERIOD + Dir.BaseNameTemp3);
                 }
                 // remove any remaining embedded spaces in basename
                 Dir.ParentBaseName = Regex.Replace(Dir.ParentBaseName, @"\s", "");
@@ -175,42 +148,62 @@ namespace AATB
             else if (Dir.PatternMatchSHS.Success)
             {
                 Dir.RecordingType = CD;
-                // extract artist and album from dir name
-                Dir.AlbumArtist = TempBaseName.Substring(0, Dir.PatternMatchSHS.Index);
-                Dir.Album = TempBaseName.Substring(Dir.PatternMatchSHS.Index + 3);
-                // no further operations needed to build parent base name
-                Dir.ParentBaseName = TempBaseName;
+                Dir.ParentBaseName = BaseName;
             }
 
             // other recording format
             else
             {
                 Dir.RecordingType = OTHER;
-                Dir.AlbumArtist = TempBaseName;
-                Dir.Album = TempBaseName;
-                Dir.ParentBaseName = TempBaseName;
+                Dir.ParentBaseName = BaseName;
                 // no further metadata or parent base name required
             }
             if (Debug) Console.WriteLine("dbg: ParentBasename = {0}", Dir.ParentBaseName);
 
-            // for wav or compressed audio directories only
-            // if infotext or cuesheet flags are set, and the infotext or cuesheet files exist
-            // metadata from these sources will overwrite existing directory metadata
-            // but will only be used for identifying tracks and not modify parent basename
-            // if metadata source file is valid, metadata source is reset appropriately
-            if (((CompressAudio || CreateCuesheet) && Dir.Type == WAVAUDIO)
-                || (VerifyAudio && Dir.Type == COMPAUDIO)
-                && (Dir.Name != RAW))
+            // if infotext filename is not in correct format move it
+            if (UseInfotext)
             {
+                TargetInfotextFilePath = Dir.ParentPath + BACKSLASH + Dir.ParentBaseName + PERIOD + INFOTXT;
+                if (Dir.ParentInfotextPath != TargetInfotextFilePath)
+                {
+                    Log.WriteLine("  Renaming info.txt file to: " + TargetInfotextFilePath);
+                    MoveFile(Dir.ParentInfotextPath, TargetInfotextFilePath);
+                    Dir.ParentInfotextPath = TargetInfotextFilePath;
+                }
+            }
+            else if (UseCuesheet)
+            {
+                // if cuesheet filepath is not in correct format move it, then update Dir filepath
+                TargetCuesheetFilePath = Dir.ParentPath + BACKSLASH + Dir.ParentBaseName + PERIOD + INFOCUE;
+                if (Dir.ParentCuesheetPath != TargetCuesheetFilePath)
+                {
+                    Log.WriteLine("  Renaming cuesheet file to: " + TargetCuesheetFilePath);
+                    MoveFile(Dir.ParentCuesheetPath, TargetCuesheetFilePath);
+                    Dir.ParentCuesheetPath = TargetCuesheetFilePath;
+                }
+            }
+
+            // for wav or compressed audio directories only
+            if ((CompressAudio || CreateCuesheet) && Dir.Type == WAVAUDIO
+                || VerifyAudio && Dir.Type == COMPAUDIO
+                && Dir.Name != RAW)
+            {
+                // initialize metadata source to directory name
+                // infotext or cuesheet information may be used later to overwrite this
+                // metadata later, if the file is present and the information is correct
+                Dir.MetadataSource = DIRNAME;
+
+                // get metadata from infotext
                 if (UseInfotext)
                     GetDirMetadataFromInfotext(Dir);
 
+                // get metadata from cuesheet
                 else if (UseCuesheet)
                     GetDirMetadataFromCuesheet(Dir);
 
-                // if Dir.MetadataSource has not changed, the metadata source reverts to directory name
+                // if infotext or cuesheet data is not valid, source reverts to DIRNAME
                 if (Dir.MetadataSource == DIRNAME)
-                    Log.WriteLine("  Deriving album metadata from directory name");
+                    GetDirMetadataFromDirectoryName(Dir);
 
                 // remove any leading spaces from Album string
                 Dir.Album = Regex.Replace(Dir.Album, @"^\s*", "");
@@ -252,7 +245,6 @@ namespace AATB
                 DateMatchLine4,
                 DateMatchLine5;
 
-            if (Debug) Console.WriteLine("dbg: GetDirMetadataFromInfotext method");
             InfotextFileName = SplitFileName(Dir.ParentInfotextPath);
 
             if (File.Exists(Dir.ParentInfotextPath))
@@ -338,8 +330,6 @@ namespace AATB
             string[]
                 DataList;
 
-            if (Debug) Console.WriteLine("dbg: GetDirMetadataFromCuesheet method");
-
             // get parent directory cuesheet filename
             CuesheetFileName = SplitFileName(Dir.ParentCuesheetPath);
 
@@ -381,6 +371,37 @@ namespace AATB
                 Log.WriteLine("*** Cuesheet not found: " + CuesheetFileName);
 
         } // end GetDirMetadataFromCuesheet
+
+        static void GetDirMetadataFromDirectoryName(AATB_DirInfo Dir)
+        {
+            /* Get directory metadata from directory name
+             * TempBaseName was previously split into three parts corresponding to:
+             *   Artist, ConcertDate/Album, Stage
+             */
+            
+            Log.WriteLine("  Deriving album metadata from directory name");
+            if (Dir.RecordingType == LIVE)
+            {
+                Dir.AlbumArtist = Dir.BaseNameTemp1;
+                Dir.ConcertDate = Dir.BaseNameTemp2;
+                Dir.Album = Dir.AlbumArtist + SPACE + Dir.ConcertDate;
+                if (Dir.BaseNameTemp3 != String.Empty)
+                {
+                    Dir.Stage = Dir.BaseNameTemp3;
+                    Dir.Album += (SPACE + Dir.Stage);
+                }
+            }
+            else if (Dir.RecordingType == CD)
+            {
+                Dir.AlbumArtist = Dir.BaseNameTemp1;
+                Dir.Album = Dir.BaseNameTemp2;
+            }
+            else
+            {
+                Dir.AlbumArtist = Dir.BaseNameTemp1;
+                Dir.Album = Dir.BaseNameTemp2;
+            }
+        } // end GetDirMetadataFromDirectoryName
 
         static string SearchList(string[] DataList, string Name)
         {

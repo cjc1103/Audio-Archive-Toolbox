@@ -57,5 +57,14 @@ namespace AATB
             + "  o Metadata in info.txt and info.cue files can be used to tag compressed audio\n"
             );
         } // end PrintHelp
+
+        static void PrintFileList(string FileType, FileInfo[] FileList)
+        {
+            /* print contents of FileList for debugging purposes
+             */
+            Console.WriteLine("dbg: File dump type: {0}", FileType);
+            for (int i = 0; i < FileList.Length; i++)
+                Console.WriteLine("dbg: FileList Name {0}", FileList[i].Name);
+        } //end PrintFileList
     }
 }
