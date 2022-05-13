@@ -40,9 +40,9 @@ namespace AATB
             {
                 File.AppendAllText(LogFileName, logEntry);
             }
-            catch (IOException e)
+            catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine("*** " + e.Message);
                 Environment.Exit(0);
             }
         } // end Write
@@ -55,9 +55,9 @@ namespace AATB
             {
                 File.AppendAllText(LogFileName, logEntry + Environment.NewLine);
             }
-            catch (IOException e)
+            catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine("*** " + e.Message);
                 Environment.Exit(0);
             }
         } // end WriteLine
@@ -70,9 +70,9 @@ namespace AATB
             {
                 File.AppendAllText(LogFileName, Environment.NewLine);
             }
-            catch (IOException e)
+            catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine("*** " + e.Message);
                 Environment.Exit(0);
             }
         } // end WriteLine(no parameters)
