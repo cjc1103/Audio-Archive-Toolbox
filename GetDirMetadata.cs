@@ -212,7 +212,8 @@ namespace AATB
                 Log.WriteLine("    Artist: " + Dir.AlbumArtist);
                 Log.WriteLine("    Album: " + Dir.Album);
                 // the following metadata is extracted from info file or cuesheet
-                if (Dir.RecordingType == LIVE)
+                // not applicable to CD recording
+                if (Dir.RecordingType != CD)
                 {
                     if (Dir.Venue != null) Log.WriteLine("    Venue: " + Dir.Venue);
                     if (Dir.Stage != null) Log.WriteLine("    Stage: " + Dir.Stage);
