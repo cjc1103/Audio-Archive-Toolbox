@@ -130,7 +130,7 @@ namespace AATB
                     case FLAC:
                     {
                         ExternalProgram = "flac.exe";
-                        if (Dir.Type == WAVAUDIO)
+                        if (Dir.Type == TRACKEDAUDIO)
                         {
                             ExternalArguments = "-" + QualityValue
                                                 + " --force"

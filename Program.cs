@@ -71,7 +71,7 @@ namespace AATB
             CUESHEET = "Cuesheet",
             DIRNAME = "Directory Name",
             RAWAUDIO = "Raw Audio Dir",
-            WAVAUDIO = "WAV Audio Dir",
+            TRACKEDAUDIO = "WAV Audio Dir",
             COMPAUDIO = "Compressed Audio Dir";
         static bool
             // set default value
@@ -326,7 +326,7 @@ namespace AATB
                         CreateSHN = true;
                         break;
                     case "-a":
-                    case "--all":
+                    case "--all-reports":
                         CreateMD5 = true;
                         CreateFFP = true;
                         CreateSHN = true;

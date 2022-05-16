@@ -62,36 +62,36 @@ namespace AATB
             // Compress WAV audio files to various compressed formats
             // compressed audio files are written to the appropriate directory
             // Command: -c|--compress --compformat=<bitrate>|all
-            if (CompressAudio )
+            if (CompressAudio)
             {
                 if (Debug) Console.WriteLine("dbg: Compress Section");
 
-                // only process WAV files in <bitrate> and raw audio directories
-                // check audioformats and audiobitrates flags are set and WAV files exist
-                if ((Dir.Type == WAVAUDIO || Dir.Type == RAWAUDIO)
-                    && CheckFormatBitrate(ANYFORMAT, Dir.Name)
+                // check audioformats and audiobitrates flags are set
+                // and wav format files exist
+                if (CheckFormatBitrate(ANYFORMAT, Dir.Name)
                     && WAVExists)
                 {
                     // loop through all compressed audio formats in AudioFormats list
                     // ignore last entry in list = WAV
-                    for (index=0; index <= AudioFormats.Length - 2; index++)
+                    for (index = 0; index <= AudioFormats.Length - 2; index++)
                     {
                         CompAudioFormat = AudioFormats[index];
                         CompAudioDirExtension = CompressedDirExtensions[index];
 
                         // check format and bitrate (directory name) flag is set
+                        // this will only be true for <bitrate> and <raw> directories
                         if (CheckFormatBitrate(CompAudioFormat, Dir.Name))
                         {
                             // populate directory metadata
                             GetDirMetadata(Dir);
 
-                            // compressed audio formats
-                            if (Dir.Type == WAVAUDIO)
+                            // tracked wav audio directory
+                            if (Dir.Type == TRACKEDAUDIO)
                             {
                                 // populate track metadata
                                 GetTrackMetadata(Dir, WAVFileList);
 
-                                // Create subdir if it does not exist
+                                // create or overwrite compressed audio subdirectory
                                 CompAudioDirName = Dir.ParentBaseName + PERIOD + Dir.Bitrate + PERIOD + CompAudioDirExtension;
                                 CompAudioDirPath = Dir.ParentPath + BACKSLASH + CompAudioDirName;
                                 if ((Directory.Exists(CompAudioDirPath) && Overwrite)
@@ -102,8 +102,11 @@ namespace AATB
                                     CompAudioFileList = CompressWAV(CompAudioFormat, Dir, CompAudioDirPath, WAVFileList);
 
                                     // create MD5 Checksum
-                                    MD5FilePath = CompAudioDirPath + BACKSLASH + CompAudioDirName + PERIOD + MD5;
-                                    CreateMD5ChecksumFile(MD5FilePath, CompAudioFileList, WriteLogMessage);
+                                    if (CreateMD5)
+                                    {
+                                        MD5FilePath = CompAudioDirPath + BACKSLASH + CompAudioDirName + PERIOD + MD5;
+                                        CreateMD5ChecksumFile(MD5FilePath, CompAudioFileList, WriteLogMessage);
+                                    }
 
                                     // create other reports - FLAC only
                                     if (CompAudioFormat == FLAC)
@@ -140,25 +143,31 @@ namespace AATB
                                                 + "    " + CompAudioDirName);
                             }
 
-                            // raw audio
+                            // raw audio directory
                             else if (Dir.Type == RAWAUDIO)
                             {
+                                // create or overwrite raw audio subdirectory
                                 CompAudioDirName = Dir.Name;
                                 CompAudioDirPath = Dir.Path;
                                 if (!FLACExists || (FLACExists && Overwrite))
                                 {
                                     if (Debug) PrintFileList(WAV, WAVFileList);
                                     Log.WriteLine("  Converting to FLAC: " + CompAudioDirName);
-                                    // return list is discarded
+                                        
+                                    // compress raw audio files, return list is discarded
                                     CompressWAV(FLAC, Dir, CompAudioDirPath, WAVFileList);
+                                       
                                     // Note: md5, ffp, shtool report and m3u playlists are not used for raw files
                                 }
                                 else
                                     Log.WriteLine("*** FLAC files already exist, use overwrite option to replace");
                             }
+
+                            // other Dir.Type values not processed in this section
                         }
                     }
                 }
+
             } // end Compress Audio section
 
             // = = = = = = = = Verify Audio section = = = = = = = = 
@@ -264,6 +273,9 @@ namespace AATB
                         }
                     }
                 }
+
+                // other Dir.Type values not processed in this section
+
             } // end Verify Audio section
 
             // = = = = = = = = Decompress Audio section = = = = = = = = 
@@ -274,7 +286,7 @@ namespace AATB
             {
                 if (Debug) Console.WriteLine("dbg: Decompress Section");
 
-                // compressed audio directories
+                // compressed flac directory
                 if (Dir.Type == COMPAUDIO
                     && Dir.AudioCompressionFormat == FLAC
                     && CheckFormatBitrate(FLAC, Dir.Bitrate))
@@ -303,8 +315,8 @@ namespace AATB
                 else if (Dir.Type == RAWAUDIO
                         && CheckFormatBitrate(FLAC, Dir.Bitrate))
                 {
-                    // FLACFileList is populated during initialization for each traversal of WalkDirectory
-                    if (FLACFileList != null)
+                    // Check FLAC format files exist
+                    if (!FLACExists)
                     {
                         // WAV output directory is the input directory
                         WAVDirName = Dir.Name;
@@ -320,6 +332,8 @@ namespace AATB
                     else
                         Log.WriteLine("*** No FLAC format files found");
                 }
+
+                // other Dir.Type values not processed in this section
 
             } // end Decompress Audio section
 
@@ -343,7 +357,7 @@ namespace AATB
                 if (CheckFormatBitrate(WAV, Dir.Name))
                 {
                     // delete wav files from <bitrate> directories
-                    if (Dir.Type == WAVAUDIO)
+                    if (Dir.Type == TRACKEDAUDIO)
                     {
                         // WAVFileList contains WAV filenames in this directory
                         // Find corresponding FLAC directory and convert to DirectoryInfo format
@@ -410,6 +424,8 @@ namespace AATB
                                 Log.WriteLine("*** WAV file has no matching FLAC file, and has not been deleted: " + wav.Name);
                         }
                     }
+
+                    // other Dir.Type values not processed in this section
 
                     // delete extraneous files created by sound editing process
                     // "AllFilesList" contains all files in the current directory
@@ -479,7 +495,7 @@ namespace AATB
             {
                 if (Debug) Console.WriteLine("dbg: Create Cuesheet Section");
 
-                if (Dir.Type == WAVAUDIO
+                if (Dir.Type == TRACKEDAUDIO
                     && CheckFormatBitrate(WAV, Dir.Name)
                     && WAVExists)
                 {
@@ -496,6 +512,9 @@ namespace AATB
                     CreateCuesheetFile(Dir);
 
                 }
+
+                // other Dir.Type values not processed in this section
+
             } // end Create Cuesheet section
 
             // = = = = = = = =  Recursion section = = = = = = = = 

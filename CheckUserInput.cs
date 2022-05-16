@@ -61,12 +61,25 @@ namespace AATB
                     }
                 }
                 PrintCompressionOptions();
+
+                // MD5 Checksum
+                if (CreateMD5) Log.WriteLine("Create MD5 checksum");
+                // FFP and shntool otions, excluding RAW 
+                if (CheckFormatBitrate(FLAC, ANYBITRATE))
+                {
+                    // FLAC Fingerprint Checksum
+                    if (CreateFFP)
+                        Log.WriteLine("Create FLAC Fingerprint (FFP)");
+                    // shntool report
+                    if (CreateSHN)
+                        Log.WriteLine("Create SHNTool report (SHN)");
+                }
                 // ID3 tags
                 if (CreateTags)
-                    Log.WriteLine("Create ID3 Tags");
+                    Log.WriteLine("Create ID3 tags");
                 // M3U Playlist
                 if (CreateM3U)
-                    Log.WriteLine("Create M3U playlist");
+                    Log.WriteLine("CreateM3U playlist");
             }
 
             if (VerifyAudio )
@@ -85,29 +98,27 @@ namespace AATB
                 {
                     PrintCompressionOptions();
                     // MD5 Checksum
-                    if (CreateMD5) Log.WriteLine("  MD5 checksum");
+                    if (CreateMD5) Log.WriteLine("  Verify MD5 checksum");
                     // FFP and shntool otions, excluding RAW 
                     if (CheckFormatBitrate(FLAC, ANYBITRATE))
                     {
                         // FLAC Fingerprint Checksum
-                        if (CreateFFP) Log.WriteLine("  FLAC Fingerprint (FFP)");
+                        if (CreateFFP)
+                            Log.WriteLine("  Verify FLAC Fingerprint (FFP)");
                         // shntool report
-                        if (CreateSHN) Log.WriteLine("  SHNTool report (SHN)");
+                        if (CreateSHN)
+                            Log.WriteLine("  Verify SHNTool report (SHN)");
                     }
                     // ID3 tags
                     if (CreateTags)
                         Log.WriteLine("Create/update ID3 tags and MD5 checksum");
                     // M3U Playlist
                     if (CreateM3U)
-                    {
                         Log.WriteLine("Create/Update M3U playlist");
-                        if (UseInfotext)
-                            Log.WriteLine("Note: Infotext metadata is not used for creating playlists");
-                    }
                 }
                 else
                 {
-                    Log.WriteLine("Input error: specify verification option [--md5 --ffp --shn]|--all,--tag, --m3u");
+                    Log.WriteLine("Input error: specify options [--md5 --ffp --shn]|--all-reports, --tag, --m3u");
                     Environment.Exit(0);
                 }
             }
@@ -161,7 +172,7 @@ namespace AATB
                     }
                 if (BitrateSet != 1)
                 {
-                    Log.WriteLine("Input error: Multiple wav conversion bitrates, or raw format selected");
+                    Log.WriteLine("Input error: Multiple wav conversion bitrates and/or raw format selected");
                     Environment.Exit(0);
                 }
                 if (ConversionFromBitrate == null)

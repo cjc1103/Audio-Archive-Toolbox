@@ -32,7 +32,7 @@ namespace AATB
             if (Dir.Name == RAW)
                 Dir.Type = RAWAUDIO;
             else if (AudioBitrates.Contains(Dir.Name))
-                Dir.Type = WAVAUDIO;
+                Dir.Type = TRACKEDAUDIO;
             else if (CompressedDirExtensions.Contains(Dir.Extension))
                 Dir.Type = COMPAUDIO;
             else
@@ -186,7 +186,7 @@ namespace AATB
             }
 
             // for wav or compressed audio directories only
-            if ((CompressAudio || CreateCuesheet) && Dir.Type == WAVAUDIO
+            if ((CompressAudio || CreateCuesheet) && Dir.Type == TRACKEDAUDIO
                 || VerifyAudio && Dir.Type == COMPAUDIO
                 && Dir.Name != RAW)
             {
