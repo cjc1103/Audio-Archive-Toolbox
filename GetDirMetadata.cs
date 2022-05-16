@@ -62,18 +62,21 @@ namespace AATB
                 }
             if (Debug) Console.WriteLine("dbg: Dir ext: {0}  Dir bitrate: {1}", Dir.Extension, Dir.Bitrate);
 
-            // get parent directory infotext file
-            // if more than one infotext file, ignore them and revert to directory names
-            if (ParentInfotextList.Length == 1)
+            // get parent directory infotext file - if more than one infotext file, ignore them
+            if (ParentInfotextList.Length >= 1)
+            {
                 Dir.ParentInfotextPath = ParentInfotextList[0].FullName;
-            else if (ParentInfotextList.Length > 1)
-                Log.WriteLine("*** Multiple info.txt files exist, and are ignored");
+                if (ParentInfotextList.Length > 1)
+                    Dir.MultipleMetadataSources = true;
+            }
 
-            // get parent directory cuesheet
-            if (ParentCuesheetList.Length == 1)
+            // get parent directory cuesheet - if more than one cuesheet, ignore them
+            if (ParentCuesheetList.Length >= 1)
+            {
                 Dir.ParentCuesheetPath = ParentCuesheetList[0].FullName;
-            else if (ParentCuesheetList.Length > 1)
-                Log.WriteLine("*** Multiple info.cue files exist, and are ignored");
+                if (ParentInfotextList.Length > 1)
+                    Dir.MultipleMetadataSources = true;
+            }
 
         } //end GetDirInformation
 
@@ -161,10 +164,12 @@ namespace AATB
             }
             if (Debug) Console.WriteLine("dbg: ParentBasename = {0}", Dir.ParentBaseName);
 
-            // if infotext file exists and is not in correct format move it
+            // check metadata info file exists and is in the correct format
             if (UseInfotext
+                && !Dir.MultipleMetadataSources
                 && Dir.ParentInfotextPath != null)
             {
+                // if infotext filepath is not in correct format move it, then update Dir filepath
                 TargetInfotextFilePath = Dir.ParentPath + BACKSLASH + Dir.ParentBaseName + PERIOD + INFOTXT;
                 if (Dir.ParentInfotextPath != TargetInfotextFilePath)
                 {
@@ -173,7 +178,9 @@ namespace AATB
                     Dir.ParentInfotextPath = TargetInfotextFilePath;
                 }
             }
-            else if (UseCuesheet)
+            else if (UseCuesheet
+                     && !Dir.MultipleMetadataSources
+                     && Dir.ParentCuesheetPath != null)
             {
                 // if cuesheet filepath is not in correct format move it, then update Dir filepath
                 TargetCuesheetFilePath = Dir.ParentPath + BACKSLASH + Dir.ParentBaseName + PERIOD + INFOCUE;
@@ -248,8 +255,10 @@ namespace AATB
                 DateMatchLine4,
                 DateMatchLine5;
 
-            InfotextFileName = SplitFileName(Dir.ParentInfotextPath);
+            if (Dir.MultipleMetadataSources)
+                Log.WriteLine("*** Multiple info text files found, only the first one is used");
 
+            InfotextFileName = SplitFileName(Dir.ParentInfotextPath);
             if (File.Exists(Dir.ParentInfotextPath))
             {
                 Log.WriteLine("  Reading album metadata from info file: " + InfotextFileName);
@@ -333,9 +342,11 @@ namespace AATB
             string[]
                 DataList;
 
+            if (Dir.MultipleMetadataSources)
+                Log.WriteLine("*** Multiple cuesheet files found, only the first one is used");
+
             // get parent directory cuesheet filename
             CuesheetFileName = SplitFileName(Dir.ParentCuesheetPath);
-
             if (File.Exists(Dir.ParentCuesheetPath))
             {
                 Log.WriteLine("  Reading album metadata from cuesheet: " + CuesheetFileName);
