@@ -63,6 +63,7 @@ namespace AATB
             if (Debug) Console.WriteLine("dbg: Dir ext: {0}  Dir bitrate: {1}", Dir.Extension, Dir.Bitrate);
 
             // get parent directory infotext file
+            // if more than one infotext file, ignore them and revert to directory names
             if (ParentInfotextList.Length == 1)
                 Dir.ParentInfotextPath = ParentInfotextList[0].FullName;
             else if (ParentInfotextList.Length > 1)
@@ -160,8 +161,9 @@ namespace AATB
             }
             if (Debug) Console.WriteLine("dbg: ParentBasename = {0}", Dir.ParentBaseName);
 
-            // if infotext filename is not in correct format move it
-            if (UseInfotext)
+            // if infotext file exists and is not in correct format move it
+            if (UseInfotext
+                && Dir.ParentInfotextPath != null)
             {
                 TargetInfotextFilePath = Dir.ParentPath + BACKSLASH + Dir.ParentBaseName + PERIOD + INFOTXT;
                 if (Dir.ParentInfotextPath != TargetInfotextFilePath)
