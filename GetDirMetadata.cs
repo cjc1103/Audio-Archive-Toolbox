@@ -149,6 +149,8 @@ namespace AATB
             {
                 Dir.RecordingType = CD;
                 Dir.ParentBaseName = BaseName;
+                Dir.BaseNameTemp1 = BaseName.Substring(0, Dir.PatternMatchSHS.Index);
+                Dir.BaseNameTemp2 = BaseName.Substring(Dir.PatternMatchSHS.Index + 2);
             }
 
             // other recording format
@@ -401,6 +403,10 @@ namespace AATB
                 Dir.AlbumArtist = Dir.BaseNameTemp1;
                 Dir.Album = Dir.BaseNameTemp2;
             }
+            // convert to title case/lower case if appropriate
+            Dir.AlbumArtist = ConvertCase(Dir.AlbumArtist);
+            Dir.Album = ConvertCase(Dir.Album);
+
         } // end GetDirMetadataFromDirectoryName
 
         static string SearchList(string[] DataList, string Name)

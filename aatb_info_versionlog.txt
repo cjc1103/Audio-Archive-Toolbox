@@ -268,7 +268,7 @@ Program history
      Modified Compress function to only generate MD5 FFP and SHN reports if the appropriate flag is set
      SHN function (shntool len report) requires FLAC 1.3.2 for 24 bit FLACs, does not work with 1.3.4
      Changed Dir structure to add ParentInfotextPath and ParentCuesheetPath
-     Changed all references to these variables to Dir.ParentInfotextPath and Dir.ParentCuesheetPath
+     Changed all references to ParentInfotextPath and ParentCuesheetPath to the Dir variables
      Enforced standard naming scheme for parent infotext and cuesheet files, if they are not in the
      correct format, the files are renamed.
 
@@ -280,3 +280,5 @@ Program history
      it is present (encased in square brackets)
      Changed WalkDirectoryTree to not call GetTrackMetaData method for raw audio
      Changed CompressWAV method to not use tags when compressing raw WAV files to FLAC
+	 Changed all exception code in LogFileOperations to a general exception
+     Added GetDirMetadataFromDirectoryName method to cleanup code flow
