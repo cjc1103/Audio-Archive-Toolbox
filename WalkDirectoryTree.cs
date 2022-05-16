@@ -183,7 +183,7 @@ namespace AATB
                 if (Debug) Console.WriteLine("dbg: Verify Section");
 
                 // compressed audio directory
-                if (Dir.Type == COMPAUDIO)
+                if (Dir.Type == COMPRESSEDAUDIO)
                 {
                     if (Debug) Console.WriteLine("dbg: Dir compression Format: {0}", Dir.AudioCompressionFormat
                            + "  Dir bitrate: " + Dir.Bitrate);
@@ -287,7 +287,7 @@ namespace AATB
                 if (Debug) Console.WriteLine("dbg: Decompress Section");
 
                 // compressed flac directory
-                if (Dir.Type == COMPAUDIO
+                if (Dir.Type == COMPRESSEDAUDIO
                     && Dir.AudioCompressionFormat == FLAC
                     && CheckFormatBitrate(FLAC, Dir.Bitrate))
                 {

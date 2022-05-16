@@ -34,7 +34,7 @@ namespace AATB
             else if (AudioBitrates.Contains(Dir.Name))
                 Dir.Type = TRACKEDAUDIO;
             else if (CompressedDirExtensions.Contains(Dir.Extension))
-                Dir.Type = COMPAUDIO;
+                Dir.Type = COMPRESSEDAUDIO;
             else
                 Dir.Type = OTHER;
             if (Debug) Console.WriteLine("dbg: Dir type: {0}", Dir.Type);
@@ -126,8 +126,6 @@ namespace AATB
                 Dir.BaseNameTemp1 = ConvertCase(Dir.BaseNameTemp1);
                 // extract concert date, 10 chars long (yyyy-mm-dd)
                 Dir.BaseNameTemp2 = BaseName.Substring(Dir.PatternMatchDate.Index, 10);
-                // build album name
-                Dir.Album = Dir.AlbumArtist + SPACE + Dir.ConcertDate;
                 // build parent basename = <artist>_<date>.<stage>
                 Dir.ParentBaseName = Dir.BaseNameTemp1 + UNDERSCORE + Dir.BaseNameTemp2;
                 // extract stage name if it exists (skip char 11 delimiter between date and stage name)
@@ -153,7 +151,7 @@ namespace AATB
                 Dir.BaseNameTemp2 = BaseName.Substring(Dir.PatternMatchSHS.Index + 2);
             }
 
-            // other recording format
+            // other directory format
             else
             {
                 Dir.RecordingType = OTHER;
@@ -187,7 +185,7 @@ namespace AATB
 
             // for wav or compressed audio directories only
             if ((CompressAudio || CreateCuesheet) && Dir.Type == TRACKEDAUDIO
-                || VerifyAudio && Dir.Type == COMPAUDIO
+                || VerifyAudio && Dir.Type == COMPRESSEDAUDIO
                 && Dir.Name != RAW)
             {
                 // initialize metadata source to directory name
@@ -382,26 +380,32 @@ namespace AATB
              */
             
             Log.WriteLine("  Deriving album metadata from directory name");
-            if (Dir.RecordingType == LIVE)
+            switch (Dir.RecordingType)
             {
-                Dir.AlbumArtist = Dir.BaseNameTemp1;
-                Dir.ConcertDate = Dir.BaseNameTemp2;
-                Dir.Album = Dir.AlbumArtist + SPACE + Dir.ConcertDate;
-                if (Dir.BaseNameTemp3 != String.Empty)
+                case LIVE:
                 {
-                    Dir.Stage = Dir.BaseNameTemp3;
-                    Dir.Album += (SPACE + Dir.Stage);
+                    Dir.AlbumArtist = Dir.BaseNameTemp1;
+                    Dir.ConcertDate = Dir.BaseNameTemp2;
+                    Dir.Album = Dir.AlbumArtist + SPACE + Dir.ConcertDate;
+                    if (Dir.BaseNameTemp3 != String.Empty)
+                    {
+                        Dir.Stage = Dir.BaseNameTemp3;
+                        Dir.Album += (SPACE + Dir.Stage);
+                    }
+                    break;
                 }
-            }
-            else if (Dir.RecordingType == CD)
-            {
-                Dir.AlbumArtist = Dir.BaseNameTemp1;
-                Dir.Album = Dir.BaseNameTemp2;
-            }
-            else
-            {
-                Dir.AlbumArtist = Dir.BaseNameTemp1;
-                Dir.Album = Dir.BaseNameTemp2;
+                case CD:
+                {
+                    Dir.AlbumArtist = Dir.BaseNameTemp1;
+                    Dir.Album = Dir.BaseNameTemp2;
+                    break;
+                }
+                case OTHER:
+                {
+                    Dir.AlbumArtist = Dir.ParentBaseName;
+                    Dir.Album = Dir.ParentBaseName;
+                    break;
+                }
             }
             // convert to title case/lower case if appropriate
             Dir.AlbumArtist = ConvertCase(Dir.AlbumArtist);

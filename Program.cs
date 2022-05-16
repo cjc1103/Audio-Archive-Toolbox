@@ -71,8 +71,8 @@ namespace AATB
             CUESHEET = "Cuesheet",
             DIRNAME = "Directory Name",
             RAWAUDIO = "Raw Audio Dir",
-            TRACKEDAUDIO = "WAV Audio Dir",
-            COMPAUDIO = "Compressed Audio Dir";
+            TRACKEDAUDIO = "Tracked Audio Dir",
+            COMPRESSEDAUDIO = "Compressed Audio Dir";
         static bool
             // set default value
             CompressAudio = false,
