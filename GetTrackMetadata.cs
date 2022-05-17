@@ -249,22 +249,10 @@ namespace AATB
                         CueTrackNumberStr = DataLine.Substring(6, 2);
                         CueTrackNumber = Convert.ToInt32(CueTrackNumberStr);
 
-                        // reset title and artist flags
-                        TitleFound = ArtistFound = false;
+                        // reset artist and title flags
+                        ArtistFound = TitleFound = false;
                     }
-                    // search for title
-                    PatternMatch = Regex.Match(DataLine, @"^TITLE");
-                    if (PatternMatch.Success)
-                    {
-                        if (TitleFound)
-                            Log.WriteLine("*** Two successive title entries in cuesheet");
-                        else
-                            TitleFound = true;
-                        if (DataLine.Length > 5)
-                            TrackTitle = CleanData(DataLine.Substring(5));
-                        else
-                            TrackTitle = String.Empty;
-                    }
+                   
                     // search for track artist (performer) - this may be different than the album artist
                     PatternMatch = Regex.Match(DataLine, @"^PERFORMER");
                     if (PatternMatch.Success)
@@ -274,9 +262,23 @@ namespace AATB
                         else
                             ArtistFound = true;
                         if (DataLine.Length > 9)
-                            TrackArtist = CleanData(DataLine.Substring(9));
+                            TrackArtist = CleanDataString(DataLine.Substring(9));
                         else
                             TrackArtist = String.Empty;
+                    }
+
+                    // search for title
+                    PatternMatch = Regex.Match(DataLine, @"^TITLE");
+                    if (PatternMatch.Success)
+                    {
+                        if (TitleFound)
+                            Log.WriteLine("*** Two successive title entries in cuesheet");
+                        else
+                            TitleFound = true;
+                        if (DataLine.Length > 5)
+                            TrackTitle = CleanDataString(DataLine.Substring(5));
+                        else
+                            TrackTitle = String.Empty;
                     }
 
                 } // end cuesheet read loop
@@ -346,18 +348,5 @@ namespace AATB
                 Log.WriteLine("    " + (i + 1).ToString("00") + SPACE + TrackTitle);
             }
         }  // end GetTrackMetadataFromFileNames
-
-        static string CleanData(string Data)
-        {
-            // remove leading spaces
-            Data = Regex.Replace(Data, @"^\s*", "");
-            // remove any trailing spaces
-            Data = Regex.Replace(Data, @"\s*$", "");
-            // remove prefix quotes
-            Data = Regex.Replace(Data, @"^\""", "");
-            // remove suffix quotes
-            Data = Regex.Replace(Data, @"\""$", "");
-            return Data;
-        }
     }
 }

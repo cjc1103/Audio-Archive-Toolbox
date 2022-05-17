@@ -324,7 +324,8 @@ namespace AATB
 
         static void GetDirMetadataFromCuesheet(AATB_DirInfo Dir)
         {
-            /* Extract directory metadata from Cuesheet
+            /* Extract directory metadata from cuesheet
+             * Finds first instance of each label, others are ignored
              * Note: will overwrite existing metadata derived from directory name
              * Inputs:
              *   Dir class
@@ -354,9 +355,9 @@ namespace AATB
                 // read data from text file
                 DataList = ReadTextFile(Dir.ParentCuesheetPath);
 
-                // search for metadata labels
+                // search for standard metadata labels
                 Dir.AlbumArtist = SearchList(DataList, "PERFORMER ");
-                Dir.Album = SearchList(DataList, "ALBUM");
+                Dir.Album = SearchList(DataList, "TITLE");
                 Dir.Event = SearchList(DataList, "EVENT ");
                 Dir.Venue = SearchList(DataList, "VENUE ");
                 Dir.Stage = SearchList(DataList, "STAGE ");
@@ -376,10 +377,10 @@ namespace AATB
                 }
 
                 // AlbumArtist and ConcertDate are minimum required to document concert
-                if (Dir.AlbumArtist != null && Dir.ConcertDate != null)
+                if (Dir.AlbumArtist != null && Dir.Album != null)
                     Dir.MetadataSource = CUESHEET;
                 else
-                    Log.WriteLine("*** Artist and concert date missing from cuesheet");
+                    Log.WriteLine("*** Performer and Title information missing from cuesheet");
             }
             else
                 Log.WriteLine("*** Cuesheet not found: " + CuesheetFileName);
@@ -427,36 +428,5 @@ namespace AATB
 
         } // end GetDirMetadataFromDirectoryName
 
-        static string SearchList(string[] DataList, string Name)
-        {
-            /* Inputs:
-             *   DataList   list containing data
-             *   Name       string search term, e.g: "Artist: "
-             * Outputs:
-             *   Data       string found by pattern match, null if not found
-             */
-            int i;
-            string
-                Data = null;
-            Match
-                PatternMatch;
-
-            for (i = 0; i < DataList.Length; i++)
-            {
-                // search for pattern at beginning of string
-                PatternMatch = Regex.Match(DataList[i], @"^"+Name);
-                if ((PatternMatch.Success)
-                    && (DataList[i].Length > Name.Length))
-                {
-                    //Data = DataList[i].Substring(PatternMatch.Index + Name.Length);
-                    Data = DataList[i].Substring(Name.Length);
-                    // remove quotation marks, if they exist
-                    Data = Regex.Replace(Data, @"""", "");
-                    // exit loop, only first match in list will be used
-                    break;
-                }
-            }
-            return Data;
-        } // end SearchList
     }
 }

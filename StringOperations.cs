@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace AATB
 {
@@ -96,5 +97,51 @@ namespace AATB
             }
             return (Prefix, Suffix);
         } // end SplitString
+
+        static string SearchList(string[] DataList, string SearchTerm)
+        {
+            /* Inputs:
+             *   DataList   list containing data
+             *   Name       string search term, e.g: "Artist: "
+             * Outputs:
+             *   Data       string found by pattern match, null if not found
+             */
+            int i;
+            string
+                Data = null;
+            Match
+                PatternMatch;
+
+            for (i = 0; i < DataList.Length; i++)
+            {
+                // search for pattern in string
+                PatternMatch = Regex.Match(DataList[i], @SearchTerm);
+                if ((PatternMatch.Success)
+                    && (DataList[i].Length > SearchTerm.Length))
+                {
+                    // get index of data following SearchName
+                    // assume SearchName
+                    Data = DataList[i].Substring(PatternMatch.Index + SearchTerm.Length + 1);
+                    // remove quotation marks, if they exist
+                    Data = Regex.Replace(Data, @"""", "");
+                    // exit loop, only first match in list will be used
+                    break;
+                }
+            }
+            return Data;
+        } // end SearchList
+
+        static string CleanDataString(string Data)
+        {
+            // remove leading spaces
+            Data = Regex.Replace(Data, @"^\s*", "");
+            // remove any trailing spaces
+            Data = Regex.Replace(Data, @"\s*$", "");
+            // remove prefix quotes
+            Data = Regex.Replace(Data, @"^\""", "");
+            // remove suffix quotes
+            Data = Regex.Replace(Data, @"\""$", "");
+            return Data;
+        } // end CleanDataString
     }
 }

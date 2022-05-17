@@ -275,11 +275,11 @@ Program history
 5.3  2022-05-16
      Added SplitFileName method, as the SplitFilePath method returned the pathname which was not been used
      Revised GetTrackMetadataFromCuesheet method so Performer entry is optional for each track
-     Added CleanData method to strip spaces and quotes from data
+     Added CleanDataString method to strip spaces and quotes from data
      Changed GetTrackMetadataFromInfotext and GetTrackMetadataFromCuesheet to only print track artist if
      it is present (encased in square brackets)
      Changed WalkDirectoryTree to not call GetTrackMetaData method for raw audio
      Changed CompressWAV method to not use tags when compressing raw WAV files to FLAC
 	 Changed all exception code in LogFileOperations to a general exception
-     Added GetDirMetadataFromDirectoryName method to cleanup code
-     Corrected code to check for flags md5, ffp, shn before creating these reports.
+     Added GetDirMetadataFromDirectoryName method, fixed issue with metadata when Dir.Type = OTHER
+     Corrected code to check for flags md5, ffp, shn before creating these reports
