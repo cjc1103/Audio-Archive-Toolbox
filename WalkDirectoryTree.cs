@@ -316,7 +316,7 @@ namespace AATB
                         && CheckFormatBitrate(FLAC, Dir.Bitrate))
                 {
                     // Check FLAC format files exist
-                    if (!FLACExists)
+                    if (FLACExists)
                     {
                         // WAV output directory is the input directory
                         WAVDirName = Dir.Name;
