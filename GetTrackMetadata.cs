@@ -131,9 +131,15 @@ namespace AATB
                         // add track artist to Dir ArtistList
                         Dir.ArtistList.Add(TrackArtist);
 
-                        // TrackTitle is remander of data line
+                        // remove non alphanumeric, special characters (escaped with \)
+                        DataLine = Regex.Replace(DataLine, @"[^a-zA-Z0-9\.\,\!\?\-\>\']", "");
+
                         // remove any trailing spaces
-                        TrackTitle = Regex.Replace(DataLine, @"\s*$", "");
+                        DataLine = Regex.Replace(DataLine, @"\s*$", "");
+
+                        // TrackTitle is remander of data line
+                        TrackTitle = DataLine;
+
                         // if TrackTitle is empty, change it to "Track dd"
                         if (TrackTitle == String.Empty)
                             TrackTitle = "Track " + TrackNumberStr;

@@ -8,13 +8,13 @@
     <Nullable>disable</Nullable>
     <StartupObject>AATB.AATB_Main</StartupObject>
     <PlatformTarget>x64</PlatformTarget>
-    <AssemblyVersion>5.3.5.1</AssemblyVersion>
-    <FileVersion>5.3.5.1</FileVersion>
-    <Version>$(VersionPrefix)5.3.5</Version>
+    <AssemblyVersion>5.3.6.1</AssemblyVersion>
+    <FileVersion>5.3.6.1</FileVersion>
+    <Version>$(VersionPrefix)5.3.6</Version>
     <Platforms>AnyCPU;x64</Platforms>
     <AssemblyName>aatb</AssemblyName>
     <Authors>Chris Cantwell</Authors>
-    <Company>Riverbend Audio Productions</Company>
+    <Company>Riverbend Music Productions</Company>
     <Product>Audio Archive Toolbox</Product>
   </PropertyGroup>
 

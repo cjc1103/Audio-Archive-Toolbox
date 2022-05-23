@@ -272,7 +272,7 @@ Program history
      Enforced standard naming scheme for parent infotext and cuesheet files, if they are not in the
      correct format, the files are renamed.
 
-5.3  2022-05-16
+5.3  2022-05-19
      Added SplitFileName method, as the SplitFilePath method returned the pathname which was not been used
      Revised GetTrackMetadataFromCuesheet method so Performer entry is optional for each track
      Added CleanDataString method to strip spaces and quotes from data
