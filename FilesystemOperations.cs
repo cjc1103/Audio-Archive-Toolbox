@@ -101,7 +101,7 @@ namespace AATB
                     if (File.Exists(DestFilePath) && !Overwrite)
                     {
                         Log.WriteLine("*** Destination file exists, use overwrite option to replace");
-                        Log.WriteLine("    " + DestFilePath);
+                        // Log.WriteLine("    " + DestFilePath);
                     }
                     else if (!File.Exists(DestFilePath)
                             || File.Exists(DestFilePath) && Overwrite)
@@ -136,7 +136,7 @@ namespace AATB
                     if (File.Exists(DestFilePath) && !Overwrite)
                     {
                         Log.WriteLine("*** Destination file exists, use overwrite option to replace");
-                        Log.WriteLine("    " + DestFilePath);
+                        // Log.WriteLine("    " + DestFilePath);
                     }
                     else if (!File.Exists(DestFilePath)
                             || File.Exists(DestFilePath) && Overwrite)

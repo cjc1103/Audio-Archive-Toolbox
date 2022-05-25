@@ -47,16 +47,22 @@ namespace AATB
                 WAVExists = WAVFileList.Any(),
                 FLACExists = FLACFileList.Any(),
                 FLACFileFound,
-                WAVFileBackupExists;
+                WAVFileBackupExists,
+                DirInfoPopulated,
+                DirTrackInfoPopulated;
 
             // = = = = = = = = Initialization = = = = = = = =
             // Instantiate AATB_DirInfo class for current directory
             // Constructor will populate directory information
-            AATB_DirInfo Dir = new (CurrentDir);
+            AATB_DirInfo Dir = new(CurrentDir);
 
             // Populate directory metadata - exclude root directory
             if (Dir.Path != RootDir)
                 GetDirInformation(Dir, ParentInfotextList, ParentCuesheetList);
+
+            // initialize dir metadata info read flags
+            DirInfoPopulated = false;
+            DirTrackInfoPopulated = false;
 
             // = = = = = = = = Compress Audio section = = = = = = = =
             // Compress WAV audio files to various compressed formats
@@ -82,14 +88,22 @@ namespace AATB
                         // this will only be true for <bitrate> and <raw> directories
                         if (CheckFormatBitrate(CompAudioFormat, Dir.Name))
                         {
-                            // populate directory metadata
-                            GetDirMetadata(Dir);
-
+                            // populate directory metadata - once for each directory
+                            if (!DirInfoPopulated)
+                            {
+                                GetDirMetadata(Dir);
+                                DirInfoPopulated = true;
+                            }
+                            
                             // tracked wav audio directory
                             if (Dir.Type == TRACKEDAUDIO)
                             {
-                                // populate track metadata
-                                GetTrackMetadata(Dir, WAVFileList);
+                                // populate track metadata - once for each tracked audio directory
+                                if (!DirTrackInfoPopulated)
+                                {
+                                    GetTrackMetadata(Dir, WAVFileList);
+                                    DirTrackInfoPopulated=true;
+                                }
 
                                 // create or overwrite compressed audio subdirectory
                                 CompAudioDirName = Dir.ParentBaseName + PERIOD + Dir.Bitrate + PERIOD + CompAudioDirExtension;
@@ -207,11 +221,14 @@ namespace AATB
 
                             if (CompAudioFileList != null)
                             {
-                                // populate directory metadata
-                                GetDirMetadata(Dir);
-
-                                // populate track metadata
-                                GetTrackMetadata(Dir, CompAudioFileList);
+                                if (!DirInfoPopulated)
+                                {
+                                    // populate directory metadata
+                                    GetDirMetadata(Dir);
+                                    // populate track metadata
+                                    GetTrackMetadata(Dir, CompAudioFileList);
+                                    DirInfoPopulated = true;
+                                }
 
                                 // Create ID3 tags
                                 // Note: This also changes MD5 checksums, recreate them
