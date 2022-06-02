@@ -53,21 +53,22 @@ namespace AATB
 
             // = = = = = = = = Initialization = = = = = = = =
             // Instantiate AATB_DirInfo class for current directory
-            // Constructor will populate directory information
+            // AATB_DirInfo constructor will populate directory information
             AATB_DirInfo Dir = new(CurrentDir);
 
-            // Populate directory metadata - exclude root directory
+            // populate directory metadata - exclude root directory
             if (Dir.Path != RootDir)
                 GetDirInformation(Dir, ParentInfotextList, ParentCuesheetList);
 
-            // initialize dir metadata info read flags
+            // initialize dir metadata flags
             DirInfoPopulated = false;
             DirTrackInfoPopulated = false;
 
             // = = = = = = = = Compress Audio section = = = = = = = =
             // Compress WAV audio files to various compressed formats
-            // compressed audio files are written to the appropriate directory
-            // Command: -c|--compress --compformat=<bitrate>|all
+            // Note: compressed audio files are written to the appropriate directory
+            // Command: -c|--compress --<compformat>=<bitrate>|all
+            //          where <compformat> is a valid compression format
             if (CompressAudio)
             {
                 if (Debug) Console.WriteLine("dbg: Compress Section");
@@ -184,7 +185,7 @@ namespace AATB
 
             } // end Compress Audio section
 
-            // = = = = = = = = Verify Audio section = = = = = = = = 
+            // = = = = = = = = Verify Audio section = = = = = = = =
             // (1) Verify metadata in compressed audio directories only
             //     a. MD5 checksums - all commpressed audio files
             //     b. FFP (FLAC Fingerprint) checksums - FLAC files
@@ -295,7 +296,7 @@ namespace AATB
 
             } // end Verify Audio section
 
-            // = = = = = = = = Decompress Audio section = = = = = = = = 
+            // = = = = = = = = Decompress Audio section = = = = = = = =
             // Decompress FLAC lossless audio files to WAV format from raw audio and compressed audio
             // directories. Other lossless formats like ALAC are not supported for simplicity
             // Command: -d|--decompress --flac=<bitrate>|raw|all
@@ -332,10 +333,10 @@ namespace AATB
                 else if (Dir.Type == RAWAUDIO
                         && CheckFormatBitrate(FLAC, Dir.Bitrate))
                 {
-                    // Check FLAC format files exist
+                    // check FLAC format files exist
                     if (FLACExists)
                     {
-                        // WAV output directory is the input directory
+                        // wav file output directory is the input directory
                         WAVDirName = Dir.Name;
                         WAVDirPath = Dir.Path;
                         if (!WAVExists || (WAVExists && Overwrite))
@@ -360,7 +361,7 @@ namespace AATB
             //     b. Uncompressed WAV directories <bitrate>
             //     Backup FLAC files are verified before deletion
             // (2) Delete extraneous temporary files by extension wildcard
-            // (3) Mark empty directories for deletion. Directories cannot be deleted immedaitely
+            // (3) Mark empty directories for deletion. Directories cannot be deleted immediately
             //     as the program is calling WalkDirectoryTree recursively
             // Command: -x|--delete --wav=<bitrate>|raw|all
             else if (DeleteAudio)
@@ -457,7 +458,7 @@ namespace AATB
                     }
                 }
 
-                // Mark miscellaneous directories in DirsToDelete list for deletion
+                // mark miscellaneous directories in DirsToDelete list for deletion
                 foreach (string dirtodelete in DirsToDelete)
                 {
                     if (dirtodelete == Dir.Name)
@@ -468,10 +469,11 @@ namespace AATB
                 }
             } // end Delete Audio section
 
-            // = = = = = = = =  Join WAV Files section = = = = = = = = 
+            // = = = = = = = = Join WAV Files section = = = = = = = = 
             // Concatenate separate WAV files into one combined wav file
-            // wav files must exist in the Dir.Bitrate directory specified by --wav=<bitrate>
-            // command: -j|--join --wav=<bitrate>
+            // Note: wav files must exist in the specified directory
+            // Note: the directory name Dir.Name = bitrate
+            // Command: -j|--join --wav=<bitrate>
             else if (JoinWAV)
             {
                 if (Debug) Console.WriteLine("dbg: Join WAV Files Section");
@@ -487,7 +489,7 @@ namespace AATB
 
             } // end Join WAV Files section
 
-            // = = = = = = = =  Convert Audio Bitrate section = = = = = = = = 
+            // = = = = = = = = Convert Audio Bitrate section = = = = = = = = 
             // Convert wav files from one bitrate to another
             // Command: -z|--convert-bitrate=<bitrate to> --wav=<bitrate from>
             else if (ConvertAudioBitrate)
@@ -505,9 +507,9 @@ namespace AATB
                 }
             } // end Convert Audio Bitrate section
 
-            // = = = = = = = =  Create Cuesheet section = = = = = = = = 
+            // = = = = = = = = Create Cuesheet section = = = = = = = = 
             // Create cuesheet from wav track metadata
-            // command: -r|--create-cuesheet --wav=<bitrate>
+            // Command: -r|--create-cuesheet --wav=<bitrate>
             if (CreateCuesheet)
             {
                 if (Debug) Console.WriteLine("dbg: Create Cuesheet Section");
@@ -534,7 +536,7 @@ namespace AATB
 
             } // end Create Cuesheet section
 
-            // = = = = = = = =  Recursion section = = = = = = = = 
+            // = = = = = = = = Recursion section = = = = = = = = 
             // Find all the subdirectories under this directory
             SubDirs = CurrentDir.GetDirectories();
             foreach (DirectoryInfo dirname in SubDirs)

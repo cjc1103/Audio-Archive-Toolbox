@@ -67,7 +67,7 @@ namespace AATB
             LIVE = "Live Recording",
             CD = "Commercial CD",
             OTHER = "Other",
-            INFOFILE = "Information File",
+            INFOFILE = "Infotext File",
             CUESHEET = "Cuesheet",
             DIRNAME = "Directory Name",
             RAWAUDIO = "Raw Audio Dir",
@@ -134,299 +134,308 @@ namespace AATB
         static List<string>
             DirsMarkedForDeletion = new List<string>();
 
-        // = = = = = Main procedure = = = = =
+        // = = = = = Main procedure = = = = = //
 
         static void Main(string[] argv)
         {
+            // main procedure
+            // argv is a list of the command line arguments and options
+            //   arg1[=opt], arg2[=opt], .. argn[=opt]
+
             string
                arg, opt,
                UserInput;
 
-            // get starting directory
-            RootDir = Directory.GetCurrentDirectory();
-
-            // initialize and write header to log
-            LogFilePath = RootDir + BACKSLASH + LOGNAME;
-            Log = new AATB_Log(LogFilePath);
-
-            // initialize boolean array for selecting format and bitrate
-            InitFormatBitrate();
-
-            // argv is a list of the command line arguments and options
-            //   arg1[=opt], arg2[=opt], .. argn[=opt]
-            // if no arguments, print help and exit
-            if (argv.Length == 0)
+            // check arguments exist
+            if (argv.Length > 0)
             {
-                PrintHelp();
-                Environment.Exit(0);
-            }
+                // get starting directory
+                RootDir = Directory.GetCurrentDirectory();
 
-            // parse arguments and options in command line argv
-            foreach (string s in argv)
-            {
-                // Split each substring s into arguments and options, delimited by '='
-                (arg, opt) = SplitString(s, EQUALS);
-                switch (arg)
+                // initialize and write header to log
+                LogFilePath = RootDir + BACKSLASH + LOGNAME;
+                Log = new AATB_Log(LogFilePath);
+
+                // initialize boolean array for selecting format and bitrate
+                InitFormatBitrate();
+
+                // parse arguments and options in command line argv
+                foreach (string s in argv)
                 {
-                    // primary modes
-                    case "-c":
-                    case "--compress":
-                        CompressAudio  = true;
-                        break;
-                    case "-d":
-                    case "--decompress":
-                        DecompressAudio = true;
-                        break;
-                    case "-v":
-                    case "--verify":
-                        VerifyAudio  = true;
-                        break;
-                    case "-x":
-                    case "--delete":
-                        DeleteAudio = true;
-                        break;
-                    case "-j":
-                    case "--join":
-                        JoinWAV = true;
-                        break;
-                    case "-z":
-                    case "--convert-to-bitrate":
-                        ConvertAudioBitrate = true;
-                        switch (opt)
-                        {
-                            case null: // default
-                                ConversionToBitrate = BR1644;
-                                break;
-                            default:
-                                ConversionToBitrate = opt;
-                                break;
-                        }
-                        break;
-                    // compressed audio flags
-                    case "--mp3":
-                        switch (opt)
-                        {
-                            case null: // default
-                            case "all":
-                                SetFormatBitrate(MP3, ALLBITRATES);
-                                break;
-                            default:
-                                SetFormatBitrate(MP3, opt);
-                                break;
-                        }
-                        break;
-                    case "--mp3-quality":
-                        SetQValue(MP3, opt);
-                        break;
-                    case "--aac":
-                    case "--m4a":
-                        switch (opt)
-                        {
-                            case null: // default
-                            case "all":
-                                SetFormatBitrate(M4A, ALLBITRATES);
-                                break;
-                            default:
-                                SetFormatBitrate(M4A, opt);
-                                break;
-                        }
-                        break;
-                    case "--aac-quality":
-                    case "--m4a-quality":
-                        SetQValue(M4A, opt);
-                        break;
-                    case "--ogg":
-                        switch (opt)
-                        {
-                            case null: // default
-                            case "all":
-                                SetFormatBitrate(OGG, ALLBITRATES);
-                                break;
-                            default:
-                                SetFormatBitrate(OGG, opt);
-                                break;
-                        }
-                        break;
-                    case "--ogg-quality":
-                        SetQValue(OGG, opt);
-                        break;
-                    case "--opus":
-                        switch (opt)
-                        {
-                            case null: // default
-                            case "all":
-                                SetFormatBitrate(OPUS, ALLBITRATES);
-                                break;
-                            default:
-                                SetFormatBitrate(OPUS, opt);
-                                break;
-                        }
-                        break;
-                    case "--opus-quality":
-                        SetQValue(OPUS, opt);
-                        break;
-                    case "--alac":
-                        switch (opt)
-                        {
-                            case null: // default
-                            case "all":
-                                SetFormatBitrate(ALAC, ALLBITRATES);
-                                break;
-                            default:
-                                SetFormatBitrate(ALAC, opt);
-                                break;
-                        }
-                        break;
-                    case "--alac-quality":
-                        // placeholder
-                        break;
-                    case "--flac":
-                        switch (opt)
-                        {
-                            case null: // default
-                            case "all":
-                                SetFormatBitrate(FLAC, ALLBITRATES);
-                                SetFormatBitrate(FLAC, RAW);
-                                break;
-                            case "raw":
-                                SetFormatBitrate(FLAC, RAW);
-                                break;
-                            default:
-                                SetFormatBitrate(FLAC, opt);
-                                break;
-                        }
-                        break;
-                    case "--flac-quality":
-                        SetQValue(FLAC, opt);
-                        break;
-                    case "--wav":
-                        switch (opt)
-                        {
-                            case null: // default
-                            case "all":
-                                SetFormatBitrate(WAV, ALLBITRATES);
-                                SetFormatBitrate(WAV, RAW);
-                                break;
-                            case "raw":
-                                SetFormatBitrate(WAV, RAW);
-                                break;
-                            default:
-                                SetFormatBitrate(WAV, opt);
-                                break;
-                        }
-                        break;
-                    // checksum and playlist flags
-                    case "--md5":
-                        CreateMD5 = true;
-                        break;
-                    case "--ffp":
-                        CreateFFP = true;
-                        break;
-                    case "--shn":
-                        CreateSHN = true;
-                        break;
-                    case "-a":
-                    case "--all-reports":
-                        CreateMD5 = true;
-                        CreateFFP = true;
-                        CreateSHN = true;
-                        break;
-                    case "-u":
-                    case "--m3u":
-                        CreateM3U = true;
-                        break;
-                    // other flags
-                    case "-i":
-                    case "--use-infotext":
-                        // extract metadata from info.txt file 
-                        UseInfotext = true;
-                        break;
-                    case "-e":
-                    case "--use-cuesheet":
-                        UseCuesheet = true;
-                        break;
-                    case "-r":
-                    case "--create-cuesheet":
-                        CreateCuesheet = true;
-                        break;
-                    case "-t":
-                    case "--tag":
-                        CreateTags = true;
-                        break;
-                    case "-l":
-                    case "--lower-case":
-                        UseLowerCase = true;
-                        break;
-                    case "-s":
-                    case "--title-case":
-                        UseTitleCase = true;
-                        break;
-                    case "-o":
-                    case "--overwrite":
-                        Overwrite = true;
-                        break;
-                    // other options
-                    case "--cjc":
-                        // that's my initials.. :-)
-                        // shortcut for -c --m4a=all --flac=all --all -u
-                        CompressAudio  = true;
-                        SetFormatBitrate(M4A, ALLBITRATES);
-                        SetFormatBitrate(FLAC, ALLBITRATES);
-                        SetFormatBitrate(FLAC, RAW);
-                        CreateMD5 = true;
-                        CreateFFP = true;
-                        CreateSHN = true;
-                        CreateM3U = true;
-                        break;
-                    case "-h":
-                    case "--help":
-                        PrintHelp();
-                        Environment.Exit(0);
-                        break;
-                    case "--debug":
-                        Debug = true;
-                        break;
-                    // argument not parsed
-                    default:
-                        Log.WriteLine("Invalid argument: " + s);
-                        Environment.Exit(0);
-                        break;
-                }
-            }
-
-            // check input validity and print compression options to console
-            CheckUserInput();
-
-            // Give user the opportunity to terminate program if input is incorrect
-            Console.Write("Do you wish to proceed (y/N)?");
-            UserInput = Console.ReadLine();
-            Match InputMatch = Regex.Match(UserInput, @"^[yY]");
-            if (InputMatch.Success)
-            {
-                // write start time stamp to log
-                Log.Start();
-
-                // start recursive directory search
-                Log.WriteLine("Root Directory: " + RootDir);
-                WalkDirectoryTree(new DirectoryInfo(RootDir));
-
-                // cleanup - delete directories marked for deletion
-                if (DeleteAudio  && DirsMarkedForDeletion != null)
-                {
-                    foreach (string dirtodelete in DirsMarkedForDeletion)
+                    // Split each substring s into arguments and options, delimited by '='
+                    (arg, opt) = SplitString(s, EQUALS);
+                    switch (arg)
                     {
-                        Log.WriteLine("Deleting directory " + dirtodelete);
-                        DeleteDir(dirtodelete, true);
+                        // primary modes
+                        case "-c":
+                        case "--compress":
+                            CompressAudio = true;
+                            break;
+                        case "-d":
+                        case "--decompress":
+                            DecompressAudio = true;
+                            break;
+                        case "-v":
+                        case "--verify":
+                            VerifyAudio = true;
+                            break;
+                        case "-x":
+                        case "--delete":
+                            DeleteAudio = true;
+                            break;
+                        case "-j":
+                        case "--join":
+                            JoinWAV = true;
+                            break;
+                        case "-z":
+                        case "--convert-to-bitrate":
+                            ConvertAudioBitrate = true;
+                            switch (opt)
+                            {
+                                case null: // no options: set conversion bitrate to 16-44
+                                    ConversionToBitrate = BR1644;
+                                    break;
+                                default: // all other options: set conversion bitrate
+                                    ConversionToBitrate = opt;
+                                    break;
+                            }
+                            break;
+                        // compressed audio flags
+                        case "--mp3":
+                            switch (opt)
+                            {
+                                case null: // no options: all bitrates
+                                case "all":
+                                    SetFormatBitrate(MP3, ALLBITRATES);
+                                    break;
+                                default: // all other options: set bitrate
+                                    SetFormatBitrate(MP3, opt);
+                                    break;
+                            }
+                            break;
+                        case "--mp3-quality":
+                            SetQValue(MP3, opt);
+                            break;
+                        case "--aac":
+                        case "--m4a":
+                            switch (opt)
+                            {
+                                case null: // no options: all bitrates
+                                case "all":
+                                    SetFormatBitrate(M4A, ALLBITRATES);
+                                    break;
+                                default: // all other options: set bitrate
+                                    SetFormatBitrate(M4A, opt);
+                                    break;
+                            }
+                            break;
+                        case "--aac-quality":
+                        case "--m4a-quality":
+                            SetQValue(M4A, opt);
+                            break;
+                        case "--ogg":
+                            switch (opt)
+                            {
+                                case null: // no options: all bitrates
+                                case "all":
+                                    SetFormatBitrate(OGG, ALLBITRATES);
+                                    break;
+                                default: // all other options: set bitrate
+                                    SetFormatBitrate(OGG, opt);
+                                    break;
+                            }
+                            break;
+                        case "--ogg-quality":
+                            SetQValue(OGG, opt);
+                            break;
+                        case "--opus":
+                            switch (opt)
+                            {
+                                case null: // no options: all bitrates
+                                case "all":
+                                    SetFormatBitrate(OPUS, ALLBITRATES);
+                                    break;
+                                default: // all other options: set bitrate
+                                    SetFormatBitrate(OPUS, opt);
+                                    break;
+                            }
+                            break;
+                        case "--opus-quality":
+                            SetQValue(OPUS, opt);
+                            break;
+                        case "--alac":
+                            switch (opt)
+                            {
+                                case null: // no options: all bitrates
+                                case "all":
+                                    SetFormatBitrate(ALAC, ALLBITRATES);
+                                    break;
+                                default: // all other options: set bitrate
+                                    SetFormatBitrate(ALAC, opt);
+                                    break;
+                            }
+                            break;
+                        case "--alac-quality":
+                            // placeholder
+                            break;
+                        case "--flac":
+                            switch (opt)
+                            {
+                                case null: // no options: all bitrates + raw
+                                case "all":
+                                    SetFormatBitrate(FLAC, ALLBITRATES);
+                                    SetFormatBitrate(FLAC, RAW);
+                                    break;
+                                case "raw":
+                                    SetFormatBitrate(FLAC, RAW);
+                                    break;
+                                default:  // all other options: set bitrate
+                                    SetFormatBitrate(FLAC, opt);
+                                    break;
+                            }
+                            break;
+                        case "--flac-quality":
+                            SetQValue(FLAC, opt);
+                            break;
+                        case "--wav":
+                            switch (opt)
+                            {
+                                case null: // no options: all bitrates + raw
+                                case "all":
+                                    SetFormatBitrate(WAV, ALLBITRATES);
+                                    SetFormatBitrate(WAV, RAW);
+                                    break;
+                                case "raw":
+                                    SetFormatBitrate(WAV, RAW);
+                                    break;
+                                default: // all other options: set bitrate
+                                    SetFormatBitrate(WAV, opt);
+                                    break;
+                            }
+                            break;
+                        // create md5 checksum file
+                        case "--md5":
+                            CreateMD5 = true;
+                            break;
+                        // create FLAC fingerprint file (ffp) file
+                        case "--ffp":
+                            CreateFFP = true;
+                            break;
+                        // create shntool report
+                        case "--shn":
+                            CreateSHN = true;
+                            break;
+                        // create all checksum and shntool reports
+                        case "-a":
+                        case "--all-reports":
+                            CreateMD5 = true;
+                            CreateFFP = true;
+                            CreateSHN = true;
+                            break;
+                        // create m3u playlist
+                        case "-u":
+                        case "--m3u-playlist":
+                            CreateM3U = true;
+                            break;
+                        // extract metadata from info text file 
+                        case "-i":
+                        case "--use-infotext":
+                            UseInfotext = true;
+                            break;
+                        // extract metadata from cuesheet 
+                        case "-e":
+                        case "--use-cuesheet":
+                            UseCuesheet = true;
+                            break;
+                        // create cuesheet 
+                        case "-r":
+                        case "--create-cuesheet":
+                            CreateCuesheet = true;
+                            break;
+                        // create metadata tags
+                        case "-t":
+                        case "--tag":
+                            CreateTags = true;
+                            break;
+                        // convert to lower case
+                        case "-l":
+                        case "--lower-case":
+                            UseLowerCase = true;
+                            break;
+                        // convert to title case
+                        case "-s":
+                        case "--title-case":
+                            UseTitleCase = true;
+                            break;
+                        // overwrite existing files
+                        case "-o":
+                        case "--overwrite":
+                            Overwrite = true;
+                            break;
+                        // other options
+                        case "--cjc":
+                            // that's my initials.. :-)
+                            // shortcut for --compress --m4a=all --flac=all --all-reports --m3u-playlist
+                            CompressAudio = true;
+                            SetFormatBitrate(M4A, ALLBITRATES);
+                            SetFormatBitrate(FLAC, ALLBITRATES);
+                            SetFormatBitrate(FLAC, RAW);
+                            CreateMD5 = true;
+                            CreateFFP = true;
+                            CreateSHN = true;
+                            CreateM3U = true;
+                            break;
+                        case "-h":
+                        case "--help":
+                            PrintHelp();
+                            Environment.Exit(0);
+                            break;
+                        case "--debug":
+                            Debug = true;
+                            break;
+                        // argument not parsed
+                        default:
+                            Log.WriteLine("Invalid argument: " + s);
+                            Environment.Exit(0);
+                            break;
                     }
                 }
 
-                // write end time stamp to log
-                Log.End();
+                // check input validity and print compression options to console
+                CheckUserInput();
+
+                // Give user the opportunity to terminate program if input is incorrect
+                Console.Write("Do you wish to proceed (y/N)?");
+                UserInput = Console.ReadLine();
+                Match InputMatch = Regex.Match(UserInput, @"^[yY]");
+                if (InputMatch.Success)
+                {
+                    // write start time stamp to log
+                    Log.Start();
+
+                    // start recursive directory search
+                    Log.WriteLine("Root Directory: " + RootDir);
+                    WalkDirectoryTree(new DirectoryInfo(RootDir));
+
+                    // cleanup - delete directories marked for deletion
+                    if (DeleteAudio && DirsMarkedForDeletion != null)
+                    {
+                        foreach (string dirtodelete in DirsMarkedForDeletion)
+                        {
+                            Log.WriteLine("Deleting directory " + dirtodelete);
+                            DeleteDir(dirtodelete, true);
+                        }
+                    }
+
+                    // write end time stamp to log
+                    Log.End();
+                }
+                else
+                    Log.WriteLine(">>> Terminated by user input");
             }
             else
-            {
-                Log.WriteLine(">>> Terminated by user input");
-            }
-        } // end Main
-    }
+                // no arguments - print list of commands and exit
+                PrintHelp();
+        }
+    } // end Main
 }
