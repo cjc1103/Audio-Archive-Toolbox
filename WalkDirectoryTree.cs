@@ -18,6 +18,7 @@ namespace AATB
             int
                 index;
             string
+                SubDirName,
                 WAVDirName,
                 WAVDirPath,
                 FLACDirName,
@@ -390,6 +391,7 @@ namespace AATB
                                 WAVFileBackupExists = false;
                             else
                                 WAVFileBackupExists = true;
+                            
                             // match each wav file with corresponding flac file
                             foreach (FileInfo wav in WAVFileList)
                             {
@@ -406,15 +408,19 @@ namespace AATB
                                 if (!FLACFileFound)
                                 {
                                     // set flag to prevent wav directory deletion
-                                    Log.WriteLine("  FLAC Backup file not found for " + wav.Name +
-                                                Environment.NewLine + "    WAV directory will be retained");
+                                    Log.WriteLine("*** FLAC Backup file not found for " + wav.Name);
                                     WAVFileBackupExists = false;
                                 }
                             }
                             if (WAVFileBackupExists)
                             {
-                                Log.WriteLine("  Marking directory for deletion: " + Dir.Name);
+                                // mark tracked audio directory for deletion
+                                // these directories will be deleted at the end of program execution
                                 DirsMarkedForDeletion.Add(Dir.Path);
+                            }
+                            else
+                            {
+                                Log.WriteLine("*** WAV directory will be retained");
                             }
                         }
                         else
@@ -452,18 +458,18 @@ namespace AATB
                     {
                         if (FilesToDelete.Contains(fi.Extension))
                         {
-                            Log.WriteLine("  Deleting file " + fi.Name);
+                            Log.WriteLine("  Deleting file: " + fi.Name);
                             DeleteFile(fi.FullName);
                         }
                     }
                 }
 
-                // mark miscellaneous directories in DirsToDelete list for deletion
+                // mark miscellaneous directories in "DirsToDelete" list for deletion
+                // these directories will be deleted at the end of program execution
                 foreach (string dirtodelete in DirsToDelete)
                 {
                     if (dirtodelete == Dir.Name)
                     {
-                        Log.WriteLine("  Marking directory for deletion: " + Dir.Name);
                         DirsMarkedForDeletion.Add(Dir.Path);
                     }
                 }
@@ -542,7 +548,8 @@ namespace AATB
             foreach (DirectoryInfo dirname in SubDirs)
             {
                 // Recursive call to walk the directory tree for each subdirectory
-                Log.WriteLine("Directory: " + dirname.Name);
+                SubDirName = SplitDirPath(RootDir, dirname.FullName);
+                Log.WriteLine("Directory: " + SubDirName);
                 WalkDirectoryTree(dirname);
             }
 

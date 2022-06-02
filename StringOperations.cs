@@ -131,6 +131,24 @@ namespace AATB
             return Data;
         } // end SearchList
 
+        static string SplitDirPath(string RootDirPath, string CurrentDirPath)
+        {
+            /* Inputs:
+             *   RootDirPath     root directory path
+             *   CurrentDirPath  current directory path (sub directory to root)
+             * Outputs:
+             *   Data            current directory list below root directory
+             */
+            string Data;
+
+            // root dir path will always start at char=0
+            if (CurrentDirPath.Length > RootDirPath.Length)
+                Data = CurrentDirPath.Substring(RootDirPath.Length);
+            else
+                Data = CurrentDirPath;
+            return Data;
+        }
+
         static string CleanDataString(string Data)
         {
             // remove leading spaces

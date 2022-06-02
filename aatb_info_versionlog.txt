@@ -272,14 +272,20 @@ Program history
      Enforced standard naming scheme for parent infotext and cuesheet files, if they are not in the
      correct format, the files are renamed.
 
-5.3  2022-05-19
+5.3  2022-05-18
      Added SplitFileName method, as the SplitFilePath method returned the pathname which was not been used
      Revised GetTrackMetadataFromCuesheet method so Performer entry is optional for each track
      Added CleanDataString method to strip spaces and quotes from data
      Changed GetTrackMetadataFromInfotext and GetTrackMetadataFromCuesheet to only print track artist if
-     it is present (encased in square brackets)
+       it is present (encased in square brackets)
      Changed WalkDirectoryTree to not call GetTrackMetaData method for raw audio
      Changed CompressWAV method to not use tags when compressing raw WAV files to FLAC
 	 Changed all exception code in LogFileOperations to a general exception
+
+5.4  2022-06-02
      Added GetDirMetadataFromDirectoryName method, fixed issue with metadata when Dir.Type = OTHER
      Corrected code to check for flags md5, ffp, shn before creating these reports
+	 Changed getting track metadata to only once for each directory
+	 Changed DirDelete method to always force deletion of subdirectories and files
+	 Changed WalkDirectoryTree to check first for at least one argument, otherwise exit at the bottom
+     Changed WalkDirectoryTree to only print out directory name once when deleting it
