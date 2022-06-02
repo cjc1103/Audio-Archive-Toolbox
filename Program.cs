@@ -423,7 +423,7 @@ namespace AATB
                         foreach (string dirtodelete in DirsMarkedForDeletion)
                         {
                             Log.WriteLine("Deleting directory " + dirtodelete);
-                            DeleteDir(dirtodelete, true);
+                            DeleteDir(dirtodelete);
                         }
                     }
 

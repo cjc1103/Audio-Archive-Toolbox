@@ -26,13 +26,14 @@ namespace AATB
             return false;
         } // end CreateDir
 
-        static bool DeleteDir(string DirPath, bool Force)
+        static bool DeleteDir(string DirPath)
         {
             /* Deletes directory if it exists
              * Inputs:
              *   Directory path
              *   "Force" flag forces recursive deletion of all files and subdirs
              */
+            bool Force = true;
             if (DirPath != null) try
             {
                 Directory.Delete(DirPath, Force);
