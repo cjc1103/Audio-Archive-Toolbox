@@ -23,7 +23,7 @@ namespace AATB
              *    PERFORMER
              *    TITLE
              *    INDEX 01 MM:SS:FF
-             *     Note: MM is minutes, SS is seconds, and FF is frames (seventy five frames to one second)
+             * Note: MM is minutes, SS is seconds, and FF is frames (75 frames = 1 second)
              */
             int
                 TrackNumber,

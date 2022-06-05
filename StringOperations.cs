@@ -141,9 +141,9 @@ namespace AATB
              */
             string Data;
 
-            // root dir path will always start at char=0
+            // root dir path will always start at char=0, add one to remove "\"
             if (CurrentDirPath.Length > RootDirPath.Length)
-                Data = CurrentDirPath.Substring(RootDirPath.Length);
+                Data = CurrentDirPath.Substring(RootDirPath.Length + 1);
             else
                 Data = CurrentDirPath;
             return Data;
