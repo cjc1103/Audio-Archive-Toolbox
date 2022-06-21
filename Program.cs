@@ -146,16 +146,16 @@ namespace AATB
                arg, opt,
                UserInput;
 
+            // get starting directory
+            RootDir = Directory.GetCurrentDirectory();
+
+            // initialize and write header to log
+            LogFilePath = RootDir + BACKSLASH + LOGNAME;
+            Log = new AATB_Log(LogFilePath);
+
             // check arguments exist
             if (argv.Length > 0)
             {
-                // get starting directory
-                RootDir = Directory.GetCurrentDirectory();
-
-                // initialize and write header to log
-                LogFilePath = RootDir + BACKSLASH + LOGNAME;
-                Log = new AATB_Log(LogFilePath);
-
                 // initialize boolean array for selecting format and bitrate
                 InitFormatBitrate();
 
@@ -436,6 +436,7 @@ namespace AATB
             else
                 // no arguments - print list of commands and exit
                 PrintHelp();
-        }
-    } // end Main
+
+        } // end Main
+    }
 }
