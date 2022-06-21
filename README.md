@@ -13,7 +13,7 @@
  * relevant audio files in various formats.
  * 
  * Description
- * AATB has six mutually exclusive primary modes:
+ * AATB has seven mutually exclusive primary modes:
  * (1) Create compressed audio files from WAV format audio files. Current audio compression formats
  *     are MP3, AAC/M4A, OGG, OPUS, ALAC, and FLAC, but others may be added.
  *     Secondary functions include:
@@ -43,14 +43,17 @@
  *     o Existing files may be overwritten using the overwrite option.
  *     Note: Only FLAC files in the <bitrate> and <raw> directories are processed,
  *       other files are ignored
- * (4) Delete source WAV directories ("<bitrate>") and raw WAV audio directory ("Audio")
+ * (4) Join tracked wav files into one contiguous wav file.
+ *     o Tracked wav files must be in a subdirectory named "<bitrate"
+ *     o Joined wav file will be written to the parent directory
+ * (5) Delete source WAV directories ("<bitrate>") and raw WAV audio directory ("Audio")
  *     Note: A FLAC backup copy of each wav file is verified before the wav
  *     file is deleted
- * (5) Create Cuesheet files from WAV audio files in a "<bitrate>" directory
- *     Note: Hydrogen audio has a complete definition of the cuesheet format
- *     This program only uses a subset, enough to read track splits by CD Wave utility
  * (6) Convert bitrate of WAV files into another bitrate format using the sox utility.
  *     e.g. convert wav files in 24-48 format into 16-44 format
+ * (7) Create Cuesheet files from WAV audio files in a "<bitrate>" directory
+ *     Note: Hydrogen audio has a complete definition of the cuesheet format
+ *     This program only uses a subset, enough to read track splits by CD Wave utility
  *
  * Note: default lossy compression parameters have been set to get roughly >=200kbps
  *   Options allow some adjustment of compression parameters
@@ -82,19 +85,25 @@
  *
  * Input directory and file structure format
  *   Commercial recording
- *   <D><artist> - <album>
+ *   <D><dd> <artist> - <album>
  *      <D>16-44 (Note: only valid bitrate, ripped from commercial CDs)
  *      
  *   Live recording [optional stage info]
- *   <D><artist> <date>[.<stage>]
- *   <D><artist>_<date>[.<stage>]
- *   <D><artist><date>[.<stage>]
- *      concert information file <dirname>.info.txt (optional)
- *      cue file for tracking songs <dirname>.info.cue (optional)
- *      <D><bitdepth-samplerate> e.g 16-44, 24-48, etc.
- *        Contains the uncompressed wav audio files with bitrate equal to the dir name
+ *   <D><dd> <artist> <date>[.<stage>]
+ *   <D><dd> <artist>_<date>[.<stage>]
+ *      <dirname>.info.txt (optional concert information file)
+ *      <dirname>.info.cue (optional cue file for burning CDs)
+ *      <D><bitdepth-samplerate>
+ *        Contains the uncompressed wav audio files. The directbory name is
+ *        the bitrate of the audio files, e.g, "16-44", "24-48", etc.
  *      <D>Audio: contains "raw" (unedited) wav audio files
  *
+ *    Limitations: Any prefix number in directory name is ignored, for when concert
+ *	    folder names are prefaced with a sequence number. This means any band with a
+ *		name beginning with a number will not work, the artist name will be missing the 
+ *		number, e.g. "18 South" => "South". The folders can be remed afterwards if desired,
+ *		without affecting the file names, checksums, or playlists.
+ *		
  * Output directory name formats for compressed files, created under the input directory
  *   Commercial recording
  *      <D><artist> - <album>.<bitrate>.<compressiontype>f
@@ -108,7 +117,7 @@
  *      e.g 16-44, 24-48, etc.
  *   <compressiontype>
  *      mp3, m4a, ogg, opus, alac, or flac
- *   f: the letter f is appended to the name to signify a "folder" (directory)
+ *      Note: the letter f is appended to the name to signify a "folder" (directory)
  *   
  * Info file format
  *   (info header format #1 - no labels):
@@ -124,7 +133,7 @@
  *   Location
  *   Date
  *   
- *   (alternate header format - labels as follows):
+ *   (alternate info header format, using labels as follows):
  *   Artist: <Artist name>
  *   Event: <Event name>
  *   Venue: <Venue name>
@@ -132,7 +141,7 @@
  *   Location: <Location>
  *   Date: <yyyy-mm-dd>
  *
- *   Artist lineup info
+ *   Artist member lineup info
  *   
  *   Recording technical data and credits
  *   
@@ -178,11 +187,14 @@
  *       -a|--all           combines --md5 --ffp --shn options
  *   -d|--decompress        decompress lossless files to wav format
  *      --flac=<bitrate>|raw|all Freeware Lossless Audio Compresson
+ *   -j|--join				joins tracked wav format files into one contiguous wav file
+ *		--wav=<bitrate>		specifies bitrate of wav files to be joined
  *   -x|--delete            delete redundant files after compression is complete
  *      --wav=<bitrate>|raw|all  Delete all input wav directories for the specified bitrate
- *   -r|--create-cuesheet   create cuesheet from wav files
  *   -z|--convert-to-bitrate   convert wav files to bitrate
  *      --wav=<bitrate>     convert wav files from bitrate
+ *   -r|--create-cuesheet   create cuesheet from wav files
+ *
  * compression and verification arguments
  *   --mp3=<bitrate>        compress wav to mp3 format (.mp3)
  *   --mp3-quality=<value>  mp3 compression parameter
@@ -219,7 +231,7 @@
  *   flac            Freeware Lossless Audic Codec
  *   fdkaac          Frauhoefer AAC encoder
  *   id3             Tagging program for mp3 files
- *   lame            LAME Ain't an MP3 Encoder MP3 encoder (.mp3)
+ *   lame            "LAME Ain't an MP3 Encoder" Freeware MP3 encoder (.mp3)
  *   md5sums         Creates/verifies md5 checksums (this program can output md5 in unix format)
  *   MediaInfo       Multipurpose utility to get metadata for audio files, CLI version only
  *   metaflac        Multipurpose metadata editing utility for flac files

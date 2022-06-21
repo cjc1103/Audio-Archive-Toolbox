@@ -11,15 +11,15 @@ namespace AATB
             *  Inputs: Flags and arguments are set from the command line
             *  Outputs: Log messages
             */
-            int i, j, BitrateSet;
 
-            // check for conflicts and errors in command line parameters
+            // sanity check for conflicts and errors in command line parameters
+            // if any of these conditions is true, the program is terminated immediately  
             // check mutually exclusive flags, only one should be set
             if (Convert.ToInt32(CompressAudio )
               + Convert.ToInt32(VerifyAudio )
               + Convert.ToInt32(DecompressAudio)
-              + Convert.ToInt32(DeleteAudio )
               + Convert.ToInt32(JoinWAV)
+              + Convert.ToInt32(DeleteAudio)
               + Convert.ToInt32(ConvertAudioBitrate)
               + Convert.ToInt32(CreateCuesheet) != 1)
             {
@@ -29,7 +29,7 @@ namespace AATB
             }
             if (CreateCuesheet && UseCuesheet)
             {
-                Log.WriteLine("Error: Conflicting Cue options\n"
+                Log.WriteLine("Error: Conflicting cuesheet options\n"
                    + "Choose create cuesheet --create-cuesheet, or use cuesheet metadata --compress --use-cuesheet");
                 Environment.Exit(0);
             }
@@ -40,7 +40,7 @@ namespace AATB
                 Environment.Exit(0);
             }
 
-            // Primary modes
+            // primary modes
             if (CompressAudio )
             {
                 Log.WriteLine("Compress WAV audio files");
@@ -136,6 +136,12 @@ namespace AATB
                 PrintCompressionOptions();
             }
 
+            if (JoinWAV)
+            {
+                Log.WriteLine("Join tracked WAV audio files");
+                PrintCompressionOptions();
+            }
+
             if (DeleteAudio )
             {
                 Log.WriteLine("Delete redundant audio files");
@@ -147,12 +153,6 @@ namespace AATB
                 PrintCompressionOptions();
             }
 
-            if (JoinWAV)
-            {
-                Log.WriteLine("Join tracked WAV audio files");
-                PrintCompressionOptions();
-            }
-
             if (ConvertAudioBitrate)
             {
                 // Conversion of WAV files to another bitrate
@@ -161,33 +161,30 @@ namespace AATB
                 //     Multiple WAV bitrates are undefined
                 // (2) -z|--convert-to-bitrate=<ConversionToBitrate>
                 //     Multiple WAV bitrates are undefined, ignore RAW flags
-                ConversionFromBitrate = null;
-                BitrateSet = 0;
-                i = Array.IndexOf(AudioFormats, WAV);
-                for (j = 0; j <= AudioBitrates.Length - 2; j++)
-                    if (AudioFormatBitrate[i, j])
-                    {
-                        ConversionFromBitrate = AudioBitrates[j];
-                        BitrateSet++;
-                    }
-                if (BitrateSet != 1)
+
+                ConversionFromBitrate = FirstBitrateSet(WAV);
+                if (!CheckFormatBitrate(WAV, ConversionFromBitrate))
+                {
+                    Log.WriteLine("Input error: Conversion from bitrate not valid. Use --wav=<bitrate>");
+                    Environment.Exit(0);
+                }
+                if (!CheckFormatBitrate(WAV, ConversionToBitrate))
+                {
+                    Log.WriteLine("Input error: Conversion to bitrate not valid. Use -z|--convert-to-bitrate=<bitrate>");
+                    Environment.Exit(0);
+                }
+                if (!CheckUniqueBitrate(WAV))
                 {
                     Log.WriteLine("Input error: Multiple wav conversion bitrates and/or raw format selected");
                     Environment.Exit(0);
                 }
-                if (ConversionFromBitrate == null)
-                {
-                    Log.WriteLine("Input error: Conversion from bitrate not set. Use --wav=<bitrate>");
-                    Environment.Exit(0);
-                }
-                else if (ConversionFromBitrate == ConversionToBitrate)
+                if (ConversionFromBitrate == ConversionToBitrate)
                 { 
                     Log.WriteLine("Input error: Conversion from and to bitrate arguments must be different");
                     Environment.Exit(0);
                 }
-                else
-                    Log.WriteLine("Convert WAV audio files from "
-                        + ConversionFromBitrate + " to " + ConversionToBitrate);
+                Log.WriteLine("Convert WAV audio files from "
+                             + ConversionFromBitrate + " to " + ConversionToBitrate);
             }
 
             if (CreateCuesheet)
@@ -201,7 +198,7 @@ namespace AATB
                 }
             }
 
-            // Secondary options
+            // secondary options and other input checking
             if ((CompressAudio  || VerifyAudio  || CreateCuesheet) && UseInfotext)
                 Log.WriteLine("Use metadata from information file (info.txt)");
 
@@ -224,6 +221,7 @@ namespace AATB
 
             // debug mode - print out AudioFormatBitrate array
             if (Debug) PrintFormatBitrate();
+
         } // end CheckUserInput
 
         static void PrintCompressionOptions()

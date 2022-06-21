@@ -52,8 +52,10 @@ namespace AATB
                 CompFilePath = CompDirPath + BACKSLASH + CompFileName;
                 // convert FileName to FileInfo type and build FLACFileList
                 CompFileList[TrackNumber - 1] = new FileInfo(CompFilePath);
+                // get compression quality value
                 CompTypeIndex = Array.IndexOf(AudioFormats, CompType);
                 QualityValue = CompressedAudioQuality[CompTypeIndex][ACTIVE];
+                // initialize external program parameters
                 ExternalProgram = ExternalArguments = null;
 
                 switch (CompType)

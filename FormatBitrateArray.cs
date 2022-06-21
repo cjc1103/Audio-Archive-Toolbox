@@ -172,7 +172,25 @@ namespace AATB
                 return true;
             else
                 return false;
-        } //end CheckUniqueBitrate
+        } // end CheckUniqueBitrate
+
+        static string FirstBitrateSet(string Format)
+        {
+            /* Returns the first bitrate set for the input format
+             * Inputs:  Format - Audio format in AudioFormats array
+             * Note:    ignores RAW flag (array length - 2)
+             * Returns: first bitrate found as string, otherwise null
+             */
+            int i, j;
+
+            i = Array.IndexOf(AudioFormats, Format);
+            for (j = 0; j <= AudioBitrates.Length - 2; j++)
+            {
+                if (AudioFormatBitrate[i, j])
+                    return AudioBitrates[j];
+            }
+            return null;
+        } // end FirstBitrateSet
 
         static void PrintFormatBitrate()
         {

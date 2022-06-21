@@ -282,7 +282,7 @@ Program history
      Changed CompressWAV method to not use tags when compressing raw WAV files to FLAC
 	 Changed all exception code in LogFileOperations to a general exception
 
-5.4  2022-06-02
+5.4  2022-06-20
      Added GetDirMetadataFromDirectoryName method, fixed issue with metadata when Dir.Type = OTHER
      Corrected code to check for flags md5, ffp, shn before creating these reports
 	 Changed getting track metadata to only once for each directory

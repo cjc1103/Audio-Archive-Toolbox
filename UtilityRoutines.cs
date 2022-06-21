@@ -38,7 +38,7 @@ namespace AATB
             + "[-j|--join]\n"
             + "  --wav=<bitrate>\n"
             + "[-z|--convert-to-bitrate]=<bitrate>(16-44)\n"
-            + "  --wav=<bitrate>\n"
+            + "  --wav=<convert from bitrate>\n"
             + "[-r|--create-cuesheet]\n"
             + "  [-i|--use-infotext]\n"
             + "  --wav[=<bitrate>|all](all)\n"

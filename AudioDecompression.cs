@@ -7,13 +7,16 @@ namespace AATB
     {
         static FileInfo[] DecompressToWAV(string CompType, string WAVDirPath, FileInfo[] CompFileList)
         {
-            /* Decompresses all FLAC files in input file list to the original WAV format
+            /* Decompresses all lossless audio files in input file list to the original WAV format
              * Inputs:
              *   CompType     String representing what audio compression codec is to be used
              *   Dir          Directory as AATB_DirInfo class instance
              *   WAVDirPath   Output directory
              *   CompFileList List of all FLAC files to be converted
              * Calls external programs, defined in code
+             *   Note: FLAC is currently the only compression method supported to reduce complexity
+             *   Other lossless compression methods like ALAC and APE could be supported with some
+             *   code changes
              * Outputs:
              *   WAV audio files are written to the output directory
              * Returns:
@@ -50,12 +53,21 @@ namespace AATB
                 WAVFilePath = WAVDirPath + BACKSLASH + WAVFileName;
                 // convert WAVFileName to FileInfo type and build WAVFileList
                 WAVFileList[TrackNumber - 1] = new FileInfo(WAVFilePath);
+                // initialize external program parameters
+                ExternalProgram = ExternalArguments = null;
 
-                ExternalProgram = "flac.exe";
-                ExternalArguments = "-d"
-                                    + " --force"
-                                    + SPACE + DBLQ + CompFilePath + DBLQ
-                                    + " --output-name " + DBLQ + WAVFilePath + DBLQ;
+                switch (CompType)
+                {
+                    case FLAC:
+                    {
+                        ExternalProgram = "flac.exe";
+                        ExternalArguments = "-d"
+                                            + " --force"
+                                            + SPACE + DBLQ + CompFilePath + DBLQ
+                                            + " --output-name " + DBLQ + WAVFilePath + DBLQ;
+                        break;
+                    }
+                }
 
                 // run external program
                 ExternalOutput = RunProcess(ExternalProgram, ExternalArguments);

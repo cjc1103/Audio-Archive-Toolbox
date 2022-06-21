@@ -171,21 +171,21 @@ namespace AATB
                         case "--compress":
                             CompressAudio = true;
                             break;
-                        case "-d":
-                        case "--decompress":
-                            DecompressAudio = true;
-                            break;
                         case "-v":
                         case "--verify":
                             VerifyAudio = true;
                             break;
-                        case "-x":
-                        case "--delete":
-                            DeleteAudio = true;
+                        case "-d":
+                        case "--decompress":
+                            DecompressAudio = true;
                             break;
                         case "-j":
                         case "--join":
                             JoinWAV = true;
+                            break;
+                        case "-x":
+                        case "--delete":
+                            DeleteAudio = true;
                             break;
                         case "-z":
                         case "--convert-to-bitrate":
@@ -200,6 +200,11 @@ namespace AATB
                                     break;
                             }
                             break;
+                        case "-r":
+                        case "--create-cuesheet":
+                            CreateCuesheet = true;
+                            break;
+                        // other functions
                         // compressed audio flags
                         case "--mp3":
                             switch (opt)
@@ -346,11 +351,6 @@ namespace AATB
                         case "-e":
                         case "--use-cuesheet":
                             UseCuesheet = true;
-                            break;
-                        // create cuesheet 
-                        case "-r":
-                        case "--create-cuesheet":
-                            CreateCuesheet = true;
                             break;
                         // create metadata tags
                         case "-t":
