@@ -174,8 +174,8 @@ namespace AATB
                 if (Dir.ParentInfotextPath != TargetInfotextFilePath)
                 {
                     Log.WriteLine("  Renaming info.txt file to: " + TargetInfotextFilePath);
-                    MoveFile(Dir.ParentInfotextPath, TargetInfotextFilePath);
-                    Dir.ParentInfotextPath = TargetInfotextFilePath;
+                    if (MoveFile(Dir.ParentInfotextPath, TargetInfotextFilePath))
+                        Dir.ParentInfotextPath = TargetInfotextFilePath;
                 }
             }
             else if (UseCuesheet
@@ -187,8 +187,8 @@ namespace AATB
                 if (Dir.ParentCuesheetPath != TargetCuesheetFilePath)
                 {
                     Log.WriteLine("  Renaming cuesheet file to: " + TargetCuesheetFilePath);
-                    MoveFile(Dir.ParentCuesheetPath, TargetCuesheetFilePath);
-                    Dir.ParentCuesheetPath = TargetCuesheetFilePath;
+                    if (MoveFile(Dir.ParentCuesheetPath, TargetCuesheetFilePath))
+                        Dir.ParentCuesheetPath = TargetCuesheetFilePath;
                 }
             }
 

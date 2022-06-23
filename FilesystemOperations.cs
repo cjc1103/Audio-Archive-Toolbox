@@ -86,78 +86,79 @@ namespace AATB
             }
         } // end DeleteFile
 
-        static void MoveFile(string OrigFilePath, string DestFilePath)
+        static Boolean MoveFile(string SourceFilePath, string TargetFilePath)
         {
             /* Moves a file to a new location
              * Inputs:
              *   File path
              * Outputs:
-             *   File is moved to the destination file path, original file is deleted
-             * Note: File.Move method requires deleting existing file to overwrite
+             *   File is moved to the destination file path
+             * Note: File.Move method overload has boolean flag to overwrite
+             *       Uses global flag "Overwrite"
              */
-            if (File.Exists(OrigFilePath))
+            if (File.Exists(SourceFilePath))
             {
                 try
                 {
-                    if (File.Exists(DestFilePath) && !Overwrite)
+                    if (File.Exists(TargetFilePath) && !Overwrite)
                     {
-                        Log.WriteLine("*** Destination file exists, use overwrite option to replace");
-                        // Log.WriteLine("    " + DestFilePath);
+                        Log.WriteLine("*** Target file exists, use overwrite option to replace");
                     }
-                    else if (!File.Exists(DestFilePath)
-                            || File.Exists(DestFilePath) && Overwrite)
+                    else
                     {
-                        File.Delete(DestFilePath);
-                        File.Move(OrigFilePath, DestFilePath);
+                        File.Move(SourceFilePath, TargetFilePath, Overwrite);
+                        return(true);
                     }
                 }
                 catch (Exception)
                 {
                     Log.WriteLine("*** Unable to move or rename file");
-                    Log.WriteLine("    From: " + OrigFilePath);
-                    Log.WriteLine("    To:   " + DestFilePath);
                 }
             }
+            else
+                Log.WriteLine("*** Source file error: " + SourceFilePath);
+
+            return (false);
         } // end MoveFile
 
-        static void CopyFile(string OrigFilePath, string DestFilePath)
+        static Boolean CopyFile(string SourceFilePath, string TargetFilePath)
         {
             /* Copies a file to a new location
              * Inputs:
              *   File path
              * Outputs:
              *   File is copied to the destination file path
-             * Note: File.Move method requires deleting existing file to overwrite
+             * Note: File.Copy method overload has boolean flag to overwrite
+             *       Uses global flag "Overwrite"
              */
-            if (File.Exists(OrigFilePath)
-                && (OrigFilePath != DestFilePath))
+            if (File.Exists(SourceFilePath))
             {
                 try
                 {
-                    if (File.Exists(DestFilePath) && !Overwrite)
+                    if (File.Exists(TargetFilePath) && !Overwrite)
                     {
-                        Log.WriteLine("*** Destination file exists, use overwrite option to replace");
-                        // Log.WriteLine("    " + DestFilePath);
+                        Log.WriteLine("*** Target file exists, use overwrite option to replace");
                     }
-                    else if (!File.Exists(DestFilePath)
-                            || File.Exists(DestFilePath) && Overwrite)
+                    else
                     {
-                        File.Delete(DestFilePath);
-                        File.Copy(OrigFilePath, DestFilePath);
+                        File.Copy(SourceFilePath, TargetFilePath, Overwrite);
+                        return (true);
                     }
                 }
                 catch (Exception)
                 {
                     Log.WriteLine("*** Unable to copy file");
-                    Log.WriteLine("    From: " + OrigFilePath);
-                    Log.WriteLine("    To:   " + DestFilePath);
                 }
             }
+            else
+                Log.WriteLine("*** Source file error: " + SourceFilePath);
+
+            return (false);
         } // end CopyFile
 
-        static void CopyTextFile(string SourceFilePath, string DestDirPath)
+        static void CopyTextFile(string SourceFilePath, string TargetDirPath)
         {
-            /* Copy text file from source to destination
+            /* Copy text file from Sourceinal to target file path
              * Inputs:
              *   Source file path
              *   Destination directory path
@@ -166,15 +167,15 @@ namespace AATB
              */
             string
                 SourceFileName,
-                DestFilePath;
+                TargetFilePath;
 
             // build destination file path
             SourceFileName = SplitFileName(SourceFilePath);
-            DestFilePath = DestDirPath + BACKSLASH + SourceFileName;
+            TargetFilePath = TargetDirPath + BACKSLASH + SourceFileName;
             
             // CopyFile method will catch errors
             Log.WriteLine("    Copying information file " + SourceFileName);
-            CopyFile(SourceFilePath, DestFilePath);
+            CopyFile(SourceFilePath, TargetFilePath);
 
         } // end CopyTextFile
 

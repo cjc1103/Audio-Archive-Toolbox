@@ -121,7 +121,7 @@ namespace AATB
                 {
                     // get index of data following SearchName
                     // assume SearchName
-                    Data = DataList[i].Substring(PatternMatch.Index + SearchTerm.Length + 1);
+                    Data = DataList[i].Substring(PatternMatch.Index + SearchTerm.Length);
                     // remove quotation marks, if they exist
                     Data = Regex.Replace(Data, @"""", "");
                     // exit loop, only first match in list will be used
