@@ -287,6 +287,6 @@ Program history
      Corrected code to check for flags md5, ffp, shn before creating these reports
 	 Changed WalkDirectoryTree so track metadata will be derived only once for each directory
 	 Changed DirDelete method to always force deletion of subdirectories and files
-	 Changed WalkDirectoryTree to check first for at least one argument, otherwise exit at the bottom
+	 Changed Program method to check first for at least one argument, otherwise exit at the bottom
      Changed WalkDirectoryTree to only print out directory name once when deleting it
 	 Updated Log operations to print version info before checking user input, including printing help

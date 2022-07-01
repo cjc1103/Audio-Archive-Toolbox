@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 
 namespace AATB
 {
@@ -86,7 +84,7 @@ namespace AATB
             }
         } // end DeleteFile
 
-        static Boolean MoveFile(string SourceFilePath, string TargetFilePath)
+        static bool MoveFile(string SourceFilePath, string TargetFilePath)
         {
             /* Moves a file to a new location
              * Inputs:
@@ -116,12 +114,12 @@ namespace AATB
                 }
             }
             else
-                Log.WriteLine("*** Source file error: " + SourceFilePath);
+                Log.WriteLine("*** Source file not found: " + SourceFilePath);
 
             return (false);
         } // end MoveFile
 
-        static Boolean CopyFile(string SourceFilePath, string TargetFilePath)
+        static bool CopyFile(string SourceFilePath, string TargetFilePath)
         {
             /* Copies a file to a new location
              * Inputs:
@@ -147,11 +145,11 @@ namespace AATB
                 }
                 catch (Exception)
                 {
-                    Log.WriteLine("*** Unable to copy file");
+                    Log.WriteLine("*** Unable to copy file: " + SourceFilePath);
                 }
             }
             else
-                Log.WriteLine("*** Source file error: " + SourceFilePath);
+                Log.WriteLine("*** Source file not found: " + SourceFilePath);
 
             return (false);
         } // end CopyFile

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace AATB
@@ -97,10 +95,6 @@ namespace AATB
                 {
                     DataLine = DataList[i];
                     
-                    // remove leading spaces
-                    DataLine = Regex.Replace(DataLine, @"^\s*", "");
-                    if (Debug) Console.WriteLine("dbg: Line {0:2} Data: {1}", i, DataLine);
-
                     // check for track number prefix
                     // match one or two digits at beginning of line, optional period and space
                     TrackPatternMatch = Regex.Match(DataLine, @"^\d{1,2}\.?\s*");
