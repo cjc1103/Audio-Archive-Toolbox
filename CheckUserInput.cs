@@ -78,7 +78,7 @@ namespace AATB
                     Log.WriteLine("Create ID3 tags");
                 // M3U Playlist
                 if (CreateM3U)
-                    Log.WriteLine("CreateM3U playlist");
+                    Log.WriteLine("Create M3U playlist");
             }
 
             if (VerifyAudio )
