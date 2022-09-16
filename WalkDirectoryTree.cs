@@ -176,12 +176,9 @@ namespace AATB
                                 else
                                     Log.WriteLine("*** FLAC files already exist, use overwrite option to replace");
                             }
-
-                            // other Dir.Type values not processed in this section
                         }
                     }
                 }
-
             } // end Compress Audio section
 
             // = = = = = = = = Verify Audio section = = = = = = = =
@@ -290,9 +287,6 @@ namespace AATB
                         }
                     }
                 }
-
-                // other Dir.Type values not processed in this section
-
             } // end Verify Audio section
 
             // = = = = = = = = Decompress Audio section = = = = = = = =
@@ -490,7 +484,6 @@ namespace AATB
                     JoinedWAVFilename = Dir.ParentBaseName + PERIOD + Dir.Bitrate + PERIOD + WAV;
                     ConcatentateWAVFiles(Dir, WAVFileList, JoinedWAVFilename);
                 }
-
             } // end Join WAV Files section
 
             // = = = = = = = = Convert Audio Bitrate section = = = = = = = = 
@@ -512,32 +505,24 @@ namespace AATB
             } // end Convert Audio Bitrate section
 
             // = = = = = = = = Create Cuesheet section = = = = = = = = 
-            // Create cuesheet from wav track metadata
+            // Create cuesheet from directory and wav track metadata
             // Command: -r|--create-cuesheet --wav=<bitrate>
             if (CreateCuesheet)
             {
                 if (Debug) Console.WriteLine("dbg: Create Cuesheet Section");
 
-                if (Dir.Type == TRACKEDAUDIO
-                    && CheckFormatBitrate(WAV, Dir.Name)
+                if (CheckFormatBitrate(WAV, Dir.Name)
                     && WAVExists)
                 {
                     // populate directory metadata
                     GetDirMetadata(Dir);
 
                     // populate track metadata
-                    // this is obtained from parent infotext file or cuesheet, if specified
-                    // otherwise from track filenames
                     GetTrackMetadata(Dir, WAVFileList);
 
                     // create cuesheet
-                    // cuesheet name is calcuated, if it exists, overwrite to replace.
                     CreateCuesheetFile(Dir);
-
                 }
-
-                // other Dir.Type values not processed in this section
-
             } // end Create Cuesheet section
 
             // = = = = = = = = Recursion section = = = = = = = = 

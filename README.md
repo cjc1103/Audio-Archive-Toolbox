@@ -15,7 +15,7 @@
  * Description
  * AATB has seven mutually exclusive primary modes:
  * (1) Create compressed audio files from WAV format audio files. Current audio compression formats
- *     are MP3, AAC/M4A, OGG, OPUS, ALAC, and FLAC, but others may be added.
+ *     are MP3, AAC (M4A), OGG, OPUS, ALAC, and FLAC, but others may be added.
  *     Secondary functions include:
  *     o Create MD5 checksum for all compressed audio files
  *     o Create FLAC fingerprint (FFP) files for all FLAC files
@@ -44,7 +44,7 @@
  *     Note: Only FLAC files in the <bitrate> and <raw> directories are processed,
  *       other files are ignored
  * (4) Join tracked wav files into one contiguous wav file.
- *     o Tracked wav files must be in a subdirectory named "<bitrate"
+ *     o Tracked wav files must be in a subdirectory named "<bitrate>"
  *     o Joined wav file will be written to the parent directory
  * (5) Delete source WAV directories ("<bitrate>") and raw WAV audio directory ("Audio")
  *     Note: A FLAC backup copy of each wav file is verified before the wav
@@ -172,7 +172,7 @@
  *       INDEX 01 04:32:67
  *   Notes:
  *     Index time is cumulative Min:Sec:Frames (CD Frame = 1/75 sec)
- *     First track INDEX 01 is always 00:00:0
+ *     First track INDEX 01 is always 00:00:00
  *   
  * Command line switches
  * basic operations (mutually exclusive)
@@ -198,10 +198,8 @@
  * compression and verification arguments
  *   --mp3=<bitrate>        compress wav to mp3 format (.mp3)
  *   --mp3-quality=<value>  mp3 compression parameter
- *   --m4a=<bitrate>        compress wav to aac format, mp4 audio container (.m4a)
- *   --aac=<bitrate>        same as above 
- *   --m4a-quality=<value>  aac compression parameter
- *   --aac-quality=<value>  same as above
+ *   --[aac|m4a]=<bitrate>        compress wav to aac format, mp4 audio container (.m4a)
+ *   --[aac-quality|m4a-quality]=<value>  aac compression parameter
  *   --ogg=<bitrate>        compress wav to vorbis format, ogg container (.ogg)
  *   --ogg-quality=<value>  ogg compression parameter
  *   --opus=<bitrate>       compress wav to opus format (.opus)
@@ -227,7 +225,7 @@
  * This program requires .NET 6.0 runtime or later, and is compiled as a x64 Windows binary
  *
  * External Windows programs called from this script (must be in path). The installation script will
- * create a directory "c:\Program Files (x86)\Audio Tools" to install these programs.
+ * create a directory "c:\Program Files\Audio Tools" to install these programs.
  *   flac            Freeware Lossless Audic Codec
  *   fdkaac          Frauhoefer AAC encoder
  *   id3             Tagging program for mp3 files
@@ -235,8 +233,8 @@
  *   md5sums         Creates/verifies md5 checksums (this program can output md5 in unix format)
  *   MediaInfo       Multipurpose utility to get metadata for audio files, CLI version only
  *   metaflac        Multipurpose metadata editing utility for flac files
- *   NeroEncAac      Nero AAC encoder (not developed any longer, but still useful)
- *   NeroTagAac      Tagging program for aac encoded audio files
+ *   NeroEncAac      Nero AAC encoder (not developed any longer)
+ *   NeroTagAac      Tagging program for AAC encoded audio files
  *   oggenc2         Ogg Vorbis audio encoder (.ogg)
  *   opusenc         Opus audio encoder (.opus)
  *   qaac64          Freeware implementation of Apple's Advanced Audio Codec, x64 version  

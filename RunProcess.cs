@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Diagnostics;
 
 namespace AATB
@@ -18,7 +19,8 @@ namespace AATB
              */
             Process p;
             string
-                ExternalOutput = null;
+                ExternalOutput = null,
+                ExternalError = null;
 
             if (ExternalProgram != null)
             {
@@ -31,7 +33,7 @@ namespace AATB
                         CreateNoWindow = true,
                         RedirectStandardInput = true,
                         RedirectStandardOutput = true,
-                        RedirectStandardError = false,
+                        RedirectStandardError = true,
                         Arguments = ExternalArguments
                     }
                 };
@@ -39,6 +41,7 @@ namespace AATB
                 {
                     p.Start();
                     ExternalOutput = p.StandardOutput.ReadToEnd();
+                    ExternalError = p.StandardError.ReadToEnd();
                     p.WaitForExit();
                 }
                 catch (Exception e)
@@ -53,7 +56,41 @@ namespace AATB
             else
                 Log.WriteLine("*** External program not specified");
 
+            PrintOutputStream(ExternalOutput, ExternalError);
             return ExternalOutput;
         } // end RunProcess
+
+        static void PrintOutputStream(string ExternalOutput, string ExternalError)
+        {
+            // prints output stream if the word "error" is detected
+            Match ErrorMatch;
+            string[] DataList;
+            bool ErrorFound = false;
+
+            // print output stream for debugging only
+            if (Debug)
+                Log.WriteLine(ExternalOutput);
+            // split error stream up into an array
+            DataList = ExternalError.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            // parse error stream
+            foreach (string li in DataList)
+            {
+                if (Verbose)
+                    Log.WriteLine(li);
+                else
+                {
+                    // print line if it contains the word "error" (case insensitive)
+                    ErrorMatch = Regex.Match(li, "error", RegexOptions.IgnoreCase);
+                    if (ErrorMatch.Success
+                        && li.Length > 0)
+                    {
+                        ErrorFound = true;
+                        Log.Write("\n" + li);
+                    }
+                }
+            }
+            // log line feed if any error found
+            if (ErrorFound) Log.WriteLine();
+        } // end PrintOutputStream
     }
 }

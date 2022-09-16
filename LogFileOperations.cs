@@ -15,9 +15,8 @@ namespace AATB
             LogFileName = FileName;
             // writes header to console and log
             string LogEntry =
-                "Audio Archival Toolbox " +
-                typeof(AATB_Main).Assembly.GetName().Version +
-                " Riverbend Music Productions";
+                "Audio Archive Toolbox " +
+                typeof(AATB_Main).Assembly.GetName().Version;
             WriteLine(LogEntry);
         } // end constructor AATB_Log
 

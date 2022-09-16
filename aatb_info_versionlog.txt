@@ -101,7 +101,7 @@ Program history
        to tag compressed files. This is restricted to <bitrate> audio file directories, the 
        info.txt file must be located in the parent directory.
      Added method to join tracked wav files into a combined wav file, using the shntool app
-     Removed nero aac compression methods, as it is not supported by developer any longer
+     Removed nero aac compression codec, as it is not supported by developer any longer
      Rewrote compressed audio file quality parameter handling, CheckQBounds, PrintQBounds
 
 3.3  2020-01-08
@@ -131,7 +131,8 @@ Program history
      Moved some metadata initialation from the AATB_Dir constructor to the GetDirMetaData method
      Added TrackDurationList string list to AATB_Dir class
      Removed GetSongTitle method, as its function was incorporated into GetTrackMetaData
-     Removed fdkaac aac compression function, as it is not as compatible as qaac
+     Removed fdkaac and faac AAC codecs, and qaac is the only supported AAC codec
+     Removed --aacCompType flag to select differnt aac codecs
      Changed all ConvertWAVToXXX methods to get song duration data from the Dir.TrackDurationList list
      Added boolCreateCuesheet method to create a CD cuesheet for each compressed audio directory
      boolCreateM3UPlaylist now rounds TrackDuration to nearest integer instead of truncating
@@ -290,3 +291,8 @@ Program history
 	 Changed Program method to check first for at least one argument, otherwise exit at the bottom
      Changed WalkDirectoryTree to only print out directory name once when deleting it
 	 Updated Log operations to print version info before checking user input, including printing help
+
+5.5  2022-09-12
+     Added method to parse Standard Error stream output from RunProcess, and print out lines with "error"
+	 Removed redundant check for TRACKEDAUDIO dir type from create cuesheet section of Program method
+	 Removed unused constants from Program method

@@ -45,19 +45,19 @@ namespace AATB
             BR2448 = "24-48",
             BR2488 = "24-88",
             BR2496 = "24-96",
-            RAW = "Audio",  // name of subdirectory containing raw wav audio files
+            RAW = "Audio",  // subdirectory containing raw wav audio files
             ALLFORMATS = "allformats",
             ALLBITRATES = "allbitrates",
             ANYFORMAT = "anyformat",
             ANYBITRATE = "anybitrate",
-            WAV = "wav", ALLWAV = "*.wav",
-            MP3 = "mp3", ALLMP3 = "*.mp3", MP3F = "mp3f",
-            M4A = "m4a", ALLM4A = "*.m4a", M4AF = "m4af",
-            OGG = "ogg", ALLOGG = "*.ogg", OGGF = "oggf",
-            OPUS = "opus", ALLOPUS = "*.opus", OPUSF = "opusf",
-            ALAC = "alac", ALLALAC = "*.alac", ALACF = "alacf",
+            WAV = "wav", ALLWAV = "*.wav", // subdir name for wav files is bitrate
+            MP3 = "mp3", MP3F = "mp3f",
+            M4A = "m4a", M4AF = "m4af", // M4A file format is MPEG-4 Audio wrapper for AAC
+            OGG = "ogg", OGGF = "oggf",
+            OPUS = "opus", OPUSF = "opusf",
+            ALAC = "alac", ALACF = "alacf",
             FLAC = "flac", ALLFLAC = "*.flac", FLACF = "flacf",
-            M3U = "m3u", ALLM3U = "*.m3u",
+            M3U = "m3u",
             MD5 = "md5", ALLMD5 = "*.md5",
             FFP = "ffp", ALLFFP = "*.ffp",
             SHN = "shntool.txt", ALLSHN = "*.shntool.txt",
@@ -95,6 +95,7 @@ namespace AATB
             UseTitleCase = false,
             WriteLogMessage = true,
             NoLogMessage = false,
+            Verbose = false,
             Debug = false;
         static string
             LogFilePath = null,
@@ -236,7 +237,6 @@ namespace AATB
                             }
                             break;
                         case "--aac-quality":
-                        case "--m4a-quality":
                             SetQValue(M4A, opt);
                             break;
                         case "--ogg":
@@ -376,7 +376,7 @@ namespace AATB
                         // other options
                         case "--cjc":
                             // that's my initials.. :-)
-                            // shortcut for --compress --m4a=all --flac=all --all-reports --m3u-playlist
+                            // shortcut for --compress --aac=all --flac=all --all-reports --m3u-playlist
                             CompressAudio = true;
                             SetFormatBitrate(M4A, ALLBITRATES);
                             SetFormatBitrate(FLAC, ALLBITRATES);
@@ -390,6 +390,9 @@ namespace AATB
                         case "--help":
                             PrintHelp();
                             Environment.Exit(0);
+                            break;
+                        case "--verbose":
+                            Verbose = true;
                             break;
                         case "--debug":
                             Debug = true;
