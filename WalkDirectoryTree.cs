@@ -525,12 +525,12 @@ namespace AATB
                 }
             } // end Create Cuesheet section
 
-            // = = = = = = = = Recursion section = = = = = = = = 
-            // Find all the subdirectories under this directory
+            // = = = = = = = = Recursion = = = = = = = = 
+            // Find all subdirectories
             SubDirs = CurrentDir.GetDirectories();
             foreach (DirectoryInfo dirname in SubDirs)
             {
-                // Recursive call to walk the directory tree for each subdirectory
+                // Walk the directory tree for each subdirectory
                 SubDirName = SplitDirPath(RootDir, dirname.FullName);
                 Log.WriteLine("Directory: " + SubDirName);
                 WalkDirectoryTree(dirname);
