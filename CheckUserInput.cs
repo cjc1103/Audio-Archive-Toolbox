@@ -156,11 +156,9 @@ namespace AATB
             {
                 // Conversion of WAV files to another bitrate
                 // (1) --wav=<ConversionFromBitrate>
-                //     Only the first WAV bitrate set in AudioFormatBitrate list is used
-                //     Multiple WAV bitrates are undefined
+                //     Multiple or raw bitrates are not allowed
                 // (2) -z|--convert-to-bitrate=<ConversionToBitrate>
-                //     Multiple WAV bitrates are undefined, ignore RAW flags
-
+                //     Must be different from ConversionFromBitrate>
                 ConversionFromBitrate = FirstBitrateSet(WAV);
                 if (!CheckFormatBitrate(WAV, ConversionFromBitrate))
                 {
