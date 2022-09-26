@@ -188,7 +188,8 @@ namespace AATB
             //     c. SHN (shntool file length and CD sector boundary report) - FLAC files
             // (2) Create/Update ID3 tags (rewrites MD5 checksum files)
             // (3) Create/update M3U Playlists
-            // Command: -v|--verify --compformat=<bitrate>|all
+            // Command: -v|--verify  --<compformat>=<bitrate>|all
+            //          where <compformat> is a valid compression format
             else if (VerifyAudio)
             {
                 if (Debug) Console.WriteLine("dbg: Verify Section");
