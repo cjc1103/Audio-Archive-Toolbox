@@ -232,10 +232,11 @@ namespace AATB
             string AudioCompFormat;
             int i, j;
 
-            // RAW flag is only valid for FLAC and WAV so no need to recheck
+            // Loop through all compressed audio formats
             for (i = 0; i <= AudioFormats.Length - 1; i++)
             {
                 AudioCompFormat = AudioFormats[i];
+                // check for any valid bitrates for each format
                 if (CheckFormatBitrate(AudioCompFormat, ANYBITRATE)
                     || CheckFormatBitrate(AudioCompFormat, RAW))
                 {
@@ -243,11 +244,12 @@ namespace AATB
                     if (CheckFormatBitrate(AudioCompFormat, ALLBITRATES))
                         Log.Write(" (All bitrates)");
                     else
-                        for (j = 0; j <= AudioBitrates.Length - 2; j++)
+                        // print all valid bitrates, RAW is last bitrate in array
+                        for (j = 0; j <= AudioBitrates.Length - 1; j++)
                             if (AudioFormatBitrate[i, j])
                                 Log.Write(" (" + AudioBitrates[j] + ")");
-                    if (CheckFormatBitrate(AudioCompFormat, RAW))
-                        Log.Write(" (" + RAW + ")");
+                    //if (CheckFormatBitrate(AudioCompFormat, RAW))
+                    //    Log.Write(" (" + RAW + ")");
 
                     // print q values in CompressedAudioQuality list for CompressAudio function
                     if (CompressAudio)
