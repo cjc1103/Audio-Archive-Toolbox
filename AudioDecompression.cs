@@ -61,9 +61,9 @@ namespace AATB
                     {
                         ExternalProgram = "flac.exe";
                         ExternalArguments = "-d"
-                                            + " --force"
-                                            + SPACE + DBLQ + CompFilePath + DBLQ
-                                            + " --output-name " + DBLQ + WAVFilePath + DBLQ;
+                                          + " --force"
+                                          + SPACE + DBLQ + CompFilePath + DBLQ
+                                          + " --output-name " + DBLQ + WAVFilePath + DBLQ;
                         break;
                     }
                 }

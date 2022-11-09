@@ -134,23 +134,23 @@ namespace AATB
                         if (Dir.Type == TRACKEDAUDIO)
                         {
                             ExternalArguments = "-" + QualityValue
-                                                + " --force"
-                                                + " --verify"
-                                                + " --tag=TITLE=" + DBLQ + Dir.TitleList[TrackNumber - 1] + DBLQ
-                                                + " --tag=ARTIST=" + DBLQ + Dir.ArtistList[TrackNumber - 1] + DBLQ
-                                                + " --tag=ALBUM=" + DBLQ + Dir.Album + DBLQ
-                                                + " --tag=DATE=" + DBLQ + Dir.ConcertDate + DBLQ
-                                                + " --tag=TRACKNUMBER=" + TrackNumberStr
-                                                + SPACE + DBLQ + WAVFilePath + DBLQ
-                                                + " --output-name " + DBLQ + CompFilePath + DBLQ;
+                                              + " --force"
+                                              + " --verify"
+                                              + " --tag=TITLE=" + DBLQ + Dir.TitleList[TrackNumber - 1] + DBLQ
+                                              + " --tag=ARTIST=" + DBLQ + Dir.ArtistList[TrackNumber - 1] + DBLQ
+                                              + " --tag=ALBUM=" + DBLQ + Dir.Album + DBLQ
+                                              + " --tag=DATE=" + DBLQ + Dir.ConcertDate + DBLQ
+                                              + " --tag=TRACKNUMBER=" + TrackNumberStr
+                                              + SPACE + DBLQ + WAVFilePath + DBLQ
+                                              + " --output-name " + DBLQ + CompFilePath + DBLQ;
                         }
                         else if (Dir.Type == RAWAUDIO)
                         {
                             ExternalArguments = "-" + QualityValue
-                                                + " --force"
-                                                + " --verify"
-                                                + SPACE + DBLQ + WAVFilePath + DBLQ
-                                                + " --output-name " + DBLQ + CompFilePath + DBLQ;
+                                              + " --force"
+                                              + " --verify"
+                                              + SPACE + DBLQ + WAVFilePath + DBLQ
+                                              + " --output-name " + DBLQ + CompFilePath + DBLQ;
                         }
                         break;
                     }

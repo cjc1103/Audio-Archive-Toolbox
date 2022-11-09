@@ -94,6 +94,7 @@ namespace AATB
                 for (i = 5; i < DataList.Length; i++)
                 {
                     DataLine = DataList[i];
+                    if (Debug) Console.WriteLine("dbg: {number:D2} Data: {1}", i, DataLine);
                     
                     // check for track number prefix
                     // match one or two digits at beginning of line, optional period and space
@@ -224,10 +225,10 @@ namespace AATB
                 for (i = 0; i < DataList.Length; i++)
                 {
                     DataLine = DataList[i];
+                    if (Debug) Console.WriteLine("dbg: {number:D2} Data: {1}", i, DataLine);
 
                     // remove leading spaces
                     DataLine = Regex.Replace(DataLine, @"^\s*", "");
-                    if (Debug) Console.WriteLine("dbg: Line {0:2} Data: {1}", i, DataLine);
 
                     // search for next track
                     PatternMatch = Regex.Match(DataLine, @"^TRACK \d{2} AUDIO");
