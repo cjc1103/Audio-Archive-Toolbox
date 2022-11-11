@@ -62,34 +62,37 @@ namespace AATB
 
         static void PrintOutputStream(string ExternalOutput, string ExternalError)
         {
-            // prints output stream if the word "error" is detected
+            /* Prints output and error streams for debugging and error reporting
+             * The ExternalError stream contains verbose output from external processes,
+             * so this is only printed for debugging, or if the word "error" is detected
+             */
             Match ErrorMatch;
             string[] DataList;
             bool ErrorFound = false;
 
-            // print output stream for debugging only
-            if (Debug)
-                Log.WriteLine(ExternalOutput);
-            // split error stream up into an array
-            DataList = ExternalError.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            // print output stream for debugging only (CR/LF at end of ExteralOutput string)
+            if (Debug && ExternalOutput.Length > 0)
+                Log.Write("dbg: " + ExternalOutput);
+
             // parse error stream
+            DataList = ExternalError.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
             foreach (string li in DataList)
             {
-                if (Verbose)
+                // print line for verbose mode
+                if (Verbose && li.Length > 0)
                     Log.WriteLine(li);
                 else
+                // print line only if it contains the word "error" (case insensitive)
                 {
-                    // print line if it contains the word "error" (case insensitive)
                     ErrorMatch = Regex.Match(li, "error", RegexOptions.IgnoreCase);
-                    if (ErrorMatch.Success
-                        && li.Length > 0)
+                    if (ErrorMatch.Success)
                     {
                         ErrorFound = true;
-                        Log.Write("\n" + li);
+                        Log.WriteLine("\n" + li);
                     }
                 }
             }
-            // log line feed if any error found
+            // flush log buffer if any error found
             if (ErrorFound) Log.WriteLine();
         } // end PrintOutputStream
     }

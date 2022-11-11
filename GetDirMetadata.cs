@@ -9,21 +9,20 @@ namespace AATB
         {
             /* populate basic directory information
              * Inputs:
-             *   Dir          Directory as AATB_DirInfo class instance
+             *   Dir class
              * Outputs:
-             *   Dir.BaseName
-             *   Dir.Extension
-             *   Dir.Type
-             *   Dir.AudioCompressionFormat
-             *   Dir.Bitrate
-             *   Dir.ParentInfotextPath
-             *   Dir.ParentCuesheetPath
+             *   Dir class
+             *     Dir.BaseName
+             *     Dir.Extension
+             *     Dir.Type
+             *     Dir.AudioCompressionFormat
+             *     Dir.Bitrate
+             *     Dir.ParentInfotextPath
+             *     Dir.ParentCuesheetPath
              */
             int i;
 
-            if (Debug) Console.WriteLine("dbg: GetDirInformation method");
-
-            // get directory basename and extension
+             // get directory basename and extension
             (Dir.BaseName, Dir.Extension) = SplitString(Dir.Name, PERIOD);
 
             // determine type of directory
@@ -82,16 +81,17 @@ namespace AATB
         {
             /* extract directory metadata
              * Inputs:
-             *   Dir          Directory as AATB_DirInfo class instance
+             *   Dir class
              *   InfotextPath location of info.txt file with recording information
              *   CuesheetPath location of cuesheet file
              * Outputs:
-             *   Dir.RecordingType
-             *   Dir.ParentBaseName
-             *   Dir.AlbumArtist
-             *   Dir.ConcertDate
-             *   Dir.Album
-             *   Dir.Stage
+             *   Dir class
+             *     Dir.RecordingType
+             *     Dir.ParentBaseName
+             *     Dir.AlbumArtist
+             *     Dir.ConcertDate
+             *     Dir.Album
+             *     Dir.Stage
              *   
              * Directory name formats
              *   Live recording: <artist> <date>, <artist>-<date>, <artist>_<date>, <artist><date>
@@ -103,8 +103,6 @@ namespace AATB
                 BaseName,
                 TargetInfotextFilePath,
                 TargetCuesheetFilePath;
-
-            if (Debug) Console.WriteLine("dbg: GetDirMetadata method");
 
             // parent base name will be used to create compressed audio subdirectories
             // remove prefix number if it exists
@@ -237,13 +235,33 @@ namespace AATB
              * Inputs:
              *   Dir class
              *   InfotextPath   location of info.txt file with recording information
+             *   Info header format with four lines:
+             *     Artist
+             *     Venue
+             *     Location
+             *     Concert Date (yyyy-mm-dd)
+             *   Info header format with five lines:
+             *     Artist
+             *     Event
+             *     Stage
+             *     Location
+             *     Concert Date (yyyy-mm-dd)
+             *   Info alternate header using labels
+             *     Artist: <artist>
+             *     Event: <event>
+             *     Venue: <venue>
+             *     Stage: <stage>
+             *     Location: <location>
+             *     Date: <yyyy-mm-dd>
+             *     
              * Outputs:
-             *   Dir.AlbumArtist
-             *   Dir.Event
-             *   Dir.Venue 
-             *   Dir.Stage
-             *   Dir.Location
-             *   Dir.ConcertDate
+             *   Dir class
+             *     Dir.AlbumArtist
+             *     Dir.Event
+             *     Dir.Venue 
+             *     Dir.Stage
+             *     Dir.Location
+             *     Dir.ConcertDate
              */
             string
                 InfotextFileName;
@@ -328,13 +346,22 @@ namespace AATB
              * Inputs:
              *   Dir class
              *   CuesheetPath   location of .cue file with recording information
+             *   Info header format
+             *     PERFORMER <artist>
+             *     TITLE <album>
+             *     EVENT <event>
+             *     VENUE <venue>
+             *     STAGE <stage>
+             *     LOCATION <location>
+             *     DATE <yyyy-mm-dd>
              * Outputs:
-             *   Dir.AlbumArtist
-             *   Dir.Event
-             *   Dir.Venue 
-             *   Dir.Stage
-             *   Dir.Location
-             *   Dir.ConcertDate
+             *   Dir class
+             *     Dir.AlbumArtist
+             *     Dir.Event
+             *     Dir.Venue 
+             *     Dir.Stage
+             *     Dir.Location
+             *     Dir.ConcertDate
              */
             string
                 CuesheetFileName;
@@ -388,10 +415,19 @@ namespace AATB
         static void GetDirMetadataFromDirectoryName(AATB_DirInfo Dir)
         {
             /* Get directory metadata from directory name
-             * TempBaseName was previously split into three parts corresponding to:
-             *   Artist, ConcertDate/Album, Stage
+             * Inputs:
+             *   Dir class
+             *     Dir.BaseNameTemp1
+             *     Dir.BaseNameTemp2
+             *     Dir.BaseNameTemp3
+             *     Dir.RecordingType
+             * Outputs:
+             *   Dir class
+             *     Dir.AlbumArtist
+             *     Dir.Album
+             *     Dir.ConcertDate
              */
-            
+
             Log.WriteLine("  Deriving album metadata from directory name");
             switch (Dir.RecordingType)
             {

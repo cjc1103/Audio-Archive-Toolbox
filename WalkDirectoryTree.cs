@@ -197,16 +197,11 @@ namespace AATB
                 // compressed audio directory
                 if (Dir.Type == COMPRESSEDAUDIO)
                 {
-                    if (Debug) Console.WriteLine("dbg: Dir compression Format: {0}", Dir.AudioCompressionFormat
-                           + "  Dir bitrate: " + Dir.Bitrate);
-
                     // loop through all compressed audio formats in AudioFormats list
                     // ignore last entry in list = WAV
                     for (index=0; index <= AudioFormats.Length - 2; index++)
                     {
                         CompAudioFormat = AudioFormats[index];
-                        if (Debug) Console.WriteLine("dbg: CompAudioFormat: {0}", CompAudioFormat);
-
                         // check format and bitrate (directory name) flag is set
                         // and directory compression format matches
                         if (CheckFormatBitrate(CompAudioFormat, Dir.Bitrate)

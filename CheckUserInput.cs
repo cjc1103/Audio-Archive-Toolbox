@@ -215,9 +215,16 @@ namespace AATB
 
             if (!DeleteAudio  && Overwrite)
                 Log.WriteLine("Overwrite existing files");
+            
+            if (Verbose)
+                Log.WriteLine("Verbose mode");
 
-            // debug mode - print out AudioFormatBitrate array
-            if (Debug) PrintFormatBitrate();
+            if (Debug)
+            {
+                Log.WriteLine("Debug mode");
+                // print out AudioFormatBitrate array
+                PrintFormatBitrate();
+            }
 
         } // end CheckUserInput
 

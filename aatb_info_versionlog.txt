@@ -292,7 +292,11 @@ Program history
      Changed WalkDirectoryTree to only print out directory name once when deleting it
 	 Updated Log operations to print version info before checking user input, including printing help
 
-5.5  2022-09-12
-     Added method to parse Standard Error stream output from RunProcess, and print out lines with "error"
+5.5  2022-11-11
+     Added PrintOutputStream method to
+      (1) log StandardOutput stream in "Debug" mode
+      (2) log StandardError stream in "Verbose" mode
+      (3) log any line in StandardError stream that contains the word "error"
+     Added Verbose flag to enable logging StandardError stream
 	 Removed redundant check for TRACKEDAUDIO dir type from create cuesheet section of Program method
-	 Removed unused constants from Program method
+	 Removed unused constants from Program method, cleaned up comments
