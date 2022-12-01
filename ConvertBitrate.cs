@@ -37,11 +37,11 @@ namespace AATB
                 OutputFileName,
                 OutputFilePath,
                 SongBitrate,
-                ExternalProgram = "sox.exe",
+                ExternalProgram,
                 ExternalArguments,
                 ExternalOutput;
 
-            // build output directory path - subdir of parent directory
+            ExternalProgram = "sox.exe";
             OutputDirPath = Dir.ParentPath + BACKSLASH + ConversionToBitrate;
 			// create output directory or overwrite existing directory
             if ((!Directory.Exists(OutputDirPath) && CreateDir(OutputDirPath))

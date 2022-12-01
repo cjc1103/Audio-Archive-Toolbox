@@ -23,10 +23,12 @@ namespace AATB
                 BitLength,
                 SampleRate,
                 BitRate,
-                ExternalProgram = "sox.exe",
+                ExternalProgram,
                 ExternalArguments,
                 ExternalOutput;
 
+            ExternalProgram = "sox.exe";
+            
             // get bit length
             ExternalArguments = "--info"
                               + " -b"
@@ -34,8 +36,8 @@ namespace AATB
             ExternalOutput = RunProcess(ExternalProgram, ExternalArguments);
             // trim newline character from end
             BitLength = ExternalOutput.TrimEnd();
-
-            // get bitrate
+            
+            // get sample rate
             ExternalArguments = "--info"
                               + " -r"
                               + SPACE + DBLQ + AudioFilePath + DBLQ;
@@ -64,11 +66,12 @@ namespace AATB
              *   Returns audio file duration in seconds
              */
             string
-                ExternalProgram = "Mediainfo.exe",
+                ExternalProgram,
                 ExternalArguments,
                 ExternalOutput,
                 DurationMsec;
 
+            ExternalProgram = "Mediainfo.exe";
             ExternalArguments = "--Inform=Audio;%Duration%"
                               + SPACE + DBLQ + AudioFilePath + DBLQ;
             // run external program
@@ -83,6 +86,7 @@ namespace AATB
             }
             // remove trailing spaces
             DurationMsec = Regex.Replace(ExternalOutput, @"\s*$", "");
+            if (Debug) Console.WriteLine("(dbg) Track Duration: " + DurationMsec);
 
             return DurationMsec;
         } // end GetTrackDuration

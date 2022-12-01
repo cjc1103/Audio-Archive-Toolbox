@@ -20,14 +20,15 @@ namespace AATB
             string
                InputWAVFileNames = String.Empty,
                OutputWAVFilePath,
-               ExternalProgram = "sox.exe",
+               ExternalProgram,
                ExternalArguments,
                ExternalOutput;
 
             Log.WriteLine("  Creating combined wav file: " + OutputFileName);
 
+            ExternalProgram = "sox.exe";
             OutputWAVFilePath = Dir.ParentPath + BACKSLASH + OutputFileName;
-
+            // create file or overwrite existing file
             if (!File.Exists(OutputWAVFilePath)
                 || File.Exists(OutputWAVFilePath) && Overwrite)
             {
@@ -43,7 +44,7 @@ namespace AATB
                                   + DBLQ + OutputWAVFilePath + DBLQ;
                 if (Debug) Console.WriteLine(ExternalArguments);
 
-                // run external program
+                // run external program to concatenate files, discard output
                 ExternalOutput = RunProcess(ExternalProgram, ExternalArguments);
             }
             else

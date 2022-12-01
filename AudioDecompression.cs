@@ -58,14 +58,12 @@ namespace AATB
                 switch (CompType)
                 {
                     case FLAC:
-                    {
                         ExternalProgram = "flac.exe";
                         ExternalArguments = "-d"
                                           + " --force"
                                           + SPACE + DBLQ + CompFilePath + DBLQ
                                           + " --output-name " + DBLQ + WAVFilePath + DBLQ;
                         break;
-                    }
                 }
 
                 // run external program

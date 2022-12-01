@@ -222,7 +222,7 @@
  *   --debug                switch to write debug files to console
  *
  * Dependencies and limitations
- * This program requires .NET 6.0 runtime or later, and is compiled as a x64 Windows binary
+ * This program requires .NET 7.0 runtime or later, and is compiled as a x64 Windows binary
  *
  * External Windows programs called from this script (must be in path). The installation script will
  * create a directory "c:\Program Files\Audio Tools" to install these programs.

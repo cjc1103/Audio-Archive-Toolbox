@@ -28,8 +28,8 @@ namespace AATB
                 WAVFilePath,
                 CompFileName,
                 CompFilePath,
-                ExternalProgram,
-                ExternalArguments,
+                ExternalProgram = null,
+                ExternalArguments = null,
                 ExternalOutput;
             int
                 TrackNumber = 0,
@@ -60,7 +60,6 @@ namespace AATB
                 switch (CompType)
                 {
                     case MP3:
-                    {
                         ExternalProgram = "lame.exe";
                         ExternalArguments = "-V" + QualityValue
                                           + " --add-id3v2"
@@ -72,9 +71,8 @@ namespace AATB
                                           + SPACE + DBLQ + WAVFilePath + DBLQ
                                           + SPACE + DBLQ + CompFilePath + DBLQ;
                         break;
-                    }
+                    
                     case M4A:
-                    {
                         ExternalProgram = "qaac64.exe";
                         ExternalArguments = "--threading"
                                           + " --tvbr " + QualityValue
@@ -86,9 +84,8 @@ namespace AATB
                                           + SPACE + DBLQ + WAVFilePath + DBLQ
                                           + " -o " + DBLQ + CompFilePath + DBLQ;
                             break;
-                    }
+                    
                     case OGG:
-                    {
                         ExternalProgram = "oggenc2.exe";
                         ExternalArguments = "-q " + QualityValue
                                           + " --title=" + DBLQ + Dir.TitleList[TrackNumber - 1] + DBLQ
@@ -99,9 +96,8 @@ namespace AATB
                                           + SPACE + DBLQ + WAVFilePath + DBLQ
                                           + " -o " + DBLQ + CompFilePath + DBLQ;
                         break;
-                    }
+                    
                     case OPUS:
-                    {
                         ExternalProgram = "opusenc.exe";
                         ExternalArguments = "--vbr"
                                           + " --bitrate " + QualityValue
@@ -113,9 +109,8 @@ namespace AATB
                                           + SPACE + DBLQ + WAVFilePath + DBLQ
                                           + SPACE + DBLQ + CompFilePath + DBLQ;
                         break;
-                    }
+                    
                     case ALAC:
-                    {
                         ExternalProgram = "qaac64.exe";
                         ExternalArguments = "--alac"
                                           + " --threading"
@@ -127,12 +122,10 @@ namespace AATB
                                           + SPACE + DBLQ + WAVFilePath + DBLQ
                                           + " -o " + DBLQ + CompFilePath + DBLQ;
                         break;
-                    }
+                    
                     case FLAC:
-                    {
                         ExternalProgram = "flac.exe";
                         if (Dir.Type == TRACKEDAUDIO)
-                        {
                             ExternalArguments = "-" + QualityValue
                                               + " --force"
                                               + " --verify"
@@ -143,17 +136,13 @@ namespace AATB
                                               + " --tag=TRACKNUMBER=" + TrackNumberStr
                                               + SPACE + DBLQ + WAVFilePath + DBLQ
                                               + " --output-name " + DBLQ + CompFilePath + DBLQ;
-                        }
                         else if (Dir.Type == RAWAUDIO)
-                        {
                             ExternalArguments = "-" + QualityValue
                                               + " --force"
                                               + " --verify"
                                               + SPACE + DBLQ + WAVFilePath + DBLQ
                                               + " --output-name " + DBLQ + CompFilePath + DBLQ;
-                        }
                         break;
-                    }
                 }
 
                 // run external program

@@ -20,12 +20,13 @@ namespace AATB
              */
             string
                 MD5Checksum,
-                ExternalProgram = "md5sums.exe",
+                ExternalProgram,
                 ExternalArguments;
 
             if (WriteLogMessage)
                 Log.WriteLine("    Creating MD5 checksum file");
 
+            ExternalProgram = "md5sums.exe";
             if (FileList != null)
             {
                 if (CreateFile(MD5FilePath))
@@ -110,12 +111,13 @@ namespace AATB
             string
                 FFPData,
                 FFPChecksum,
-                ExternalProgram = "metaflac.exe",
+                ExternalProgram,
                 ExternalArguments;
 
             if (WriteLogMessage)
                 Log.WriteLine("    Creating FFP checksum file");
 
+            ExternalProgram = "metaflac.exe";
             if (FLACFileList != null)
             {
                 if (CreateFile(FFPFilePath))

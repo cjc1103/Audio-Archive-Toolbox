@@ -36,7 +36,6 @@ namespace AATB
                 switch (CompType)
                 {
                     case MP3:
-                    {
                         ExternalProgram = "id3.exe";
                         ExternalArguments = "-d"
                                           + " -M"
@@ -47,9 +46,8 @@ namespace AATB
                                           + " -n " + TrackNumberStr
                                           + SPACE + DBLQ + CompFilePath + DBLQ;
                         break;
-                    }
+
                     case M4A:
-                    {
                         ExternalProgram = "NeroAacTag.exe";
                         ExternalArguments = "-meta:title=" + DBLQ + Dir.TitleList[TrackNumber - 1] + DBLQ
                                           + " -meta:artist=" + DBLQ + Dir.ArtistList[TrackNumber - 1] + DBLQ
@@ -58,9 +56,8 @@ namespace AATB
                                           + " -meta:track=" + TrackNumberStr
                                           + SPACE + DBLQ + CompFilePath + DBLQ;
                         break;
-                    }
+
                     case OGG:
-                    {
                         ExternalProgram = "vorbiscomment.exe";
                         ExternalArguments = "--write " + DBLQ + CompFilePath + DBLQ
                                           + " -t TITLE=" + DBLQ + Dir.TitleList[TrackNumber - 1] + DBLQ
@@ -69,19 +66,16 @@ namespace AATB
                                           + " -t DATE=" + DBLQ + Dir.ConcertDate + DBLQ
                                           + " -t TRACKNUMBER=" + TrackNumberStr;
                         break;
-                    }
+
                     case OPUS:
-                    {
                         // placeholder for future tagging, feature not yet available
                         break;
-                    }
+
                     case ALAC:
-                    {
                         // placeholder for future tagging, feature not yet available
                         break;
-                    }
+
                     case FLAC:
-                    {
                         ExternalProgram = "metaflac.exe";
                         // remove existing tags
                         ExternalArguments = "--preserve-modtime"
@@ -97,7 +91,6 @@ namespace AATB
                                           + " --set-tag=TRACKNUMBER=" + TrackNumberStr
                                           + SPACE + DBLQ + CompFilePath + DBLQ;
                         break;
-                    }
                 }
 
                 // run external process

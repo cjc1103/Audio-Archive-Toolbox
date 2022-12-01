@@ -102,13 +102,16 @@ namespace AATB
             RootDir = null,
             ConversionFromBitrate = null,
             ConversionToBitrate = null;
-        static readonly bool[,]
-            // AudioFormatBitrate array - must be at least the size of AudioFormats, AudioBitrates arrays
+        static bool[,]
+            // combined audio format and bitrate flag array
+            // this must be at least the size of AudioFormats, AudioBitrates arrays
             AudioFormatBitrate = new bool[7, 7];
         static readonly string[]
-            // FLAC and WAV must be the last two entries in this list
+            // line delimiters for dos and unix text files
+            LineDelimeters = { "\r\n", "\r", "\n" },
+            // audio formats (FLAC and WAV must be the last two entries in this list)
             AudioFormats = { MP3, M4A, OGG, OPUS, ALAC, FLAC, WAV },
-            // RAW must be last entry in this list
+            // audio bitrates (RAW must be last entry in this list)
             AudioBitrates = { BR1644, BR1648, BR2444, BR2448, BR2488, BR2496, RAW },
             // compressed audio directory extensions
             CompressedDirExtensions = { MP3F, M4AF, OGGF, OPUSF, ALACF, FLACF },
@@ -168,27 +171,32 @@ namespace AATB
                     (arg, opt) = SplitString(s, EQUALS);
                     switch (arg)
                     {
-                        // primary modes
+                        // PRIMARY MODES
                         case "-c":
                         case "--compress":
                             CompressAudio = true;
                             break;
+
                         case "-v":
                         case "--verify":
                             VerifyAudio = true;
                             break;
+
                         case "-d":
                         case "--decompress":
                             DecompressAudio = true;
                             break;
+
                         case "-j":
                         case "--join":
                             JoinWAV = true;
                             break;
+
                         case "-x":
                         case "--delete":
                             DeleteAudio = true;
                             break;
+
                         case "-z":
                         case "--convert-to-bitrate":
                             ConvertAudioBitrate = true;
@@ -202,12 +210,14 @@ namespace AATB
                                     break;
                             }
                             break;
+
                         case "-r":
                         case "--create-cuesheet":
                             CreateCuesheet = true;
                             break;
-                        // other functions
-                        // compressed audio flags
+
+                        // OTHER FUNCTIONS
+                        // MP3 compression
                         case "--mp3":
                             switch (opt)
                             {
@@ -223,6 +233,8 @@ namespace AATB
                         case "--mp3-quality":
                             SetQValue(MP3, opt);
                             break;
+
+                        // AAC compression, M4A container
                         case "--aac":
                         case "--m4a":
                             switch (opt)
@@ -239,6 +251,8 @@ namespace AATB
                         case "--aac-quality":
                             SetQValue(M4A, opt);
                             break;
+
+                        // OGG compression
                         case "--ogg":
                             switch (opt)
                             {
@@ -254,6 +268,8 @@ namespace AATB
                         case "--ogg-quality":
                             SetQValue(OGG, opt);
                             break;
+
+                        // OPUS compression
                         case "--opus":
                             switch (opt)
                             {
@@ -269,6 +285,8 @@ namespace AATB
                         case "--opus-quality":
                             SetQValue(OPUS, opt);
                             break;
+
+                        // ALAC compression
                         case "--alac":
                             switch (opt)
                             {
@@ -284,6 +302,8 @@ namespace AATB
                         case "--alac-quality":
                             // placeholder
                             break;
+
+                        // FLAC compression
                         case "--flac":
                             switch (opt)
                             {
@@ -303,6 +323,8 @@ namespace AATB
                         case "--flac-quality":
                             SetQValue(FLAC, opt);
                             break;
+
+                        // WAVE file
                         case "--wav":
                             switch (opt)
                             {
@@ -319,64 +341,76 @@ namespace AATB
                                     break;
                             }
                             break;
+                        
                         // create md5 checksum file
                         case "--md5":
                             CreateMD5 = true;
                             break;
+                        
                         // create FLAC fingerprint file (ffp) file
                         case "--ffp":
                             CreateFFP = true;
                             break;
+                        
                         // create shntool report
                         case "--shn":
                             CreateSHN = true;
                             break;
-                        // create all checksum and shntool reports
+                        
+                            // create all checksum and shntool reports
                         case "-a":
                         case "--all-reports":
                             CreateMD5 = true;
                             CreateFFP = true;
                             CreateSHN = true;
                             break;
+
                         // create m3u playlist
                         case "-u":
                         case "--m3u-playlist":
                             CreateM3U = true;
                             break;
+
                         // extract metadata from info text file 
                         case "-i":
                         case "--use-infotext":
                             UseInfotext = true;
                             break;
+
                         // extract metadata from cuesheet 
                         case "-e":
                         case "--use-cuesheet":
                             UseCuesheet = true;
                             break;
+
                         // create metadata tags
                         case "-t":
                         case "--tag":
                             CreateTags = true;
                             break;
+
                         // convert to lower case
                         case "-l":
                         case "--lower-case":
                             UseLowerCase = true;
                             break;
+
                         // convert to title case
                         case "-s":
                         case "--title-case":
                             UseTitleCase = true;
                             break;
+
                         // overwrite existing files
                         case "-o":
                         case "--overwrite":
                             Overwrite = true;
                             break;
+
                         // other options
                         case "--cjc":
                             // that's my initials.. :-)
-                            // shortcut for --compress --aac=all --flac=all --all-reports --m3u-playlist
+                            // shortcut for --compress --aac|m4a=all --flac=all --all-reports --m3u-playlist
                             CompressAudio = true;
                             SetFormatBitrate(M4A, ALLBITRATES);
                             SetFormatBitrate(FLAC, ALLBITRATES);
@@ -386,17 +420,21 @@ namespace AATB
                             CreateSHN = true;
                             CreateM3U = true;
                             break;
+
                         case "-h":
                         case "--help":
                             PrintHelp();
                             Environment.Exit(0);
                             break;
+
                         case "--verbose":
                             Verbose = true;
                             break;
+
                         case "--debug":
                             Debug = true;
                             break;
+
                         // argument not parsed
                         default:
                             Log.WriteLine("Invalid argument: " + s);

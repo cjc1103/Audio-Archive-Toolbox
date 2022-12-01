@@ -20,13 +20,15 @@ namespace AATB
                 Data1, Data2,
                 FileName,
                 FLACFileNames = null,
-                ExternalProgram = "shntool.exe",
+                ExternalProgram,
                 ExternalArguments,
                 ExternalOutput;
             string[]
                 DataList;
             bool
                 FirstDataLine;
+
+            ExternalProgram = "shntool.exe";
 
             if (FLACFileList != null)
             {
@@ -46,9 +48,8 @@ namespace AATB
                     ExternalOutput = RunProcess(ExternalProgram, ExternalArguments);
 
                     // raw output includes entire path for filenames
-                    // split output into lines using linefeed/CR as delimiters
-                    DataList = ExternalOutput.Split
-                               (new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+                    // split external output into lines
+                    DataList = SplitDataByLine(ExternalOutput);
                     FirstDataLine = true;
                     // parse each line in the list to remove embedded path
                     foreach (string li in DataList)

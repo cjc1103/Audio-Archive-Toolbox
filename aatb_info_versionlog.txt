@@ -240,7 +240,7 @@ Program history
 	 Changed InnoSetup code to only show checkboxes for installing optional programs initially selected
 	 
 4.9  2022-01-10
-	 Updated project to .NET 6.0
+	 Updated SDK to .NET 6.0
 	 Added ALAC (Apple Lossless Audio Codec)
 	 Changed GetDirMetadata method to allow different directory naming conventions for live recording,
 	   and allow embedded spaces in artist name and stage name, non-word delimiters in directory names
@@ -257,7 +257,6 @@ Program history
      Consolidated album metadata code in GetDirMetadata method from either directory name, infotext or cuesheet
 
 5.1  2022-03-10
-     Updated .NET runtime to 6.0.3
      Removed decompression code for ALAC, even though it is a lossless compression format
      Added checks to ensure raw is only valid for FLAC format
      Enabled printout of flac q values in CheckUserInput method
@@ -292,11 +291,16 @@ Program history
      Changed WalkDirectoryTree to only print out directory name once when deleting it
 	 Updated Log operations to print version info before checking user input, including printing help
 
-5.5  2022-11-11
+5.5  2022-09-06
      Added PrintOutputStream method to
       (1) log StandardOutput stream in "Debug" mode
       (2) log StandardError stream in "Verbose" mode
-      (3) log any line in StandardError stream that contains the word "error"
+      (3) log any line in StandardError stream that contains the word "error" (case insensitive)
      Added Verbose flag to enable logging StandardError stream
 	 Removed redundant check for TRACKEDAUDIO dir type from create cuesheet section of Program method
-	 Removed unused constants from Program method, cleaned up comments
+
+5.6 2022-11-29
+    Updated .NET SDK to 7.0
+    Added SplitDataByLine method to split data stream into an array of lines separated by
+      dos|unix line delimiters <cr> <line feed> <return>
+    Comment and code cleanup

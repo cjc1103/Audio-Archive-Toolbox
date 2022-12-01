@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AATB
 {
@@ -33,15 +34,18 @@ namespace AATB
                         CreateNoWindow = true,
                         RedirectStandardInput = true,
                         RedirectStandardOutput = true,
-                        RedirectStandardError = true,
+                        RedirectStandardError = Verbose,
                         Arguments = ExternalArguments
                     }
                 };
                 try
                 {
                     p.Start();
+                    // read standard output stream
                     ExternalOutput = p.StandardOutput.ReadToEnd();
-                    ExternalError = p.StandardError.ReadToEnd();
+                    // read standard error stream if verbose flag is set
+                    if (Verbose)
+                        ExternalError = p.StandardError.ReadToEnd();
                     p.WaitForExit();
                 }
                 catch (Exception e)
@@ -70,30 +74,39 @@ namespace AATB
             string[] DataList;
             bool ErrorFound = false;
 
-            // print output stream for debugging only (CR/LF at end of ExteralOutput string)
+            // print ExternalOutput stream for debugging only
+            // typically stream has only a single line with a CR/LF at end
             if (Debug && ExternalOutput.Length > 0)
                 Log.Write("dbg: " + ExternalOutput);
-
-            // parse error stream
-            DataList = ExternalError.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-            foreach (string li in DataList)
+            
+            // ExternalError stream is null except in verbose mode
+            // An exception will be generated if attempting to read null value
+            if (Verbose && ExternalError != null)
             {
-                // print line for verbose mode
-                if (Verbose && li.Length > 0)
-                    Log.WriteLine(li);
-                else
-                // print line only if it contains the word "error" (case insensitive)
+                // split stream into lines, ignoring blank lines
+                DataList = SplitDataByLine(ExternalError);
+                // parse each line in the list
+                foreach (string li in DataList)
                 {
-                    ErrorMatch = Regex.Match(li, "error", RegexOptions.IgnoreCase);
-                    if (ErrorMatch.Success)
+                    // print ExternalError line for debugging
+                    if (Debug)
+                        Log.WriteLine("\ndbg: " + li);
+
+                    // otherwise print line only if it contains the word "error" (case insensitive)
+                    else
                     {
-                        ErrorFound = true;
-                        Log.WriteLine("\n" + li);
+                        ErrorMatch = Regex.Match(li, @"error", RegexOptions.IgnoreCase);
+                        if (ErrorMatch.Success)
+                        {
+                            ErrorFound = true;
+                            Log.WriteLine("\n" + li);
+                        }
                     }
                 }
+                // flush log buffer if needed
+                if (Debug || ErrorFound) Log.WriteLine();
             }
-            // flush log buffer if any error found
-            if (ErrorFound) Log.WriteLine();
+
         } // end PrintOutputStream
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using Windows.ApplicationModel.UserDataTasks;
 
 namespace AATB
 {
@@ -97,6 +98,17 @@ namespace AATB
             }
             return (Prefix, Suffix);
         } // end SplitString
+
+        static string[] SplitDataByLine(string Data)
+        {
+            /* splits a text string into lines separated by dos and unix delimeters
+             * Input: Input data string
+             * Constant: LineDelimeters is a static string array defined in Program.cs
+             * Output: string array, with one line to each element of array, empty lines removed
+             */
+            string[] DataList = Data.Split(LineDelimeters, StringSplitOptions.RemoveEmptyEntries);
+            return DataList;
+        }
 
         static string SearchList(string[] DataList, string SearchTerm)
         {
