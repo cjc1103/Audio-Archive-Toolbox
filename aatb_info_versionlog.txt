@@ -240,7 +240,7 @@ Program history
 	 Changed InnoSetup code to only show checkboxes for installing optional programs initially selected
 	 
 4.9  2022-01-10
-	 Updated SDK to .NET 6.0
+	 Updated .NET SDK to 6.0
 	 Added ALAC (Apple Lossless Audio Codec)
 	 Changed GetDirMetadata method to allow different directory naming conventions for live recording,
 	   and allow embedded spaces in artist name and stage name, non-word delimiters in directory names
@@ -292,15 +292,17 @@ Program history
 	 Updated Log operations to print version info before checking user input, including printing help
 
 5.5  2022-09-06
+     Added Verbose flag to enable logging StandardError stream
      Added PrintOutputStream method to
       (1) log StandardOutput stream in "Debug" mode
-      (2) log StandardError stream in "Verbose" mode
-      (3) log any line in StandardError stream that contains the word "error" (case insensitive)
-     Added Verbose flag to enable logging StandardError stream
-	 Removed redundant check for TRACKEDAUDIO dir type from create cuesheet section of Program method
+      (2) log any line in StandardError stream that contains the word "error" in "Verbose" mode
+      (3) log entire StandardError stream in "Debug" and "Verbose" modes
+     Note: FLAC external process stalls if the file is big enough and StandardError is enabled, so the
+     Verbose flag is used to toggle the StandardError stream if necessary for investigating an error
 
-5.6 2022-11-29
+5.6 2022-12-01
     Updated .NET SDK to 7.0
+    Removed redundant check for TRACKEDAUDIO dir type from create cuesheet section of Program method
     Added SplitDataByLine method to split data stream into an array of lines separated by
       dos|unix line delimiters <cr> <line feed> <return>
-    Comment and code cleanup
+    Added exception handling to PrintOutputStream method

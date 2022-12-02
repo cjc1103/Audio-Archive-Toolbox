@@ -78,33 +78,43 @@ namespace AATB
             // typically stream has only a single line with a CR/LF at end
             if (Debug && ExternalOutput.Length > 0)
                 Log.Write("dbg: " + ExternalOutput);
-            
-            // ExternalError stream is null except in verbose mode
-            // An exception will be generated if attempting to read null value
-            if (Verbose && ExternalError != null)
-            {
-                // split stream into lines, ignoring blank lines
-                DataList = SplitDataByLine(ExternalError);
-                // parse each line in the list
-                foreach (string li in DataList)
-                {
-                    // print ExternalError line for debugging
-                    if (Debug)
-                        Log.WriteLine("\ndbg: " + li);
 
-                    // otherwise print line only if it contains the word "error" (case insensitive)
-                    else
+            // ExternalError stream is null except in verbose mode
+            // An exception will be generated if attempting to read null string'
+            try
+            {
+                if (Verbose && ExternalError != null)
+                {
+                    // split stream into lines, ignoring blank lines
+                    DataList = SplitDataByLine(ExternalError);
+                    // parse each line in the list
+                    foreach (string li in DataList)
                     {
-                        ErrorMatch = Regex.Match(li, @"error", RegexOptions.IgnoreCase);
-                        if (ErrorMatch.Success)
+                        // print ExternalError line for debugging
+                        if (Debug)
+                            Log.WriteLine("\ndbg: " + li);
+
+                        // otherwise print line only if it contains the word "error" (case insensitive)
+                        else
                         {
-                            ErrorFound = true;
-                            Log.WriteLine("\n" + li);
+                            ErrorMatch = Regex.Match(li, @"error", RegexOptions.IgnoreCase);
+                            if (ErrorMatch.Success)
+                            {
+                                ErrorFound = true;
+                                Log.WriteLine("\n" + li);
+                            }
                         }
                     }
+                    // flush log buffer if needed
+                    if (Debug || ErrorFound) Log.WriteLine();
                 }
-                // flush log buffer if needed
-                if (Debug || ErrorFound) Log.WriteLine();
+            }
+            catch (Exception e)
+            {
+                Log.WriteLine(); // flush output buffer
+                Log.WriteLine("*** Fatal program exception");
+                if (Debug) Log.WriteLine(e.Message);
+                Environment.Exit(0);
             }
 
         } // end PrintOutputStream
