@@ -421,16 +421,20 @@ namespace AATB
                             CreateM3U = true;
                             break;
 
+                        // print program options and exit
                         case "-h":
                         case "--help":
                             PrintHelp();
                             Environment.Exit(0);
                             break;
 
+                        // error reporting for external processes
+                        case "-b":
                         case "--verbose":
                             Verbose = true;
                             break;
 
+                        // additonal logging for debugging
                         case "--debug":
                             Debug = true;
                             break;

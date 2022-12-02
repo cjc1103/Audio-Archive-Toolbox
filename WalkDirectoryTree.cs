@@ -160,7 +160,7 @@ namespace AATB
                             // raw audio directory
                             else if (Dir.Type == RAWAUDIO)
                             {
-                                // create or overwrite raw audio subdirectory
+                                // create or overwrite raw audio files
                                 CompAudioDirName = Dir.Name;
                                 CompAudioDirPath = Dir.Path;
                                 if (!FLACExists || (FLACExists && Overwrite))

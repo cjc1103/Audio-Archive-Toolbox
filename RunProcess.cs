@@ -72,7 +72,6 @@ namespace AATB
              */
             Match ErrorMatch;
             string[] DataList;
-            bool ErrorFound = false;
 
             // print ExternalOutput stream for debugging only
             // typically stream has only a single line with a CR/LF at end
@@ -90,23 +89,18 @@ namespace AATB
                     // parse each line in the list
                     foreach (string li in DataList)
                     {
-                        // print ExternalError line for debugging
+                        // print ExternalError line for debugging, each line has a linefeed/cr
                         if (Debug)
-                            Log.WriteLine("\ndbg: " + li);
+                            Log.WriteLine("dbg: " + li);
 
                         // otherwise print line only if it contains the word "error" (case insensitive)
                         else
                         {
                             ErrorMatch = Regex.Match(li, @"error", RegexOptions.IgnoreCase);
                             if (ErrorMatch.Success)
-                            {
-                                ErrorFound = true;
                                 Log.WriteLine("\n" + li);
-                            }
                         }
                     }
-                    // flush log buffer if needed
-                    if (Debug || ErrorFound) Log.WriteLine();
                 }
             }
             catch (Exception e)

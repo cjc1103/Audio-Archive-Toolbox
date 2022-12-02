@@ -45,6 +45,7 @@ namespace AATB
             + "[-l|--lower-case]\n"
             + "[-s|--title-case]\n"
             + "[-o|--overwrite]\n"
+            + "[-b|--verbose]"
             + "[-h|--help]\n"
             + "Notes:\n"
             + "  o Valid compression types are mp3, aac, ogg, opus, alac, and flac\n"
