@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AATB
 {
@@ -13,8 +12,9 @@ namespace AATB
              * Inputs
              *   ExternalProgram     External program to run in process
              *   ExternalArguments    String containing arguments
-             * Note: Process sends normal output to StandardError stream so "RedirectStandardError"
-             *   option is set to false
+             * Note: Some external programs like flac send normal output to StandardError stream,
+             *   so "RedirectStandardError" is toggled with the Verbose flag, which is disabled
+             *   by default. If additional output is needed the user can enable Verbose mode.
              * Returns:
              *   StandardOutput string from external program
              */
@@ -72,6 +72,7 @@ namespace AATB
              */
             Match ErrorMatch;
             string[] DataList;
+            bool ErrorFound = false;
 
             // print ExternalOutput stream for debugging only
             // typically stream has only a single line with a CR/LF at end
@@ -89,23 +90,32 @@ namespace AATB
                     // parse each line in the list
                     foreach (string li in DataList)
                     {
-                        // print ExternalError line for debugging, each line has a linefeed/cr
+                        // print ExternalError line for debugging
+                        // flush output buffer first so error message starts on a new line
                         if (Debug)
-                            Log.WriteLine("dbg: " + li);
+                            Log.Write("\n" + li);
 
                         // otherwise print line only if it contains the word "error" (case insensitive)
+                        // flush output buffer first so error message starts on a new line
                         else
                         {
                             ErrorMatch = Regex.Match(li, @"error", RegexOptions.IgnoreCase);
                             if (ErrorMatch.Success)
-                                Log.WriteLine("\n" + li);
+                            {
+                                ErrorFound = true;
+                                Log.Write("\n" + li);
+                            }
                         }
                     }
+                    if (Debug || ErrorFound)
+                        // flush output buffer
+                        Log.WriteLine();
                 }
             }
             catch (Exception e)
             {
-                Log.WriteLine(); // flush output buffer
+                // flush output buffer, write exception message and exit
+                Log.WriteLine();
                 Log.WriteLine("*** Fatal program exception");
                 if (Debug) Log.WriteLine(e.Message);
                 Environment.Exit(0);
