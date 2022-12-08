@@ -28,8 +28,8 @@ namespace AATB
             string
                 TrackDuration,
                 TrackDurationSec,
-                M3UTempString1,
-                M3UTempString2;
+                M3UOutputString1,
+                M3UOutputString2;
 
             Log.WriteLine("    Creating M3U Playlist");
             if (CreateFile(M3UFilePath))
@@ -56,18 +56,18 @@ namespace AATB
                         Log.WriteLine(e.Message);
                     }
                     // first line
-                    M3UTempString1 = ("#EXTINF:"
+                    M3UOutputString1 = ("#EXTINF:"
                                      + TrackDurationSec + ","
                                      + Dir.AlbumArtist + " - "
                                      + Dir.TitleList[TrackNumber - 1]
                                      + Environment.NewLine);
-                    if (Debug) Console.Write("dbg: " + M3UTempString1);
-                    File.AppendAllText(M3UFilePath, M3UTempString1);
+                    if (Debug) Console.Write("dbg: " + M3UOutputString1);
+                    File.AppendAllText(M3UFilePath, M3UOutputString1);
                     // second line
-                    M3UTempString2 = (fi.Name
+                    M3UOutputString2 = (fi.Name
                                      + Environment.NewLine);
-                    if (Debug) Console.Write("dbg: " + M3UTempString2);
-                    File.AppendAllText(M3UFilePath, M3UTempString2);
+                    if (Debug) Console.Write("dbg: " + M3UOutputString2);
+                    File.AppendAllText(M3UFilePath, M3UOutputString2);
                 }
             }
         } // end CreateM3UPlaylist
