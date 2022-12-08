@@ -27,7 +27,9 @@ namespace AATB
                 decTrackDurationSec;
             string
                 TrackDuration,
-                TrackDurationSec;
+                TrackDurationSec,
+                M3UTempString1,
+                M3UTempString2;
 
             Log.WriteLine("    Creating M3U Playlist");
             if (CreateFile(M3UFilePath))
@@ -38,20 +40,34 @@ namespace AATB
                     // increment track number
                     TrackNumber++;
                     // get track duration in milliseconds
-                    TrackDuration = GetTrackDuration(fi.FullName);
-                    // convert to seconds
-                    decTrackDurationSec = (decimal)Convert.ToDouble(TrackDuration) / 1000;
-                    intTrackDurationSec = (int)Decimal.Round(decTrackDurationSec);
-                    TrackDurationSec = Convert.ToString(intTrackDurationSec);
-                    File.AppendAllText(M3UFilePath,
-                                       "#EXTINF:"
-                                       + TrackDurationSec + ","
-                                       + Dir.AlbumArtist + " - "
-                                       + Dir.TitleList[TrackNumber - 1]
-                                       + Environment.NewLine);
-                    File.AppendAllText(M3UFilePath,
-                                       fi.Name
-                                       + Environment.NewLine);
+                    TrackDuration = Dir.TrackDurationList[TrackNumber - 1];
+                    TrackDurationSec = ""; // initialize before try section
+                    try
+                    {
+                        // convert to seconds
+                        decTrackDurationSec = Convert.ToDecimal(TrackDuration) / 1000;
+                        intTrackDurationSec = Convert.ToInt32(Decimal.Round(decTrackDurationSec));
+                        TrackDurationSec = Convert.ToString(intTrackDurationSec);
+                    }
+                    catch (Exception e)
+                    {
+                        // flush output buffer, write exception message and exit
+                        Log.WriteLine("*** Track duration conversion error in track " + TrackNumber);
+                        Log.WriteLine(e.Message);
+                    }
+                    // first line
+                    M3UTempString1 = ("#EXTINF:"
+                                     + TrackDurationSec + ","
+                                     + Dir.AlbumArtist + " - "
+                                     + Dir.TitleList[TrackNumber - 1]
+                                     + Environment.NewLine);
+                    if (Debug) Console.Write("dbg: " + M3UTempString1);
+                    File.AppendAllText(M3UFilePath, M3UTempString1);
+                    // second line
+                    M3UTempString2 = (fi.Name
+                                     + Environment.NewLine);
+                    if (Debug) Console.Write("dbg: " + M3UTempString2);
+                    File.AppendAllText(M3UFilePath, M3UTempString2);
                 }
             }
         } // end CreateM3UPlaylist

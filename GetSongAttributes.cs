@@ -86,7 +86,7 @@ namespace AATB
             }
             // remove trailing spaces
             DurationMsec = Regex.Replace(ExternalOutput, @"\s*$", "");
-            if (Debug) Console.WriteLine("(dbg) Track Duration: " + DurationMsec);
+            if (Debug) Console.WriteLine("dbg: Track Duration: " + DurationMsec);
 
             return DurationMsec;
         } // end GetTrackDuration

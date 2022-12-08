@@ -39,6 +39,7 @@ namespace AATB
             string
                 CuesheetFileName,
                 WAVFileName,
+                TrackDuration,
                 strTrackDuration;
 
             // build cuesheet filename
@@ -114,7 +115,8 @@ namespace AATB
                             File.AppendAllText(Dir.ParentCuesheetPath, "    INDEX 01 " + strTrackDuration + Environment.NewLine);
 
                             // read previous track duration entry in msec, convert to decimal seconds
-                            decTrackDurationSec = Convert.ToDecimal(Dir.TrackDurationList[TrackNumber - 1]) / 1000;
+                            TrackDuration = Dir.TrackDurationList[TrackNumber - 1];
+                            decTrackDurationSec = Convert.ToDecimal(TrackDuration) / 1000;
 
                             // update cumulative duration seconds for next loop iteration
                             decCumTrackDurationSec += decTrackDurationSec;

@@ -76,8 +76,8 @@ namespace AATB
 
             // print ExternalOutput stream for debugging only
             // typically stream has only a single line with a CR/LF at end
-            if (Debug && ExternalOutput.Length > 0)
-                Log.Write("dbg: " + ExternalOutput);
+            if (Debug && ExternalOutput != null)
+                Log.Write("dbg: Output:" + ExternalOutput);
 
             // ExternalError stream is null except in verbose mode
             // An exception will be generated if attempting to read null string'
@@ -117,7 +117,7 @@ namespace AATB
                 // flush output buffer, write exception message and exit
                 Log.WriteLine();
                 Log.WriteLine("*** Fatal program exception");
-                if (Debug) Log.WriteLine(e.Message);
+                Log.WriteLine(e.Message);
                 Environment.Exit(0);
             }
 
