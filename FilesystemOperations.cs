@@ -110,7 +110,7 @@ namespace AATB
                 }
                 catch (Exception)
                 {
-                    Log.WriteLine("*** Unable to move or rename file");
+                    Log.WriteLine("*** Unable to move or rename file" + SourceFilePathA);
                 }
             }
             else
