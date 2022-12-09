@@ -16,7 +16,7 @@ namespace AATB
             int
                 index;
             string
-                SubDirName,
+                SubDirPath,
                 WAVDirName,
                 WAVDirPath,
                 FLACDirName,
@@ -526,9 +526,11 @@ namespace AATB
             SubDirs = CurrentDir.GetDirectories();
             foreach (DirectoryInfo dirname in SubDirs)
             {
+                // extract the subdirectory path
+                // log entire subdirectory path below root dir
+                SubDirPath = SplitDirPath(RootDir, dirname.FullName);
+                Log.WriteLine("Directory: " + SubDirPath);
                 // Walk the directory tree for each subdirectory
-                SubDirName = SplitDirPath(RootDir, dirname.FullName);
-                Log.WriteLine("Directory: " + SubDirName);
                 WalkDirectoryTree(dirname);
             }
 
