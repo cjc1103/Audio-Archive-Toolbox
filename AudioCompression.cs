@@ -28,13 +28,16 @@ namespace AATB
                 WAVFilePath,
                 CompFileName,
                 CompFilePath,
-                ExternalProgram = null,
-                ExternalArguments = null,
+                ExternalProgram,
+                ExternalArguments,
                 ExternalOutput;
             int
                 TrackNumber = 0,
                 CompTypeIndex,
                 QualityValue;
+
+            // initialize external program parameters
+            ExternalProgram = ExternalArguments = null;
 
             Log.Write("    Track ");
             foreach (FileInfo fi in WAVFileList)
@@ -54,8 +57,6 @@ namespace AATB
                 // get compression quality value
                 CompTypeIndex = Array.IndexOf(AudioFormats, CompType);
                 QualityValue = CompressedAudioQuality[CompTypeIndex][ACTIVE];
-                // initialize external program parameters
-                ExternalProgram = ExternalArguments = null;
 
                 switch (CompType)
                 {
@@ -142,6 +143,11 @@ namespace AATB
                                               + " --verify"
                                               + SPACE + DBLQ + WAVFilePath + DBLQ
                                               + " --output-name " + DBLQ + CompFilePath + DBLQ;
+                        break;
+
+                    default:
+                        Log.WriteLine("*** Invalid argument for CompressWAV method: " + CompType);
+                        Environment.Exit(0);
                         break;
                 }
 

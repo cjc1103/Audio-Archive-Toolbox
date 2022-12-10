@@ -37,6 +37,9 @@ namespace AATB
             int
                 TrackNumber = 0;
 
+            // initialize external program parameters
+            ExternalProgram = ExternalArguments = null;
+
             Log.Write("    Track ");
             foreach (FileInfo fi in CompFileList)
             {
@@ -52,8 +55,6 @@ namespace AATB
                 WAVFilePath = WAVDirPath + BACKSLASH + WAVFileName;
                 // convert WAVFileName to FileInfo type and build WAVFileList
                 WAVFileList[TrackNumber - 1] = new FileInfo(WAVFilePath);
-                // initialize external program parameters
-                ExternalProgram = ExternalArguments = null;
 
                 switch (CompType)
                 {
@@ -63,6 +64,11 @@ namespace AATB
                                           + " --force"
                                           + SPACE + DBLQ + CompFilePath + DBLQ
                                           + " --output-name " + DBLQ + WAVFilePath + DBLQ;
+                        break;
+
+                    default:
+                        Log.WriteLine("*** Invalid argument for DecompressToWAV method: " + CompType);
+                        Environment.Exit(0);
                         break;
                 }
 
