@@ -55,7 +55,7 @@ namespace AATB
             + "  o Raw (unedited or tracked) audio files are in <" + RAW + "> subdirectory\n"
             + "  o FLAC is only compression type supported for raw files\n"
             + "  o AAC compressed files are saved in an MPEG-4 Audio (.m4a) container\n"
-            + "  o Ogg Vorbis compressed file are saved in an Ogg Audio (.oga) container\n"
+            + "  o Ogg Vorbis compressed file are saved in an Ogg (.ogg) container\n"
             + "  o If compression bitrates are not specified, all bitrates are assumed\n"
             + "  o Metadata in info.txt and info.cue files can be used to tag compressed audio\n"
             );
