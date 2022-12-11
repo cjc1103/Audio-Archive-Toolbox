@@ -298,7 +298,7 @@ Program history
       (2) log any line in StandardError stream that contains the word "error" in "Verbose" mode
       (3) log entire StandardError stream in "Debug" and "Verbose" modes
 
-5.6 2022-12-10
+5.6 2022-12-01
     Updated .NET SDK to 7.0
     Removed redundant check for TRACKEDAUDIO dir type from create cuesheet section of Program method
     Added SplitDataByLine method to split data stream into an array of lines separated by
@@ -306,5 +306,4 @@ Program history
     Added exception handling to PrintOutputStream method, changed print formatting
     Added exception handling to decimal calculations in CreateM3UPlaylist method
     Removed redundant TrackDuration calculation from CreateM3UPlayList method, and instead retrieved
-      it from the DirInfo structure. This value is populated in DirInfo when reading track metadata
-    Updated case statements in AudioCompression and AudioDecompression methods to include default case
+      it from the DirInfo structure. This value is populated in DirInfo when reading track metadata.

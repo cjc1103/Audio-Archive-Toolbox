@@ -432,6 +432,7 @@ namespace AATB
             switch (Dir.RecordingType)
             {
                 case LIVE:
+                {
                     Dir.AlbumArtist = Dir.BaseNameTemp1;
                     Dir.ConcertDate = Dir.BaseNameTemp2;
                     Dir.Album = Dir.AlbumArtist + SPACE + Dir.ConcertDate;
@@ -441,16 +442,19 @@ namespace AATB
                         Dir.Album += (SPACE + Dir.Stage);
                     }
                     break;
-
+                }
                 case CD:
+                {
                     Dir.AlbumArtist = Dir.BaseNameTemp1;
                     Dir.Album = Dir.BaseNameTemp2;
                     break;
-
+                }
                 case OTHER:
-                     Dir.AlbumArtist = Dir.ParentBaseName;
+                {
+                    Dir.AlbumArtist = Dir.ParentBaseName;
                     Dir.Album = Dir.ParentBaseName;
                     break;
+                }
             }
             // convert to title case/lower case if appropriate
             Dir.AlbumArtist = ConvertCase(Dir.AlbumArtist);

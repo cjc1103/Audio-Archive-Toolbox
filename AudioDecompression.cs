@@ -67,7 +67,7 @@ namespace AATB
                         break;
 
                     default:
-                        Log.WriteLine("*** Invalid argument for DecompressToWAV method: " + CompType);
+                        Log.WriteLine("*** Undefined external program in DecompressToWAV: " + ExternalProgram);
                         Environment.Exit(0);
                         break;
                 }

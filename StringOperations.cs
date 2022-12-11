@@ -11,7 +11,7 @@ namespace AATB
              * Inputs:
              *   Directory or file path
              * Output:
-             *   Returns Filename - characters after last backslash
+             *   FileName - characters after last backslash (\)
              */
             int
                 index;
@@ -36,9 +36,9 @@ namespace AATB
              * Inputs:
              *   Directory or file path
              * Outputs:
-             *   Returns tuple (Path, FileName) where
+             *   Tuple (Path, FileName) where
              *     Path - characters before last delimiter
-             *     FileName - characters after last delimiter
+             *     FileName - characters after last delimter
              */
             int
                 index;
@@ -71,7 +71,7 @@ namespace AATB
              *   Directory or file name (e.g., filename.extension)
              *   Delimiter: character used to delimit name and extension
              * Outputs:
-             *   Returns tuple (Prefix, Suffix) where
+             *   Tuple (Prefix, Suffix) where
              *     Prefix - characters before last delimiter
              *     Suffix - characters after last delimiter
              */
@@ -106,7 +106,7 @@ namespace AATB
              *   RootDirPath     root directory path
              *   CurrentDirPath  current directory path (subdirectory path from root)
              * Outputs:
-             *   Returns CurrentDirPath - current subdirectory path below root directory
+             *   Data            current subdirectory path below root directory
              */
             string Data;
 
@@ -121,13 +121,10 @@ namespace AATB
 
         static string[] SplitDataByLine(string Data)
         {
-            /* Splits a text string into lines separated by dos and unix delimeters
-             * Input:
-             *   Data       Text string
-             * Constant:
-             *   LineDelimeters is a static string array defined in Program.cs
-             * Output:
-             *   Returns string array, with one line to each element of array, empty lines removed
+            /* splits a text string into lines separated by dos and unix delimeters
+             * Input: Input data string
+             * Constant: LineDelimeters is a static string array defined in Program.cs
+             * Output: string array, with one line to each element of array, empty lines removed
              */
             string[] DataList = Data.Split(LineDelimeters, StringSplitOptions.RemoveEmptyEntries);
             return DataList;
@@ -137,9 +134,9 @@ namespace AATB
         {
             /* Inputs:
              *   DataList   list containing data
-             *   Name       string search term
+             *   Name       string search term, e.g: "Artist: "
              * Outputs:
-             *   Returns string found by pattern match, null if not found
+             *   Data       string found by pattern match, null if not found
              */
             int i;
             string
@@ -154,10 +151,11 @@ namespace AATB
                 if ((PatternMatch.Success)
                     && (DataList[i].Length > SearchTerm.Length))
                 {
-                    // extract matching data substring from Datalist line
+                    // get index of data following SearchName
+                    // assume SearchName
                     Data = DataList[i].Substring(PatternMatch.Index + SearchTerm.Length);
-                    // remove extraneous characters
-                    Data = CleanDataString(Data);
+                    // remove quotation marks, if they exist
+                    Data = Regex.Replace(Data, @"""", "");
                     // exit loop, only first match in list will be used
                     break;
                 }

@@ -146,7 +146,7 @@ namespace AATB
                         break;
 
                     default:
-                        Log.WriteLine("*** Invalid argument for CompressWAV method: " + CompType);
+                        Log.WriteLine("*** Undefined external program in CompressWAV: " + ExternalProgram);
                         Environment.Exit(0);
                         break;
                 }
