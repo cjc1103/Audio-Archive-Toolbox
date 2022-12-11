@@ -38,7 +38,7 @@ namespace AATB
              * Outputs:
              *   Returns tuple (Path, FileName) where
              *     Path - characters before last delimiter
-             *     FileName - characters after last delimter
+             *     FileName - characters after last delimiter
              */
             int
                 index;
