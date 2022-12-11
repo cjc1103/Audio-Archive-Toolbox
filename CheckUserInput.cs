@@ -87,47 +87,45 @@ namespace AATB
                 if (CheckFormatBitrate(ANYFORMAT, RAW))
                 {
                     Log.WriteLine("Verification of raw audio files is not supported");
+                    Environment.Exit(0);
+                }
+                // check at least one flag is set
+                if (!CreateMD5 && !CreateFFP && !CreateSHN && !CreateTags & !CreateM3U)
+                {
+                    Log.WriteLine("Input error: specify options [--md5 --ffp --shn]|--all-reports, --tag, --m3u");
+                    Environment.Exit(0);
                 }
                 // if no format or bitrate is set, then assume all formats and bitrates
                 if (!CheckFormatBitrate(ANYFORMAT, ANYBITRATE)
                     && !CheckFormatBitrate(ANYFORMAT, RAW))
                     SetFormatBitrate(ALLFORMATS, ALLBITRATES);
-
-                if (CreateMD5 || CreateFFP || CreateSHN || CreateTags || CreateM3U)
+                PrintCompressionOptions();
+                // MD5 Checksum
+                if (CreateMD5) Log.WriteLine("  Verify MD5 checksum");
+                // FFP and shntool otions, excluding RAW 
+                if (CheckFormatBitrate(FLAC, ANYBITRATE))
                 {
-                    PrintCompressionOptions();
-                    // MD5 Checksum
-                    if (CreateMD5) Log.WriteLine("  Verify MD5 checksum");
-                    // FFP and shntool otions, excluding RAW 
-                    if (CheckFormatBitrate(FLAC, ANYBITRATE))
-                    {
-                        // FLAC Fingerprint Checksum
-                        if (CreateFFP)
-                            Log.WriteLine("  Verify FLAC Fingerprint (FFP)");
-                        // shntool report
-                        if (CreateSHN)
-                            Log.WriteLine("  Verify SHNTool report (SHN)");
-                    }
-                    // ID3 tags
-                    if (CreateTags)
-                        Log.WriteLine("Create/update ID3 tags and MD5 checksum");
-                    // M3U Playlist
-                    if (CreateM3U)
-                        Log.WriteLine("Create/Update M3U playlist");
+                    // FLAC Fingerprint Checksum
+                    if (CreateFFP)
+                        Log.WriteLine("  Verify FLAC Fingerprint (FFP)");
+                    // shntool report
+                    if (CreateSHN)
+                        Log.WriteLine("  Verify SHNTool report (SHN)");
                 }
-                else
-                {
-                    Log.WriteLine("Input error: specify options [--md5 --ffp --shn]|--all-reports, --tag, --m3u");
-                    Environment.Exit(0);
-                }
+                // ID3 tags
+                if (CreateTags)
+                    Log.WriteLine("Create/update ID3 tags and MD5 checksum");
+                // M3U Playlist
+                if (CreateM3U)
+                    Log.WriteLine("Create/Update M3U playlist");
             }
 
             if (DecompressAudio)
             {
-                if (CheckFormatBitrate(FLAC, ANYBITRATE)
-                    || CheckFormatBitrate(FLAC, RAW))
-                    Log.WriteLine("Decompress FLAC audio files");
-                else
+                Log.WriteLine("Decompress FLAC audio files");
+                // check for unique FLAC bitrate or raw
+                if (!CheckUniqueBitrate(FLAC)
+                    && !CheckFormatBitrate(FLAC, RAW))
                 {
                     Log.WriteLine("Input error: specify flac format and bitrate/raw to decompress");
                     Environment.Exit(0);
@@ -137,12 +135,13 @@ namespace AATB
 
             if (JoinWAV)
             {
+                Log.WriteLine("Join tracked WAV audio files");
+                // check for unique WAV bitrate
                 if (!CheckUniqueBitrate(WAV))
                 {
                     Log.WriteLine("Input error: Multiple wav conversion bitrates and/or raw format selected");
                     Environment.Exit(0);
                 }
-                Log.WriteLine("Join tracked WAV audio files");
                 PrintCompressionOptions();
             }
 
@@ -165,6 +164,8 @@ namespace AATB
                 // (2) -z|--convert-to-bitrate=<ConversionToBitrate>
                 //     Must be different from ConversionFromBitrate>
                 ConversionFromBitrate = FirstBitrateSet(WAV);
+                Log.WriteLine("Convert WAV audio files from "
+                              + ConversionFromBitrate + " to " + ConversionToBitrate);
                 if (!CheckFormatBitrate(WAV, ConversionFromBitrate))
                 {
                     Log.WriteLine("Input error: Conversion from bitrate not valid. Use --wav=<bitrate>");
@@ -185,19 +186,17 @@ namespace AATB
                     Log.WriteLine("Input error: Conversion from and to bitrate arguments must be different");
                     Environment.Exit(0);
                 }
-                Log.WriteLine("Convert WAV audio files from "
-                             + ConversionFromBitrate + " to " + ConversionToBitrate);
             }
 
             if (CreateCuesheet)
             {
                 Log.WriteLine("  Create cuesheet from WAV audio files");
-                PrintCompressionOptions();
                 if (!CheckUniqueBitrate(WAV))
                 {
                     Log.WriteLine("Input error: specify only one WAV bitrate to create a cuesheet from");
                     Environment.Exit(0);
                 }
+                PrintCompressionOptions();
             }
 
             // secondary options and other input checking
