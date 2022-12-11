@@ -29,8 +29,7 @@ namespace AATB
                 CompFileName,
                 CompFilePath,
                 ExternalProgram,
-                ExternalArguments,
-                ExternalOutput;
+                ExternalArguments;
             int
                 TrackNumber = 0,
                 CompTypeIndex,
