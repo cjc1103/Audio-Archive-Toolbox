@@ -54,8 +54,7 @@ namespace AATB
                     if (!CheckFormatBitrate(ANYFORMAT, ANYBITRATE)
                         && !CheckFormatBitrate(FLAC, RAW))
                     {
-                        Log.WriteLine("Input error: specify at least one compressed audio format and bitrate\n"
-                                    + "             raw is only valid for flac format");
+                        Log.WriteLine("Input error: Specify at least one compressed audio format and bitrate");
                         Environment.Exit(0);
                     }
                 }
@@ -86,13 +85,13 @@ namespace AATB
                 Log.WriteLine("Verify compressed audio files");
                 if (CheckFormatBitrate(ANYFORMAT, RAW))
                 {
-                    Log.WriteLine("Verification of raw audio files is not supported");
+                    Log.WriteLine("Input error: Verification of raw audio files is not supported");
                     Environment.Exit(0);
                 }
                 // check at least one flag is set
                 if (!CreateMD5 && !CreateFFP && !CreateSHN && !CreateTags & !CreateM3U)
                 {
-                    Log.WriteLine("Input error: specify options [--md5 --ffp --shn]|--all-reports, --tag, --m3u");
+                    Log.WriteLine("Input error: Specify options [--md5 --ffp --shn]|--all-reports, --tag, --m3u");
                     Environment.Exit(0);
                 }
                 // if no format or bitrate is set, then assume all formats and bitrates
@@ -127,7 +126,7 @@ namespace AATB
                 if (!CheckUniqueBitrate(FLAC)
                     && !CheckFormatBitrate(FLAC, RAW))
                 {
-                    Log.WriteLine("Input error: specify FLAC format and bitrate/raw to decompress");
+                    Log.WriteLine("Input error: Use '--flac=[<bitrate>|raw|all]'");
                     Environment.Exit(0);
                 }
                 PrintCompressionOptions();
@@ -137,9 +136,14 @@ namespace AATB
             {
                 Log.WriteLine("Join tracked WAV audio files");
                 // check for unique WAV bitrate
+                if (!CheckFormatBitrate(WAV, ANYBITRATE))
+                {
+                    Log.WriteLine("Input error: A WAV bitrate was not specified");
+                    Environment.Exit(0);
+                }
                 if (!CheckUniqueBitrate(WAV))
                 {
-                    Log.WriteLine("Input error: Select only one WAV bitrate, raw is not supported");
+                    Log.WriteLine("Input error: Multiple or invalid WAV conversion bitrates selected");
                     Environment.Exit(0);
                 }
                 PrintCompressionOptions();
@@ -150,7 +154,7 @@ namespace AATB
                 Log.WriteLine("Delete redundant audio files");
                 if (!CheckFormatBitrate(WAV, ANYBITRATE))
                 {
-                    Log.WriteLine("Input error: Use '--wav=[<bitrate>|raw|all]' to delete redundant wav files");
+                    Log.WriteLine("Input error: Select WAV bitrate '--wav=[<bitrate>|raw|all]'");
                     Environment.Exit(0);
                 }
                 PrintCompressionOptions();
@@ -178,7 +182,7 @@ namespace AATB
                 }
                 if (!CheckUniqueBitrate(WAV))
                 {
-                    Log.WriteLine("Input error: Multiple WAV conversion bitrates and/or raw format selected");
+                    Log.WriteLine("Input error: Multiple or invalid WAV conversion bitrates selected");
                     Environment.Exit(0);
                 }
                 if (ConversionFromBitrate == ConversionToBitrate)
@@ -190,10 +194,10 @@ namespace AATB
 
             if (CreateCuesheet)
             {
-                Log.WriteLine("  Create cuesheet from WAV audio files");
+                Log.WriteLine("  Create cuesheet from tracked WAV audio files");
                 if (!CheckUniqueBitrate(WAV))
                 {
-                    Log.WriteLine("Input error: specify only one WAV bitrate to create a cuesheet from");
+                    Log.WriteLine("Input error: Specify only one WAV bitrate");
                     Environment.Exit(0);
                 }
                 PrintCompressionOptions();
@@ -208,7 +212,7 @@ namespace AATB
 
             if (UseTitleCase && UseLowerCase)
             {
-                Log.WriteLine("Input error, can't use lower case and title case together");
+                Log.WriteLine("Input error: Can't use both lower case and title case options");
                 Environment.Exit(0);
             }
             if (UseTitleCase)
