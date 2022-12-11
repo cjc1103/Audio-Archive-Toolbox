@@ -325,7 +325,7 @@ namespace AATB
                             SetQValue(FLAC, opt);
                             break;
 
-                        // WAVE file
+                        // WAV file
                         case "--wav":
                             switch (opt)
                             {

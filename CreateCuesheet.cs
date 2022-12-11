@@ -64,7 +64,7 @@ namespace AATB
                             "REM Created by Audio Archive Toolbox" + Environment.NewLine);
                         // write wav filename. This is solely for convention
                         File.AppendAllText(Dir.ParentCuesheetPath,
-                            "FILE " + DBLQ + WAVFileName + DBLQ + " WAVE" + Environment.NewLine);
+                            "FILE " + DBLQ + WAVFileName + DBLQ + " WAV" + Environment.NewLine);
                         File.AppendAllText(Dir.ParentCuesheetPath,
                             "PERFORMER " + DBLQ + Dir.AlbumArtist + DBLQ + Environment.NewLine);
                         File.AppendAllText(Dir.ParentCuesheetPath,

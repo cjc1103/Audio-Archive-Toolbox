@@ -127,7 +127,7 @@ namespace AATB
                 if (!CheckUniqueBitrate(FLAC)
                     && !CheckFormatBitrate(FLAC, RAW))
                 {
-                    Log.WriteLine("Input error: specify flac format and bitrate/raw to decompress");
+                    Log.WriteLine("Input error: specify FLAC format and bitrate/raw to decompress");
                     Environment.Exit(0);
                 }
                 PrintCompressionOptions();
@@ -139,7 +139,7 @@ namespace AATB
                 // check for unique WAV bitrate
                 if (!CheckUniqueBitrate(WAV))
                 {
-                    Log.WriteLine("Input error: Multiple wav conversion bitrates and/or raw format selected");
+                    Log.WriteLine("Input error: Select only one WAV bitrate, raw is not supported");
                     Environment.Exit(0);
                 }
                 PrintCompressionOptions();
@@ -178,7 +178,7 @@ namespace AATB
                 }
                 if (!CheckUniqueBitrate(WAV))
                 {
-                    Log.WriteLine("Input error: Multiple wav conversion bitrates and/or raw format selected");
+                    Log.WriteLine("Input error: Multiple WAV conversion bitrates and/or raw format selected");
                     Environment.Exit(0);
                 }
                 if (ConversionFromBitrate == ConversionToBitrate)
