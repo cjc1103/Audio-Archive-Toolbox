@@ -137,6 +137,11 @@ namespace AATB
 
             if (JoinWAV)
             {
+                if (!CheckUniqueBitrate(WAV))
+                {
+                    Log.WriteLine("Input error: Multiple wav conversion bitrates and/or raw format selected");
+                    Environment.Exit(0);
+                }
                 Log.WriteLine("Join tracked WAV audio files");
                 PrintCompressionOptions();
             }
