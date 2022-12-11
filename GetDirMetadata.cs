@@ -382,7 +382,7 @@ namespace AATB
 
                 // search for standard metadata labels
                 Dir.AlbumArtist = SearchList(DataList, "PERFORMER ");
-                Dir.Album = SearchList(DataList, "TITLE");
+                Dir.Album = SearchList(DataList, "AlBUM");
                 Dir.Event = SearchList(DataList, "EVENT ");
                 Dir.Venue = SearchList(DataList, "VENUE ");
                 Dir.Stage = SearchList(DataList, "STAGE ");
