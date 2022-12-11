@@ -80,7 +80,7 @@ namespace AATB
                 // Create new MD5 filepath
                 NewMD5FilePath = MD5FilePath + PERIOD + NEW;
 
-                // create new MD5 checksum, output to MD5FilePath
+                // create new MD5 checksum, output to NewMD5FilePath, do not log output
                 CreateMD5ChecksumFile(NewMD5FilePath, FileList, NoLogMessage);
                 //if files are identical, remove the new file and rename the original file
                 if (FilesAreEquivalent(MD5FilePath, NewMD5FilePath))

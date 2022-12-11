@@ -19,8 +19,7 @@ namespace AATB
                 TrackNumberStr,
                 CompFilePath,
                 ExternalProgram = null,
-                ExternalArguments = null,
-                ExternalOutput;
+                ExternalArguments = null;
             int
                 TrackNumber = 0;
 
@@ -77,11 +76,14 @@ namespace AATB
 
                     case FLAC:
                         ExternalProgram = "metaflac.exe";
+                        
                         // remove existing tags
                         ExternalArguments = "--preserve-modtime"
                                           + " --remove-all-tags"
                                           + SPACE + DBLQ + CompFilePath + DBLQ;
-                        ExternalOutput = RunProcess(ExternalProgram, ExternalArguments);
+                        // run external process, discard external output
+                        RunProcess(ExternalProgram, ExternalArguments);
+
                         // write new tags
                         ExternalArguments = "--preserve-modtime"
                                           + " --set-tag=TITLE=" + DBLQ + Dir.TitleList[TrackNumber - 1] + DBLQ
@@ -93,8 +95,8 @@ namespace AATB
                         break;
                 }
 
-                // run external process
-                ExternalOutput = RunProcess(ExternalProgram, ExternalArguments);
+                // run external process, discard external output
+                RunProcess(ExternalProgram, ExternalArguments);
             }
         } // end TagCompressedAudio
     }

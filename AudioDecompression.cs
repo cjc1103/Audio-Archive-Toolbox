@@ -32,8 +32,7 @@ namespace AATB
                 CompFileName,
                 CompFilePath,
                 ExternalProgram,
-                ExternalArguments,
-                ExternalOutput;
+                ExternalArguments;
             int
                 TrackNumber = 0;
 
@@ -72,8 +71,8 @@ namespace AATB
                         break;
                 }
 
-                // run external program
-                ExternalOutput = RunProcess(ExternalProgram, ExternalArguments);
+                // run external process, discard external output
+                RunProcess(ExternalProgram, ExternalArguments);
             }
             Log.WriteLine();
             return WAVFileList;

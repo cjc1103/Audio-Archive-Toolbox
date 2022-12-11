@@ -21,8 +21,7 @@ namespace AATB
                InputWAVFileNames = String.Empty,
                OutputWAVFilePath,
                ExternalProgram,
-               ExternalArguments,
-               ExternalOutput;
+               ExternalArguments;
 
             Log.WriteLine("  Creating combined wav file: " + OutputFileName);
 
@@ -44,8 +43,8 @@ namespace AATB
                                   + DBLQ + OutputWAVFilePath + DBLQ;
                 if (Debug) Console.WriteLine(ExternalArguments);
 
-                // run external program to concatenate files, discard output
-                ExternalOutput = RunProcess(ExternalProgram, ExternalArguments);
+                // run external process, discard external output
+                RunProcess(ExternalProgram, ExternalArguments);
             }
             else
                 Log.WriteLine("*** Combined wav file exists, use overwrite option to replace");

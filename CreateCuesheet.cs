@@ -124,14 +124,11 @@ namespace AATB
                     }
                 }
                 else
-                {
                     Log.WriteLine("*** Track metadata cannot be found, cuesheet not created");
-                }
             }
             else
-            {
                 Log.WriteLine("*** Cuesheet exists, use overwrite to replace: " + CuesheetFileName);
-            }
+
         } // end CreateCuesheetFile
     }
 }

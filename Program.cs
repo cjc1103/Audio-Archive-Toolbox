@@ -249,10 +249,11 @@ namespace AATB
                             }
                             break;
                         case "--aac-quality":
+                        case "--m4a-quality":
                             SetQValue(M4A, opt);
                             break;
 
-                        // OGG compression
+                        // Vorbis compression, OGG container
                         case "--ogg":
                             switch (opt)
                             {

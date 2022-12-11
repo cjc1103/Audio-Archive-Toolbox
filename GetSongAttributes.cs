@@ -79,9 +79,9 @@ namespace AATB
             ExternalOutput = RunProcess(ExternalProgram, ExternalArguments);
 
             // check for invalid output - perhaps using GUI instead of CLI version of MediaInfo
-            if (ExternalOutput == null)
+            if (ExternalOutput.Length == 0)
             {
-                Log.WriteLine("*** MediaInfo returns null, are you using the CLI version?");
+                Log.WriteLine("*** MediaInfo does not return track duration, are you using the CLI version?");
                 Environment.Exit(0);
             }
             // remove trailing spaces

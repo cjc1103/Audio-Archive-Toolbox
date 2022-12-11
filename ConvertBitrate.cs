@@ -38,8 +38,7 @@ namespace AATB
                 OutputFilePath,
                 SongBitrate,
                 ExternalProgram,
-                ExternalArguments,
-                ExternalOutput;
+                ExternalArguments;
 
             ExternalProgram = "sox.exe";
             OutputDirPath = Dir.ParentPath + BACKSLASH + ConversionToBitrate;
@@ -101,8 +100,8 @@ namespace AATB
                                           + " -b " + BitDepth
                                           + " -r " + SampleRate
                                           + SPACE + DBLQ + OutputFilePath + DBLQ;
-                        // run external program
-                        ExternalOutput = RunProcess(ExternalProgram, ExternalArguments);
+                        // run external process, discard external output
+                        RunProcess(ExternalProgram, ExternalArguments);
                     }
                     else
                     {
