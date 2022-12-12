@@ -22,19 +22,19 @@ namespace AATB
               + Convert.ToInt32(ConvertAudioBitrate)
               + Convert.ToInt32(CreateCuesheet) != 1)
             {
-                Log.WriteLine("Error: Conflicting options\n"
+                Log.WriteLine("Input error: Conflicting options\n"
                    + "Choose compress, verify, decompress, delete, create cuesheet, or convert wav bitrate");
                 Environment.Exit(0);
             }
             if (CreateCuesheet && UseCuesheet)
             {
-                Log.WriteLine("Error: Conflicting cuesheet options\n"
+                Log.WriteLine("Input error: Conflicting cuesheet options\n"
                    + "Choose create cuesheet --create-cuesheet, or use cuesheet metadata --compress --use-cuesheet");
                 Environment.Exit(0);
             }
             if (UseCuesheet && UseInfotext)
             {
-                Log.WriteLine("Error: Conflicting metadata options\n"
+                Log.WriteLine("Input error: Conflicting metadata options\n"
                    + "Choose use cuesheet metadata --use-cuesheet, or use info text metadata --use-infotext");
                 Environment.Exit(0);
             }
