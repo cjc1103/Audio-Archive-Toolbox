@@ -45,31 +45,13 @@ namespace AATB
         {
             /* Constructor for AATB_DirInfo class
              * Creates data structures and populates directory names
-             * Other class variables are populated as the directories are
-             * traversed from the WalkDirectoryTree method
+             * Other class variables are initially null, and are populated
+             * with metadata from the directory name, infotext file, or cuesheet.
              */
             Name = Directory.Name;
             Path = Directory.FullName;
             ParentName = Directory.Parent.Name;
             ParentPath = Directory.Parent.FullName;
-            BaseName = null;
-            Extension = null;
-            ParentBaseName = null;
-            Bitrate = null;
-            AudioCompressionFormat = null;
-            Type = null;
-            RecordingType = null;
-            AlbumArtist = null;
-            Album = null;
-            Event = null;
-            Venue = null;
-            Location = null;
-            Stage = null;
-            ConcertDate = null;
-            Comment = null;
-            MetadataSource = null;
-            ParentInfotextPath = null;
-            ParentCuesheetPath = null;
             TitleList = new List<string>();
             ArtistList = new List<string>();
             TrackDurationList = new List<string>();
