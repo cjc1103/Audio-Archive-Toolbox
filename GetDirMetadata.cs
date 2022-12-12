@@ -389,19 +389,20 @@ namespace AATB
                 Dir.Location = SearchList(DataList, "LOCATION ");
                 Dir.ConcertDate = SearchList(DataList, "DATE ");
 
-                // if album info not found in infotext file, build album string
+                // if album not found in cuesheet, then build album string
+                // from venue, concert date, and stage metadata, separated by spaces
                 if (Dir.Album == null)
                 {
                     Dir.Album = Dir.Event;
-                    if (Dir.Venue != null)
+                    if (Dir.Venue != null && Dir.Venue.Length > 0)
                         Dir.Album += (SPACE + Dir.Venue);
-                    if (Dir.ConcertDate != null)
+                    if (Dir.ConcertDate != null && Dir.ConcertDate.Length > 0)
                         Dir.Album += (SPACE + Dir.ConcertDate);
-                    if (Dir.Stage != null)
+                    if (Dir.Stage != null && Dir.Stage.Length > 0)
                         Dir.Album += (SPACE + Dir.Stage);
                 }
 
-                // AlbumArtist and ConcertDate are minimum required to document concert
+                // album artist and album name are minimum required to document concert
                 if (Dir.AlbumArtist != null && Dir.Album != null)
                     Dir.MetadataSource = CUESHEET;
                 else

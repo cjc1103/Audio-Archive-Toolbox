@@ -30,6 +30,7 @@ namespace AATB
             ACTIVE = 1,
             UPPER = 2;
         const string
+            BLANK = "",
             SPACE = " ",
             HYPHEN = "-",
             PERIOD = ".",
