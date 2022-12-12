@@ -299,7 +299,7 @@ Program history
       (3) log entire StandardError stream in "Debug" and "Verbose" modes
 
 5.6 2022-12-11
-    Updated .NET SDK to 7.0
+    Updated .NET SDK to 7.0, included .NET 7.0 Desktop Runtime in installation script
     Removed redundant check for TRACKEDAUDIO dir type from create cuesheet section of Program method
     Added SplitDataByLine method to split data stream into an array of lines separated by
       dos|unix line delimiters <cr> <line feed> <return>
