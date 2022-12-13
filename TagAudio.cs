@@ -23,7 +23,7 @@ namespace AATB
             int
                 TrackNumber = 0;
 
-            Log.WriteLine("    Creating tags");
+            Log.WriteLine("    Updating tags");
             foreach (FileInfo fi in CompFileList)
             {
                 // increment track number and convert to two place string

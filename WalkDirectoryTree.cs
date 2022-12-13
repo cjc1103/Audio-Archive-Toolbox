@@ -226,7 +226,7 @@ namespace AATB
                                 // Create ID3 tags
                                 // Note: This also changes MD5 checksums, recreate them
                                 MD5FilePath = Dir.Path + BACKSLASH + Dir.Name + PERIOD + MD5;
-                                if (CreateTags)
+                                if (UpdateTags)
                                 {
                                     TagCompressedAudio(CompAudioFormat, Dir, CompAudioFileList);
                                     CreateMD5ChecksumFile(MD5FilePath, CompAudioFileList, WriteLogMessage);

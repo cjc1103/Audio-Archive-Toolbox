@@ -89,7 +89,7 @@ namespace AATB
             CreateSHN = false,
             CreateM3U = false,
             CreateCuesheet = false,
-            CreateTags = false,
+            UpdateTags = false,
             UseInfotext = false,
             UseCuesheet = false,
             UseLowerCase = false,
@@ -388,7 +388,7 @@ namespace AATB
                         // create metadata tags
                         case "-t":
                         case "--tag":
-                            CreateTags = true;
+                            UpdateTags = true;
                             break;
 
                         // convert to lower case
@@ -412,7 +412,7 @@ namespace AATB
                         // other options
                         case "--cjc":
                             // that's my initials.. :-)
-                            // shortcut for --compress --aac|m4a=all --flac=all --all-reports --m3u-playlist
+                            // --compress --aac|m4a=all --flac=all --all-reports --m3u-playlist
                             CompressAudio = true;
                             SetFormatBitrate(M4A, ALLBITRATES);
                             SetFormatBitrate(FLAC, ALLBITRATES);

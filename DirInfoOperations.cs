@@ -45,8 +45,7 @@ namespace AATB
         {
             /* Constructor for AATB_DirInfo class
              * Creates data structures and populates directory names
-             * Other class variables are initially null, and are populated
-             * with metadata from the directory name, infotext file, or cuesheet.
+             * Other class variables are initially null
              */
             Name = Directory.Name;
             Path = Directory.FullName;

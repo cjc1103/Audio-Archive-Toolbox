@@ -72,9 +72,6 @@ namespace AATB
                     if (CreateSHN)
                         Log.WriteLine("Create SHNTool report (SHN)");
                 }
-                // ID3 tags
-                if (CreateTags)
-                    Log.WriteLine("Create ID3 tags");
                 // M3U Playlist
                 if (CreateM3U)
                     Log.WriteLine("Create M3U playlist");
@@ -89,7 +86,7 @@ namespace AATB
                     Environment.Exit(0);
                 }
                 // check at least one flag is set
-                if (!CreateMD5 && !CreateFFP && !CreateSHN && !CreateTags & !CreateM3U)
+                if (!CreateMD5 && !CreateFFP && !CreateSHN && !UpdateTags & !CreateM3U)
                 {
                     Log.WriteLine("Input error: Specify options [--md5 --ffp --shn]|--all-reports, --tag, --m3u");
                     Environment.Exit(0);
@@ -112,7 +109,7 @@ namespace AATB
                         Log.WriteLine("  Verify SHNTool report (SHN)");
                 }
                 // ID3 tags
-                if (CreateTags)
+                if (UpdateTags)
                     Log.WriteLine("Create/update ID3 tags and MD5 checksum");
                 // M3U Playlist
                 if (CreateM3U)
