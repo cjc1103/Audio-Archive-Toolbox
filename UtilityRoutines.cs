@@ -30,7 +30,7 @@ namespace AATB
             + "  --alac[=<bitrate>|all](all)\n"
             + "  --flac[=<bitrate>|all](all)\n"
             + "  [--md5, --ffp, --shn]|[-a|--all]\n"
-            + "  [--tag]\n"
+            + "  [-t|-tag]\n"
             + "[-d|--decompress]\n"
             + "  --flac[=<bitrate>|all](all)\n"
             + "[-x|--delete]\n"
