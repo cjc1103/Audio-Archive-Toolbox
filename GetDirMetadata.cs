@@ -417,13 +417,13 @@ namespace AATB
         {
             /* Get directory metadata from directory name
              * Inputs:
-             *   Dir class
+             *   Dir   Directory as AATB_DirInfo class instance
              *     Dir.BaseNameTemp1
              *     Dir.BaseNameTemp2
              *     Dir.BaseNameTemp3
              *     Dir.RecordingType
              * Outputs:
-             *   Dir class
+             *   Dir   Directory as AATB_DirInfo class instance
              *     Dir.AlbumArtist
              *     Dir.Album
              *     Dir.ConcertDate
@@ -435,13 +435,13 @@ namespace AATB
                 case LIVE:
                 {
                     Dir.AlbumArtist = Dir.BaseNameTemp1;
+                    Dir.Album = Dir.AlbumArtist;
                     Dir.ConcertDate = Dir.BaseNameTemp2;
-                    Dir.Album = Dir.AlbumArtist + SPACE + Dir.ConcertDate;
+                    if (Dir.ConcertDate != String.Empty)
+                        Dir.Album += SPACE + Dir.ConcertDate;
+                    Dir.Stage = Dir.BaseNameTemp3;
                     if (Dir.BaseNameTemp3 != String.Empty)
-                    {
-                        Dir.Stage = Dir.BaseNameTemp3;
-                        Dir.Album += (SPACE + Dir.Stage);
-                    }
+                        Dir.Album += SPACE + Dir.Stage;
                     break;
                 }
                 case CD:
