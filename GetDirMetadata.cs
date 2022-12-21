@@ -318,7 +318,7 @@ namespace AATB
                     }
                 }
 
-                // build album string
+                // album = event + venue + date + stage, separated by spaces
                 Dir.Album = Dir.Event;
                 if (Dir.Venue != null)
                     Dir.Album += (SPACE + Dir.Venue);
@@ -390,7 +390,7 @@ namespace AATB
                 Dir.ConcertDate = SearchList(DataList, "DATE ");
 
                 // if album not found in cuesheet, then build album string
-                // from venue, concert date, and stage metadata, separated by spaces
+                // album = event + venue + date + stage, separated by spaces
                 if (Dir.Album == null)
                 {
                     Dir.Album = Dir.Event;
@@ -435,6 +435,7 @@ namespace AATB
                 case LIVE:
                 {
                     Dir.AlbumArtist = Dir.BaseNameTemp1;
+                    // album = artist + date + stage, separated by spaces
                     Dir.Album = Dir.AlbumArtist;
                     Dir.ConcertDate = Dir.BaseNameTemp2;
                     if (Dir.ConcertDate != String.Empty)
