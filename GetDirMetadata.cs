@@ -382,7 +382,7 @@ namespace AATB
 
                 // search for standard metadata labels
                 Dir.AlbumArtist = SearchList(DataList, "PERFORMER ");
-                Dir.Album = SearchList(DataList, "ALBUM");
+                Dir.Album = SearchList(DataList, "TITLE");
                 Dir.Event = SearchList(DataList, "EVENT ");
                 Dir.Venue = SearchList(DataList, "VENUE ");
                 Dir.Stage = SearchList(DataList, "STAGE ");
@@ -402,7 +402,7 @@ namespace AATB
                         Dir.Album += (SPACE + Dir.Stage);
                 }
 
-                // album artist and album name are minimum required to document concert
+                // album artist and album name are minimum required
                 if (Dir.AlbumArtist != null && Dir.Album != null)
                     Dir.MetadataSource = CUESHEET;
                 else
