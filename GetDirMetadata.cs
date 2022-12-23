@@ -7,7 +7,7 @@ namespace AATB
     {
         static void GetDirInformation(AATB_DirInfo Dir, FileInfo[] ParentInfotextList, FileInfo[] ParentCuesheetList)
         {
-            /* populate basic directory information
+            /* Populate basic directory information
              * Inputs:
              *   Dir class
              * Outputs:
@@ -79,7 +79,7 @@ namespace AATB
 
         static void GetDirMetadata(AATB_DirInfo Dir)
         {
-            /* extract directory metadata
+            /* Extract directory metadata
              * Inputs:
              *   Dir class
              *   InfotextPath location of info.txt file with recording information
@@ -204,7 +204,7 @@ namespace AATB
                 else if (UseCuesheet)
                     GetDirMetadataFromCuesheet(Dir);
 
-                // if infotext or cuesheet data is not valid, source reverts to DIRNAME
+                // if infotext or cuesheet data is not valid, MetadataSource remains DIRNAME
                 if (Dir.MetadataSource == DIRNAME)
                     GetDirMetadataFromDirectoryName(Dir);
 
@@ -228,7 +228,7 @@ namespace AATB
 
         static void GetDirMetadataFromInfotext(AATB_DirInfo Dir)
         {
-            /* Extract directory metadata from Info File
+            /* Extract directory metadata from infotext file
              * Note: will overwrite existing metadata derived from directory name
              * Inputs:
              *   Dir class
@@ -322,7 +322,8 @@ namespace AATB
                 if (Dir.Stage != null)
                     Dir.Album += (SPACE + Dir.Stage);
 
-                // AlbumArtist and ConcertDate are minimum required to document concert
+                // verify metadata has been found and reset MetadataSource
+                // artist and concert date are minimum required to document concert
                 if (Dir.AlbumArtist != null && Dir.ConcertDate != null)
                     Dir.MetadataSource = INFOFILE;
                 else
@@ -394,7 +395,8 @@ namespace AATB
                         Dir.Album += (SPACE + Dir.Stage);
                 }
 
-                // album artist and album name are minimum required
+                // verify metadata has been found and reset MetadataSource
+                // artist and album name are minimum required
                 if (Dir.AlbumArtist != null && Dir.Album != null)
                     Dir.MetadataSource = CUESHEET;
                 // otherwise Dir.Metadatasource remains Directory
