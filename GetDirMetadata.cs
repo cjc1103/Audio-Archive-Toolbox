@@ -59,20 +59,20 @@ namespace AATB
                 }
             if (Debug) Console.WriteLine("dbg: Dir ext: {0}  Dir bitrate: {1}", Dir.Extension, Dir.Bitrate);
 
-            // get parent directory infotext file - if more than one infotext file, ignore them
-            if (ParentInfotextList.Length >= 1)
+            // get first parent directory infotext file - ignore multiple infotext files
+            if (UseInfotext && ParentInfotextList.Length >= 1)
             {
                 Dir.ParentInfotextPath = ParentInfotextList[0].FullName;
                 if (ParentInfotextList.Length > 1)
-                    Dir.MultipleMetadataSources = true;
+                    Log.WriteLine("*** Multiple infotext files exist, using: " + ParentInfotextList[0].Name);
             }
 
-            // get parent directory cuesheet - if more than one cuesheet, ignore them
-            if (ParentCuesheetList.Length >= 1)
+            // get first parent directory cuesheet - ignore multiple cuesheets
+            if (UseCuesheet && ParentCuesheetList.Length >= 1)
             {
                 Dir.ParentCuesheetPath = ParentCuesheetList[0].FullName;
                 if (ParentInfotextList.Length > 1)
-                    Dir.MultipleMetadataSources = true;
+                    Log.WriteLine("*** Multiple cuesheet files exist, using: " + ParentCuesheetList[0].Name);
             }
 
         } //end GetDirInformation
@@ -162,7 +162,6 @@ namespace AATB
 
             // check metadata info file exists and is in the correct format
             if (UseInfotext
-                && !Dir.MultipleMetadataSources
                 && Dir.ParentInfotextPath != null)
             {
                 // if infotext filepath is not in correct format move it, then update Dir filepath
@@ -175,7 +174,6 @@ namespace AATB
                 }
             }
             else if (UseCuesheet
-                     && !Dir.MultipleMetadataSources
                      && Dir.ParentCuesheetPath != null)
             {
                 // if cuesheet filepath is not in correct format move it, then update Dir filepath
@@ -271,9 +269,6 @@ namespace AATB
                 DateMatchLine4,
                 DateMatchLine5;
 
-            if (Dir.MultipleMetadataSources)
-                Log.WriteLine("*** Multiple info text files found, only the first one is used");
-
             InfotextFileName = SplitFileName(Dir.ParentInfotextPath);
             if (File.Exists(Dir.ParentInfotextPath))
             {
@@ -368,9 +363,6 @@ namespace AATB
             string[]
                 DataList;
 
-            if (Dir.MultipleMetadataSources)
-                Log.WriteLine("*** Multiple cuesheet files found, only the first one is used");
-
             // get parent directory cuesheet filename
             CuesheetFileName = SplitFileName(Dir.ParentCuesheetPath);
             if (File.Exists(Dir.ParentCuesheetPath))
@@ -405,6 +397,7 @@ namespace AATB
                 // album artist and album name are minimum required
                 if (Dir.AlbumArtist != null && Dir.Album != null)
                     Dir.MetadataSource = CUESHEET;
+                // otherwise Dir.Metadatasource remains Directory
                 else
                     Log.WriteLine("*** Performer and Title information missing from cuesheet");
             }

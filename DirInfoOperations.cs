@@ -31,8 +31,6 @@ namespace AATB
             MetadataSource,
             ParentInfotextPath,
             ParentCuesheetPath;
-        public bool
-            MultipleMetadataSources;
         public Match
             PatternMatchDate,
             PatternMatchSHS;
