@@ -68,7 +68,7 @@ namespace AATB
                         File.AppendAllText(Dir.ParentCuesheetPath,
                             "PERFORMER " + DBLQ + Dir.AlbumArtist + DBLQ + Environment.NewLine);
                         File.AppendAllText(Dir.ParentCuesheetPath,
-                            "ALBUM " + DBLQ + Dir.Album + DBLQ + Environment.NewLine);
+                            "TITLE " + DBLQ + Dir.Album + DBLQ + Environment.NewLine);
                         File.AppendAllText(Dir.ParentCuesheetPath,
                             "EVENT " + DBLQ + Dir.Event + DBLQ + Environment.NewLine);
                         File.AppendAllText(Dir.ParentCuesheetPath,
