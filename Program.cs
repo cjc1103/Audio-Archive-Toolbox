@@ -214,7 +214,7 @@ namespace AATB
                             }
                             break;
 
-                        case "-r":
+                        case "-e":
                         case "--create-cuesheet":
                             CreateCuesheet = true;
                             break;
