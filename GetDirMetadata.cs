@@ -60,7 +60,9 @@ namespace AATB
             if (Debug) Console.WriteLine("dbg: Dir ext: {0}  Dir bitrate: {1}", Dir.Extension, Dir.Bitrate);
 
             // get first parent directory infotext file - ignore multiple infotext files
-            if (UseInfotext && ParentInfotextList.Length >= 1)
+            if (UseInfotext
+                && !UseCurrentDirInfo
+                && ParentInfotextList.Length >= 1)
             {
                 Dir.ParentInfotextPath = ParentInfotextList[0].FullName;
                 if (ParentInfotextList.Length > 1)
@@ -68,7 +70,9 @@ namespace AATB
             }
 
             // get first parent directory cuesheet - ignore multiple cuesheets
-            if (UseCuesheet && ParentCuesheetList.Length >= 1)
+            if (UseCuesheet
+                && !UseCurrentDirInfo 
+                && ParentCuesheetList.Length >= 1)
             {
                 Dir.ParentCuesheetPath = ParentCuesheetList[0].FullName;
                 if (ParentInfotextList.Length > 1)

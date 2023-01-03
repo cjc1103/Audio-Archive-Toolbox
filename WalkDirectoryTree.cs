@@ -216,7 +216,7 @@ namespace AATB
 
                             if (CompAudioFileList != null)
                             {
-                                // repopulate directory info from current directory
+                                // if required repopulate directory info from current directory
                                 if (UseCurrentDirInfo)
                                     GetDirInformation(Dir, InfotextList, CuesheetList);
                                 // populate directory metadata
