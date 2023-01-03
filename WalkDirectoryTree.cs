@@ -58,7 +58,7 @@ namespace AATB
             AATB_DirInfo Dir = new(CurrentDir);
 
             // populate directory metadata - exclude root directory
-            if (Dir.Path != RootDir)
+            if (Dir.Path != RootDir && !UseCurrentDirInfo)
                 GetDirInformation(Dir, ParentInfotextList, ParentCuesheetList);
 
             // initialize dir metadata flags
