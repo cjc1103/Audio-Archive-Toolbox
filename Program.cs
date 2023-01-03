@@ -214,11 +214,6 @@ namespace AATB
                             }
                             break;
 
-                        case "-e":
-                        case "--create-cuesheet":
-                            CreateCuesheet = true;
-                            break;
-
                         // OTHER FUNCTIONS
                         // MP3 compression
                         case "--mp3":
@@ -379,6 +374,11 @@ namespace AATB
                         case "-i":
                         case "--use-infotext":
                             UseInfotext = true;
+                            break;
+
+                        case "-k":
+                        case "--create-cuesheet":
+                            CreateCuesheet = true;
                             break;
 
                         // extract metadata from cuesheet 

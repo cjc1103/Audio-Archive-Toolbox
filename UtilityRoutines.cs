@@ -39,7 +39,7 @@ namespace AATB
             + "  --wav=<bitrate>\n"
             + "[-z|--convert-to-bitrate]=<bitrate>(16-44)\n"
             + "  --wav=<convert from bitrate>\n"
-            + "[-e|--create-cuesheet]\n"
+            + "[-k|--create-cuesheet]\n"
             + "  [-i|--use-infotext]\n"
             + "  --wav[=<bitrate>|all](all)\n"
             + "[-l|--lower-case]\n"
