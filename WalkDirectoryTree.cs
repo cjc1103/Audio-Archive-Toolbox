@@ -40,6 +40,8 @@ namespace AATB
                 MD5FileList = CurrentDir.GetFiles(ALLMD5),
                 FFPFileList = CurrentDir.GetFiles(ALLFFP),
                 SHNReportList = CurrentDir.GetFiles(ALLSHN),
+                InfotextList = CurrentDir.GetFiles(ALLINFOTXT),
+                CuesheetList = CurrentDir.GetFiles(ALLINFOCUE),
                 ParentInfotextList = CurrentDir.Parent.GetFiles(ALLINFOTXT),
                 ParentCuesheetList = CurrentDir.Parent.GetFiles(ALLINFOCUE);
             bool
@@ -214,14 +216,13 @@ namespace AATB
 
                             if (CompAudioFileList != null)
                             {
-                                if (!DirInfoPopulated)
-                                {
-                                    // populate directory metadata
-                                    GetDirMetadata(Dir);
-                                    // populate track metadata
-                                    GetTrackMetadata(Dir, CompAudioFileList);
-                                    DirInfoPopulated = true;
-                                }
+                                // repopulate directory info from current directory
+                                if (UseCurrentDirInfo)
+                                    GetDirInformation(Dir, InfotextList, CuesheetList);
+                                // populate directory metadata
+                                GetDirMetadata(Dir);
+                                // populate track metadata
+                                GetTrackMetadata(Dir, CompAudioFileList);
 
                                 // Create ID3 tags
                                 // Note: This also changes MD5 checksums, recreate them
@@ -273,10 +274,6 @@ namespace AATB
                                     else
                                         Log.WriteLine("*** M3U playlist exists, use overwrite option to replace");
                                 }
-
-                                // Copy info.txt File from parent directory
-                                if (UseInfotext)
-                                    CopyTextFile(Dir.ParentInfotextPath, Dir.Path);
                             }
                             else
                                 Log.WriteLine("*** No " + CompAudioFormat.ToUpper() + " format files found");

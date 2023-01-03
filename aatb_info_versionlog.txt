@@ -292,14 +292,14 @@ Program history
 	 Updated Log operations to print version info before checking user input, including printing help
 
 5.5  2022-09-06
+     Updated .NET SDK to 7.0, included .NET 7.0 Desktop Runtime in installation script
      Added Verbose flag to enable logging StandardError stream
      Added PrintOutputStream method to
       (1) log StandardOutput stream in "Debug" mode
       (2) log any line in StandardError stream that contains the word "error" in "Verbose" mode
       (3) log entire StandardError stream in "Debug" and "Verbose" modes
 
-5.6 2022-12-11
-    Updated .NET SDK to 7.0, included .NET 7.0 Desktop Runtime in installation script
+5.6 2023-01-03
     Removed redundant check for TRACKEDAUDIO dir type from create cuesheet section of Program method
     Added SplitDataByLine method to split data stream into an array of lines separated by
       dos|unix line delimiters <cr> <line feed> <return>
@@ -310,3 +310,4 @@ Program history
     Added default case for switch statement in CompressWAV and DecompressToWav methods
     Corrected search terms for building Album string in DirMetadataFromCuesheet
 	Corrected album metadata search term in GetTrackMetadataFromCuesheet method to TITLE
+    Added RenameInfoFiles flag to rename info.txt and .cue files

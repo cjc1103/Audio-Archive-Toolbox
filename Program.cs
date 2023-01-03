@@ -94,6 +94,8 @@ namespace AATB
             UseCuesheet = false,
             UseLowerCase = false,
             UseTitleCase = false,
+            RenameInfoFiles = false,
+            UseCurrentDirInfo = false,
             WriteLogMessage = true,
             NoLogMessage = false,
             Verbose = false,
@@ -359,7 +361,7 @@ namespace AATB
                             CreateSHN = true;
                             break;
                         
-                            // create all checksum and shntool reports
+                        // create all checksum and shntool reports
                         case "-a":
                         case "--all-reports":
                             CreateMD5 = true;
@@ -368,7 +370,7 @@ namespace AATB
                             break;
 
                         // create m3u playlist
-                        case "-u":
+                        case "-m":
                         case "--m3u-playlist":
                             CreateM3U = true;
                             break;
@@ -398,9 +400,20 @@ namespace AATB
                             break;
 
                         // convert to title case
-                        case "-s":
+                        case "-u":
                         case "--title-case":
                             UseTitleCase = true;
+                            break;
+
+                        // rename info files
+                        case "-r":
+                        case "--rename-infofiles":
+                            RenameInfoFiles = true;
+                            break;
+
+                        case "-f":
+                        case "--use-currentdirinfo":
+                            UseCurrentDirInfo = true;
                             break;
 
                         // overwrite existing files
@@ -423,17 +436,17 @@ namespace AATB
                             CreateM3U = true;
                             break;
 
+                        // error reporting for external processes
+                        case "-b":
+                        case "--verbose":
+                            Verbose = true;
+                            break;
+
                         // print program options and exit
                         case "-h":
                         case "--help":
                             PrintHelp();
                             Environment.Exit(0);
-                            break;
-
-                        // error reporting for external processes
-                        case "-b":
-                        case "--verbose":
-                            Verbose = true;
                             break;
 
                         // additonal logging for debugging

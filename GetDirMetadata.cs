@@ -164,9 +164,10 @@ namespace AATB
             if (UseInfotext
                 && Dir.ParentInfotextPath != null)
             {
-                // if infotext filepath is not in correct format move it, then update Dir filepath
+                // if infotext filepath is not in correct format, rename it
                 TargetInfotextFilePath = Dir.ParentPath + BACKSLASH + Dir.ParentBaseName + PERIOD + INFOTXT;
-                if (Dir.ParentInfotextPath != TargetInfotextFilePath)
+                if (RenameInfoFiles
+                    && (Dir.ParentInfotextPath != TargetInfotextFilePath))
                 {
                     Log.WriteLine("  Renaming info.txt file to: " + TargetInfotextFilePath);
                     if (MoveFile(Dir.ParentInfotextPath, TargetInfotextFilePath))
@@ -176,9 +177,10 @@ namespace AATB
             else if (UseCuesheet
                      && Dir.ParentCuesheetPath != null)
             {
-                // if cuesheet filepath is not in correct format move it, then update Dir filepath
+                // if cuesheet filepath is not in correct format, rename it
                 TargetCuesheetFilePath = Dir.ParentPath + BACKSLASH + Dir.ParentBaseName + PERIOD + INFOCUE;
-                if (Dir.ParentCuesheetPath != TargetCuesheetFilePath)
+                if (RenameInfoFiles
+                    && (Dir.ParentCuesheetPath != TargetCuesheetFilePath))
                 {
                     Log.WriteLine("  Renaming cuesheet file to: " + TargetCuesheetFilePath);
                     if (MoveFile(Dir.ParentCuesheetPath, TargetCuesheetFilePath))
@@ -375,7 +377,7 @@ namespace AATB
 
                 // search for standard metadata labels
                 Dir.AlbumArtist = SearchList(DataList, "PERFORMER ");
-                Dir.Album = SearchList(DataList, "TITLE");
+                Dir.Album = SearchList(DataList, "TITLE ");
                 Dir.Event = SearchList(DataList, "EVENT ");
                 Dir.Venue = SearchList(DataList, "VENUE ");
                 Dir.Stage = SearchList(DataList, "STAGE ");
