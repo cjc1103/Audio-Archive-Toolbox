@@ -181,7 +181,7 @@ namespace AATB
                 if (SHNErrors == 0)
                     Log.WriteLine("  OK");
                 else
-                    Log.WriteLine("");  // clear output buffer
+                    Log.WriteLine();  // clear output buffer
             }
             else
                 Log.WriteLine("    Multiple shntool report files exist, and are not verified");
