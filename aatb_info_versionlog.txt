@@ -312,3 +312,4 @@ Program history
 	Corrected album metadata search term in GetTrackMetadataFromCuesheet method to TITLE
     Added RenameInfoFiles flag to rename info.txt and .cue files
     Added UseCurrentDirInfo flag for Verify mode - forces program to read info files in current dir
+    Combined infotext and cuesheet function into new method GetDirTextFiles
