@@ -200,6 +200,12 @@ namespace AATB
                 // compressed audio directory
                 if (Dir.Type == COMPRESSEDAUDIO)
                 {
+                    // populate directory info from text files
+                    if (UseCurrentDirInfo)
+                        GetDirTextFiles(Dir, InfotextList, CuesheetList);
+                    else
+                        GetDirTextFiles(Dir, ParentInfotextList, ParentCuesheetList);
+
                     // loop through all compressed audio formats in AudioFormats list
                     // ignore last entry in list = WAV
                     for (index=0; index <= AudioFormats.Length - 2; index++)
@@ -217,12 +223,6 @@ namespace AATB
 
                             if (CompAudioFileList != null)
                             {
-                                // populate directory info from text files
-                                if (UseCurrentDirInfo)
-                                    GetDirTextFiles(Dir, InfotextList, CuesheetList);
-                                else
-                                    GetDirTextFiles(Dir, ParentInfotextList, ParentCuesheetList);
-
                                 // populate directory metadata
                                 GetDirMetadata(Dir);
 
