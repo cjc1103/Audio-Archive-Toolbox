@@ -57,13 +57,13 @@ namespace AATB
             // AATB_DirInfo constructor will populate directory information
             AATB_DirInfo Dir = new(CurrentDir);
 
-            // populate directory metadata - exclude root directory
-            if (Dir.Path != RootDir)
-                GetDirInformation(Dir);
-
             // initialize dir metadata flags
             DirInfoPopulated = false;
             DirTrackInfoPopulated = false;
+
+            // populate directory metadata - exclude root directory
+            if (Dir.Path != RootDir)
+                GetDirInformation(Dir);
 
             // = = = = = = = = Compress Audio section = = = = = = = =
             // Compress WAV audio files to various compressed formats
@@ -93,8 +93,8 @@ namespace AATB
                             // populate directory metadata - once for each directory
                             if (!DirInfoPopulated)
                             {
-                                GetDirMetadata(Dir);
                                 GetDirTextFiles(Dir, ParentInfotextList, ParentCuesheetList);
+                                GetDirMetadata(Dir);
                                 DirInfoPopulated = true;
                             }
                             

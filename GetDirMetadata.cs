@@ -72,10 +72,9 @@ namespace AATB
              *   Dir class
              *     Dir.InfotextPath
              *     Dir.CuesheetPath
-             */         
+             */
             string
-                TargetInfotextFilePath,
-                TargetCuesheetFilePath;
+                TargetFilePath;
 
             if (UseInfotext)
             {
@@ -89,13 +88,13 @@ namespace AATB
                 {
                     Dir.InfotextPath = InfotextList[0].FullName;
                     // if infotext filepath is not in correct format, rename it
-                    TargetInfotextFilePath = Dir.ParentPath + BACKSLASH + Dir.ParentBaseName + PERIOD + INFOTXT;
+                    TargetFilePath = Dir.ParentPath + BACKSLASH + Dir.ParentBaseName + PERIOD + INFOTXT;
                     if (RenameInfoFiles
-                        && (Dir.InfotextPath != TargetInfotextFilePath))
+                        && (Dir.InfotextPath != TargetFilePath))
                     {
-                        Log.WriteLine("  Renaming info.txt file to: " + TargetInfotextFilePath);
-                        if (MoveFile(Dir.InfotextPath, TargetInfotextFilePath))
-                            Dir.InfotextPath = TargetInfotextFilePath;
+                        Log.WriteLine("  Renaming info.txt file to: " + TargetFilePath);
+                        if (MoveFile(Dir.InfotextPath, TargetFilePath))
+                            Dir.InfotextPath = TargetFilePath;
                     }
                 }
             }
@@ -112,13 +111,13 @@ namespace AATB
                 {
                     Dir.CuesheetPath = CuesheetList[0].FullName;
                     // if cuesheet filepath is not in correct format, rename it
-                    TargetCuesheetFilePath = Dir.ParentPath + BACKSLASH + Dir.ParentBaseName + PERIOD + INFOCUE;
+                    TargetFilePath = Dir.ParentPath + BACKSLASH + Dir.ParentBaseName + PERIOD + INFOCUE;
                     if (RenameInfoFiles
-                        && (Dir.CuesheetPath != TargetCuesheetFilePath))
+                        && (Dir.CuesheetPath != TargetFilePath))
                     {
-                        Log.WriteLine("  Renaming cuesheet file to: " + TargetCuesheetFilePath);
-                        if (MoveFile(Dir.CuesheetPath, TargetCuesheetFilePath))
-                            Dir.CuesheetPath = TargetCuesheetFilePath;
+                        Log.WriteLine("  Renaming cuesheet file to: " + TargetFilePath);
+                        if (MoveFile(Dir.CuesheetPath, TargetFilePath))
+                            Dir.CuesheetPath = TargetFilePath;
                     }
                 }
             }
@@ -348,7 +347,7 @@ namespace AATB
                     Log.WriteLine("*** Artist and concert date missing from info file");
             }
             else
-                Log.WriteLine("*** Infotext file not found");
+                Log.WriteLine("*** Infotext file does not exist:" + InfotextFileName);
 
         } // end GetDirMetadataFromInfotext
 
