@@ -47,10 +47,10 @@ namespace AATB
             BR2488 = "24-88",
             BR2496 = "24-96",
             RAW = "Audio",  // subdirectory containing raw wav audio files
-            ALLFORMATS = "allformats",
-            ALLBITRATES = "allbitrates",
-            ANYFORMAT = "anyformat",
-            ANYBITRATE = "anybitrate",
+            ALLFORMATS = "All Formats",
+            ALLBITRATES = "All Bitrates",
+            ANYFORMAT = "Any Format",
+            ANYBITRATE = "Any Bitrate",
             WAV = "wav", ALLWAV = "*.wav", // subdir name for wav files is bitrate
             MP3 = "mp3", MP3F = "mp3f",
             M4A = "m4a", M4AF = "m4af", // M4A file format is MPEG-4 Audio wrapper for AAC
@@ -69,12 +69,12 @@ namespace AATB
             LIVE = "Live Recording",
             CD = "Commercial CD",
             OTHER = "Other",
-            INFOFILE = "Infotext File",
+            INFOFILE = "Infotext",
             CUESHEET = "Cuesheet",
-            DIRNAME = "Directory Name",
-            RAWAUDIO = "Raw Audio Dir",
-            TRACKEDAUDIO = "Tracked Audio Dir",
-            COMPRESSEDAUDIO = "Compressed Audio Dir";
+            DIRNAME = "Directory",
+            RAWAUDIO = "Raw Audio",
+            TRACKEDAUDIO = "Tracked Audio",
+            COMPRESSEDAUDIO = "Compressed Audio";
         static bool
             // set default value
             CompressAudio = false,
@@ -127,8 +127,8 @@ namespace AATB
             mp3Quality = { 0, 0, 4 }, // 0 is best
             aacQuality = { 0, 127, 127 },
             oggQuality = { 0, 8, 10 },
-            opusQuality = { 64, 256, 256 },
-            alacQuality = { 0, 0, 0}, // not applicable, placeholder only
+            opusQuality = { 64, 256, 256 }, // placeholder only
+            alacQuality = { 0, 0, 0}, // placeholder only
             flacQuality = { 1, 6, 10 };
         static int[][]
             // Two dimensional list of all quality parameters - must be in same order as AudioFormats list
@@ -146,9 +146,12 @@ namespace AATB
 
         static void Main(string[] argv)
         {
-            // main procedure
-            // argv is a list of the command line arguments and options
-            //   arg1[=opt], arg2[=opt], .. argn[=opt]
+            /* Main Procedure
+             * initializes data structures
+             * gets input from command line, and calls WalkDirectoryTree
+             * argv is a list of the command line arguments and options
+             *   e.g, arg1[=opt], arg2[=opt], .. argn[=opt]
+             */
 
             string
                arg, opt,

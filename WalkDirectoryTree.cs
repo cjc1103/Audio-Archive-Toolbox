@@ -505,7 +505,7 @@ namespace AATB
 
             // = = = = = = = = Create Cuesheet section = = = = = = = = 
             // Create cuesheet from directory and wav track metadata
-            // Command: -r|--create-cuesheet --wav=<bitrate>
+            // Command: -k|--create-cuesheet --wav=<bitrate>
             if (CreateCuesheet)
             {
                 if (Debug) Console.WriteLine("dbg: Create Cuesheet Section");

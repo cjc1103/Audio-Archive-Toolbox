@@ -41,7 +41,6 @@ namespace AATB
                     TrackNumber++;
                     // get track duration in milliseconds
                     TrackDuration = Dir.TrackDurationList[TrackNumber - 1];
-                    TrackDurationSec = ""; // initialize before try section
                     try
                     {
                         // convert to seconds
@@ -51,6 +50,7 @@ namespace AATB
                     }
                     catch (Exception e)
                     {
+                        TrackDurationSec = "0";
                         // flush output buffer, write exception message and exit
                         Log.WriteLine("*** Track duration conversion error in track " + TrackNumber);
                         Log.WriteLine(e.Message);
