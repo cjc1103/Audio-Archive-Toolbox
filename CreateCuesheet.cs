@@ -44,10 +44,10 @@ namespace AATB
 
             // build cuesheet filename
             CuesheetFileName = Dir.ParentBaseName + PERIOD + INFOCUE;
-            Dir.ParentCuesheetPath = Dir.ParentPath + BACKSLASH + CuesheetFileName;
+            Dir.CuesheetPath = Dir.ParentPath + BACKSLASH + CuesheetFileName;
 
-            if (!File.Exists(Dir.ParentCuesheetPath)
-                || (File.Exists(Dir.ParentCuesheetPath) && Overwrite))
+            if (!File.Exists(Dir.CuesheetPath)
+                || (File.Exists(Dir.CuesheetPath) && Overwrite))
             {
                 // check the number of Tracks > 0
                 TrackCount = Dir.TitleList.Count;
@@ -56,28 +56,28 @@ namespace AATB
                 if (TrackCount > 0)
                 {
                     Log.WriteLine("  Creating cuesheet: " + CuesheetFileName);
-                    if (CreateFile(Dir.ParentCuesheetPath))
+                    if (CreateFile(Dir.CuesheetPath))
                     {
                         WAVFileName = Dir.ParentBaseName + PERIOD + Dir.Bitrate + PERIOD + WAV;
                         // write header info to cuesheet
-                        File.AppendAllText(Dir.ParentCuesheetPath,
+                        File.AppendAllText(Dir.CuesheetPath,
                             "REM Created by Audio Archive Toolbox" + Environment.NewLine);
                         // write wav filename. This is solely for convention
-                        File.AppendAllText(Dir.ParentCuesheetPath,
+                        File.AppendAllText(Dir.CuesheetPath,
                             "FILE " + DBLQ + WAVFileName + DBLQ + " WAV" + Environment.NewLine);
-                        File.AppendAllText(Dir.ParentCuesheetPath,
+                        File.AppendAllText(Dir.CuesheetPath,
                             "PERFORMER " + DBLQ + Dir.AlbumArtist + DBLQ + Environment.NewLine);
-                        File.AppendAllText(Dir.ParentCuesheetPath,
+                        File.AppendAllText(Dir.CuesheetPath,
                             "TITLE " + DBLQ + Dir.Album + DBLQ + Environment.NewLine);
-                        File.AppendAllText(Dir.ParentCuesheetPath,
+                        File.AppendAllText(Dir.CuesheetPath,
                             "EVENT " + DBLQ + Dir.Event + DBLQ + Environment.NewLine);
-                        File.AppendAllText(Dir.ParentCuesheetPath,
+                        File.AppendAllText(Dir.CuesheetPath,
                             "VENUE " + DBLQ + Dir.Venue + DBLQ + Environment.NewLine);
-                        File.AppendAllText(Dir.ParentCuesheetPath,
+                        File.AppendAllText(Dir.CuesheetPath,
                             "STAGE " + DBLQ + Dir.Stage + DBLQ + Environment.NewLine);
-                        File.AppendAllText(Dir.ParentCuesheetPath,
+                        File.AppendAllText(Dir.CuesheetPath,
                             "LOCATION " + DBLQ + Dir.Location + DBLQ + Environment.NewLine);
-                        File.AppendAllText(Dir.ParentCuesheetPath,
+                        File.AppendAllText(Dir.CuesheetPath,
                             "DATE " + DBLQ + Dir.ConcertDate + DBLQ + Environment.NewLine);
 
                         // initialize cumulative track duration seconds
@@ -88,11 +88,11 @@ namespace AATB
                         for (TrackNumber = 1; TrackNumber <= TrackCount; TrackNumber++)
                         {
                             // write track, title, and artist info to cuesheet
-                            File.AppendAllText(Dir.ParentCuesheetPath,
+                            File.AppendAllText(Dir.CuesheetPath,
                                 "  TRACK " + String.Format("{0:D2}", TrackNumber) + " AUDIO" + Environment.NewLine);
-                            File.AppendAllText(Dir.ParentCuesheetPath,
+                            File.AppendAllText(Dir.CuesheetPath,
                                 "    TITLE " + DBLQ + Dir.TitleList[TrackNumber - 1] + DBLQ + Environment.NewLine);
-                            File.AppendAllText(Dir.ParentCuesheetPath,
+                            File.AppendAllText(Dir.CuesheetPath,
                                 "    PERFORMER " + DBLQ + Dir.ArtistList[TrackNumber - 1] + DBLQ + Environment.NewLine);
 
                             // get cumulative seconds floor
@@ -112,7 +112,7 @@ namespace AATB
                             strTrackDuration = String.Format("{0:D2}", intTrackDurationMin) + COLON
                                              + String.Format("{0:D2}", intTrackDurationSec) + COLON
                                              + String.Format("{0:D2}", intTrackDurationFrames);
-                            File.AppendAllText(Dir.ParentCuesheetPath, "    INDEX 01 " + strTrackDuration + Environment.NewLine);
+                            File.AppendAllText(Dir.CuesheetPath, "    INDEX 01 " + strTrackDuration + Environment.NewLine);
 
                             // read previous track duration entry in msec, convert to decimal seconds
                             TrackDuration = Dir.TrackDurationList[TrackNumber - 1];

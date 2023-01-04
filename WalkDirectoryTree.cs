@@ -58,8 +58,8 @@ namespace AATB
             AATB_DirInfo Dir = new(CurrentDir);
 
             // populate directory metadata - exclude root directory
-            if (Dir.Path != RootDir && !UseCurrentDirInfo)
-                GetDirInformation(Dir, ParentInfotextList, ParentCuesheetList);
+            if (Dir.Path != RootDir)
+                GetDirInformation(Dir);
 
             // initialize dir metadata flags
             DirInfoPopulated = false;
@@ -94,6 +94,7 @@ namespace AATB
                             if (!DirInfoPopulated)
                             {
                                 GetDirMetadata(Dir);
+                                GetDirTextFiles(Dir, ParentInfotextList, ParentCuesheetList);
                                 DirInfoPopulated = true;
                             }
                             
@@ -151,7 +152,7 @@ namespace AATB
 
                                     // copy info file, if it exists, to destination directory
                                     if (UseInfotext)
-                                        CopyTextFile(Dir.ParentInfotextPath, CompAudioDirPath);
+                                        CopyTextFile(Dir.InfotextPath, CompAudioDirPath);
                                 }
                                 else
                                     Log.WriteLine("*** " + CompAudioFormat.ToUpper()
@@ -216,11 +217,15 @@ namespace AATB
 
                             if (CompAudioFileList != null)
                             {
-                                // if required repopulate directory info from current directory
+                                // populate directory info from text files
                                 if (UseCurrentDirInfo)
-                                    GetDirInformation(Dir, InfotextList, CuesheetList);
+                                    GetDirTextFiles(Dir, InfotextList, CuesheetList);
+                                else
+                                    GetDirTextFiles(Dir, ParentInfotextList, ParentCuesheetList);
+
                                 // populate directory metadata
                                 GetDirMetadata(Dir);
+
                                 // populate track metadata
                                 GetTrackMetadata(Dir, CompAudioFileList);
 

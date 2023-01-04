@@ -81,13 +81,13 @@ namespace AATB
                 ArtistPatternMatch;
 
             // check infotext file exists
-            if (File.Exists(Dir.ParentInfotextPath))
+            if (File.Exists(Dir.InfotextPath))
             {
                 // get info file name
-                InfotextFileName = SplitFileName(Dir.ParentInfotextPath);
+                InfotextFileName = SplitFileName(Dir.InfotextPath);
                 Log.WriteLine("  Reading track metadata from info file: " + InfotextFileName);
                 // read infotext file
-                DataList = ReadTextFile(Dir.ParentInfotextPath);
+                DataList = ReadTextFile(Dir.InfotextPath);
                 FileListCount = FileList.Length;
 
                 // read info file, ignoring concert info on first 5 lines)
@@ -208,13 +208,13 @@ namespace AATB
                 PatternMatch;
 
             // check infotext file exists
-            if (File.Exists(Dir.ParentCuesheetPath))
+            if (File.Exists(Dir.CuesheetPath))
             {
                 // get cuesheet filename
-                CuesheetFileName = SplitFileName(Dir.ParentCuesheetPath);
+                CuesheetFileName = SplitFileName(Dir.CuesheetPath);
                 Log.WriteLine("  Reading track metadata from cuesheet: " + CuesheetFileName);
                 // read cuesheet
-                DataList = ReadTextFile(Dir.ParentCuesheetPath);
+                DataList = ReadTextFile(Dir.CuesheetPath);
                 FileListCount = FileList.Length;
                 // initialize title and artist flags
                 TitleFound = ArtistFound = false;
@@ -316,7 +316,7 @@ namespace AATB
                 }
             }
             else
-                Log.WriteLine("*** Cuesheet not found: " + Dir.ParentCuesheetPath);
+                Log.WriteLine("*** Cuesheet not found: " + Dir.CuesheetPath);
 
         }  // end GetTrackMetadataFromCuesheet
 
