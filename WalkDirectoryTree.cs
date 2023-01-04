@@ -477,6 +477,7 @@ namespace AATB
                     && WAVExists)
                 {
                     // populate directory metadata
+                    GetDirTextFiles(Dir, ParentInfotextList, ParentCuesheetList);
                     GetDirMetadata(Dir);
 
                     JoinedWAVFilename = Dir.ParentBaseName + PERIOD + Dir.Bitrate + PERIOD + WAV;
@@ -513,6 +514,7 @@ namespace AATB
                     && WAVExists)
                 {
                     // populate directory metadata
+                    GetDirTextFiles(Dir, ParentInfotextList, ParentCuesheetList);
                     GetDirMetadata(Dir);
 
                     // populate track metadata
