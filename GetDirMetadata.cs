@@ -34,7 +34,6 @@ namespace AATB
                 Dir.Type = COMPRESSEDAUDIO;
             else
                 Dir.Type = OTHER;
-            if (Debug) Console.WriteLine("dbg: Dir type: {0}", Dir.Type);
 
             // get audio compression format from directory extension
             // ignore last entry in list = WAV
@@ -57,7 +56,8 @@ namespace AATB
                         break;
                     }
                 }
-            if (Debug) Console.WriteLine("dbg: Dir ext: {0}  Dir bitrate: {1}", Dir.Extension, Dir.Bitrate);
+            if (Debug) Console.WriteLine("dbg: Dir type {0}  extension: {0}  bitrate: {1}",
+                                        Dir.Type, Dir.Extension, Dir.Bitrate);
 
         } // end GetDirInformation
 
@@ -73,55 +73,45 @@ namespace AATB
              *     Dir.InfotextPath
              *     Dir.CuesheetPath
              */
-            string
-                TargetFilePath;
 
             if (UseInfotext)
-            {
-                if (InfotextList.Length == 0)
-                    Log.WriteLine("*** Infotext file not found");
+                Dir.InfotextPath = RenameDirInfoFiles(Dir, InfotextList, "infotext", INFOTXT);
 
-                if (InfotextList.Length > 1)
-                    Log.WriteLine("*** Multiple infotext files exist, using: " + InfotextList[0].Name);
+            if (UseCuesheet)
+                Dir.CuesheetPath = RenameDirInfoFiles(Dir, CuesheetList, "cuesheet", INFOCUE);
 
-                if (InfotextList.Length >= 1)
-                {
-                    Dir.InfotextPath = InfotextList[0].FullName;
-                    // if infotext filepath is not in correct format, rename it
-                    TargetFilePath = Dir.ParentPath + BACKSLASH + Dir.ParentBaseName + PERIOD + INFOTXT;
-                    if (RenameInfoFiles
-                        && (Dir.InfotextPath != TargetFilePath))
-                    {
-                        Log.WriteLine("  Renaming info.txt file to: " + TargetFilePath);
-                        if (MoveFile(Dir.InfotextPath, TargetFilePath))
-                            Dir.InfotextPath = TargetFilePath;
-                    }
-                }
-            }
-
-            else if (UseCuesheet)
-            {
-                if (CuesheetList.Length == 0)
-                    Log.WriteLine("*** Cuesheet not found");
-
-                if (CuesheetList.Length > 1)
-                    Log.WriteLine("*** Multiple cuesheet files exist, using: " + CuesheetList[0].Name);
-
-                if (CuesheetList.Length >= 1)
-                {
-                    Dir.CuesheetPath = CuesheetList[0].FullName;
-                    // if cuesheet filepath is not in correct format, rename it
-                    TargetFilePath = Dir.ParentPath + BACKSLASH + Dir.ParentBaseName + PERIOD + INFOCUE;
-                    if (RenameInfoFiles
-                        && (Dir.CuesheetPath != TargetFilePath))
-                    {
-                        Log.WriteLine("  Renaming cuesheet file to: " + TargetFilePath);
-                        if (MoveFile(Dir.CuesheetPath, TargetFilePath))
-                            Dir.CuesheetPath = TargetFilePath;
-                    }
-                }
-            }
         } //end GetDirTextFiles
+
+        static string RenameDirInfoFiles(AATB_DirInfo Dir, FileInfo[] FileList,
+                                        string Description, string Extension)
+        {
+            // renames info files
+            string
+                ActualFilePath = null,
+                TargetFilePath;
+
+            if (FileList.Length == 0)
+                Log.WriteLine("*** Cuesheet not found");
+
+            if (FileList.Length > 1)
+                Log.WriteLine("*** Multiple cuesheet files exist, using: " + FileList[0].Name);
+
+            if (FileList.Length >= 1)
+            {
+                ActualFilePath = FileList[0].FullName;
+                // if cuesheet filepath is not in correct format, rename it
+                TargetFilePath = Dir.ParentPath + BACKSLASH + Dir.ParentBaseName + PERIOD + Extension;
+                if (RenameInfoFiles
+                    && (ActualFilePath != TargetFilePath))
+                {
+                    Log.WriteLine("  Renaming " + Description + " file to: " + TargetFilePath);
+                    if (MoveFile(ActualFilePath, TargetFilePath))
+                        ActualFilePath = TargetFilePath;
+                }
+            }
+            return ActualFilePath; 
+
+        } // end RenameInfoFiles
 
         static void GetDirMetadata(AATB_DirInfo Dir)
         {
