@@ -61,6 +61,7 @@ namespace AATB
             int
                 MD5FileCount;
             string
+                NewMD5FileName,
                 NewMD5FilePath,
                 ExistingMD5FilePath;
 
@@ -79,7 +80,7 @@ namespace AATB
 
                 // Create new MD5 filepath
                 NewMD5FilePath = MD5FilePath + PERIOD + NEW;
-
+                NewMD5FileName = SplitFileName(NewMD5FilePath);
                 // create new MD5 checksum, output to NewMD5FilePath, do not log output
                 CreateMD5ChecksumFile(NewMD5FilePath, FileList, NoLogMessage);
                 //if files are identical, remove the new file and rename the original file
@@ -89,8 +90,7 @@ namespace AATB
                     Log.WriteLine("  OK");
                 }
                 else
-                    Log.WriteLine("\n    Cannot verify MD5 checksums. The new checksum file is:"
-                                + "\n      " + NewMD5FilePath);
+                    Log.WriteLine("\n    Cannot verify MD5 checksums. The new file is: " + NewMD5FileName);
             }
             else
                 Log.WriteLine("    Multiple MD5 checksum files exist, and are not verified");
@@ -154,6 +154,7 @@ namespace AATB
              */
             int FFPFileCount;
             string
+                NewFFPFileName,
                 NewFFPFilePath,
                 ExistingFFPFilePath;
 
@@ -172,6 +173,7 @@ namespace AATB
 
                 // build new FFP filename
                 NewFFPFilePath = FFPFilePath + PERIOD + NEW;
+                NewFFPFileName = SplitFileName(NewFFPFilePath);
 
                 // create new FFP file from FLAC files named FFPFilePath
                 CreateFFPChecksumFile(NewFFPFilePath, FLACFileList, NoLogMessage);
@@ -182,8 +184,7 @@ namespace AATB
                     Log.WriteLine("  OK");
                 }
                 else
-                    Log.WriteLine("\n    Cannot verify FFP checksums. The new FFP checksum file is:"
-                                + "\n      " + NewFFPFilePath);
+                    Log.WriteLine("\n    Cannot verify FFP checksums. The new file is: " + NewFFPFileName);
             }
             else
                 Log.WriteLine("    Multiple FFP checksum files exist, and are not verified");

@@ -30,7 +30,6 @@ namespace AATB
             ACTIVE = 1,
             UPPER = 2;
         const string
-            BLANK = "",
             SPACE = " ",
             HYPHEN = "-",
             PERIOD = ".",
@@ -368,7 +367,7 @@ namespace AATB
                             break;
 
                         // create m3u playlist
-                        case "-m":
+                        case "-p":
                         case "--m3u-playlist":
                             CreateM3U = true;
                             break;
@@ -379,13 +378,13 @@ namespace AATB
                             UseInfotext = true;
                             break;
 
-                        case "-k":
+                        case "-e":
                         case "--create-cuesheet":
                             CreateCuesheet = true;
                             break;
 
                         // extract metadata from cuesheet 
-                        case "-e":
+                        case "-s":
                         case "--use-cuesheet":
                             UseCuesheet = true;
                             break;

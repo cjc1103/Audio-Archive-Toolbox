@@ -177,9 +177,9 @@
  * Command line switches
  * basic operations (mutually exclusive)
  *   -c|--compress          compress wav PCM format audio to a compressed audio format
- *       -u|--m3u           create m3u playlist file for all audio files in directory
- *       -i|--use-infotext  read metadata from an info.txt concert information file for live recordings
- *       -e|--use-cuesheet  read metadata from cuesheet (.cue) for commercial recordings
+ *       -p|--m3u           create m3u playlist file for all audio files in directory
+ *       -i|--use-infotext  read metadata from an info.txt concert information file
+ *       -s|--use-cuesheet  read metadata from cuesheet (.cue) for commercial recordings
  *   -v|--verify            verify flac files are correct by checking md5 and ffp checksum files
  *       --md5              creates/updates md5 checksum files
  *       --ffp              creates/updates ffp checksum files
@@ -193,7 +193,8 @@
  *      --wav=<bitrate>|raw|all  Delete all input wav directories for the specified bitrate
  *   -z|--convert-to-bitrate   convert wav files to bitrate
  *      --wav=<bitrate>     convert wav files from bitrate
- *   -r|--create-cuesheet   create cuesheet from wav files
+ *   -e|--create-cuesheet   create cuesheet from wav files
+ *        -i|--use-infotext  read metadata from an info.txt concert information file
  *
  * compression and verification arguments
  *   --mp3=<bitrate>        compress wav to mp3 format (.mp3)
@@ -216,8 +217,11 @@
  *   
  * additional options
  *   -l|--lower-case        convert subdirectory names to lower case
- *   -s|--title-case        convert subdirectory names to title case (capitalize first letter of each word)
+ *   -u|--title-case        convert subdirectory names to title case (capitalize first letter of each word)
+ *   -r|--rename-infofiles  rename info.txt and info.cue files
+ *   -f|--use-currentdirinfo  use current directory for info files
  *   -o|--overwrite         overwrite existing files
+ *   -b|--verbose           write StandardError datastream to console
  *   -h|--help              display options list on console
  *   --debug                switch to write debug files to console
  *

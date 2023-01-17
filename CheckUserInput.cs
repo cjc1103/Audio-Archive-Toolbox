@@ -80,10 +80,10 @@ namespace AATB
             if (VerifyAudio )
             {
                 Log.WriteLine("Verify compressed audio files");
-                if (CheckFormatBitrate(ANYFORMAT, RAW))
+                if (CheckFormatBitrate(FLAC, RAW))
                 {
-                    Log.WriteLine("Input error: Verification of raw audio files is not supported");
-                    Environment.Exit(0);
+                    Log.WriteLine("Note: Verification of raw audio files is not supported");
+                    // continue with program, other modes are supported
                 }
                 // check at least one flag is set
                 if (!CreateMD5 && !CreateFFP && !CreateSHN && !UpdateTags & !CreateM3U)

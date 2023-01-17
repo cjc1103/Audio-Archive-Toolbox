@@ -8,8 +8,8 @@ namespace AATB
         {
             Console.WriteLine
             ("[-c|--compress]\n"
-            + "  [-i|--use-infotext] | [-e|--use-cuesheet]\n"
-            + "  [-u|--m3u]\n"
+            + "  [-i|--use-infotext] | [-s|--use-cuesheet]\n"
+            + "  [-p|--m3u]\n"
             + "  --mp3[=<bitrate>](16-44)\n"
             + "  --[aac|m4a]=[<bitrate>|all](all)\n"
             + "  --ogg[=<bitrate>|all](all)\n"
@@ -21,7 +21,7 @@ namespace AATB
             + "  --ogg-quality=<q>\n"
             + "  --flac-quality=<q>\n"
             + "[-v|--verify]\n"
-            + "  [-i|--use-infotext] | [-e|--use-cuesheet]\n"
+            + "  [-i|--use-infotext] | [-s|--use-cuesheet]\n"
             + "  [-m|--m3u]\n"
             + "  --mp3[=<bitrate>](16-44)\n"
             + "  --[aac|m4a]=[<bitrate>|all](all)\n"
@@ -39,7 +39,7 @@ namespace AATB
             + "  --wav=<bitrate>\n"
             + "[-z|--convert-to-bitrate]=<bitrate>(16-44)\n"
             + "  --wav=<convert from bitrate>\n"
-            + "[-k|--create-cuesheet]\n"
+            + "[-e|--create-cuesheet]\n"
             + "  [-i|--use-infotext]\n"
             + "  --wav[=<bitrate>|all](all)\n"
             + "[-l|--lower-case]\n"

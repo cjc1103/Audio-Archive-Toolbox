@@ -63,55 +63,71 @@ namespace AATB
 
         static void GetDirTextFiles(AATB_DirInfo Dir, FileInfo[] InfotextList, FileInfo[] CuesheetList)
         {
-            /* Reads infotext and cuesheet files
+            /* Reads infotext and cuesheet lists to get the first entry in the list
+             * and rename it if appropriate
              * Inputs:
-             *   Dir class
-             *   InfotextList
-             *   CuesheetList
+             *   Lists of all text files in the directory
+             *     Dir.InfotextList
+             *     Dir.CuesheetList
              * Outputs:
-             *   Dir class
+             *   The correct text file path
              *     Dir.InfotextPath
              *     Dir.CuesheetPath
+             * Note: if the inputlist is empty, the Dir values will not be populated
+             * and an error message will be generated later when trying to open an empty file
              */
+            string TargetFilePath;
 
             if (UseInfotext)
-                Dir.InfotextPath = RenameDirInfoFiles(Dir, InfotextList, "infotext", INFOTXT);
-
-            if (UseCuesheet)
-                Dir.CuesheetPath = RenameDirInfoFiles(Dir, CuesheetList, "cuesheet", INFOCUE);
-
-        } //end GetDirTextFiles
-
-        static string RenameDirInfoFiles(AATB_DirInfo Dir, FileInfo[] FileList,
-                                        string Description, string Extension)
-        {
-            // renames info files
-            string
-                ActualFilePath = null,
-                TargetFilePath;
-
-            if (FileList.Length == 0)
-                Log.WriteLine("*** Cuesheet not found");
-
-            if (FileList.Length > 1)
-                Log.WriteLine("*** Multiple cuesheet files exist, using: " + FileList[0].Name);
-
-            if (FileList.Length >= 1)
             {
-                ActualFilePath = FileList[0].FullName;
-                // if cuesheet filepath is not in correct format, rename it
-                TargetFilePath = Dir.ParentPath + BACKSLASH + Dir.ParentBaseName + PERIOD + Extension;
-                if (RenameInfoFiles
-                    && (ActualFilePath != TargetFilePath))
+                if (InfotextList.Length > 1)
+                    Log.WriteLine("*** Multiple infotext files exist, using: " + InfotextList[0].Name);
+
+                if (InfotextList.Length >= 1)
                 {
-                    Log.WriteLine("  Renaming " + Description + " file to: " + TargetFilePath);
-                    if (MoveFile(ActualFilePath, TargetFilePath))
-                        ActualFilePath = TargetFilePath;
+                    Dir.InfotextPath = InfotextList[0].FullName;
+                    // choose current or parent directory
+                    if (UseCurrentDirInfo)
+                        TargetFilePath = Dir.Path + BACKSLASH + Dir.BaseName + PERIOD + INFOTXT;
+                    else
+                        TargetFilePath = Dir.ParentPath + BACKSLASH + Dir.ParentBaseName + PERIOD + INFOTXT;
+
+                    // rename info file if needed
+                    if (RenameInfoFiles
+                        && (Dir.InfotextPath != TargetFilePath))
+                    {
+                        Log.WriteLine("  Renaming infotext file to: " + TargetFilePath);
+                        if (MoveFile(Dir.InfotextPath, TargetFilePath))
+                            Dir.InfotextPath = TargetFilePath;
+                    }
                 }
             }
-            return ActualFilePath; 
 
-        } // end RenameInfoFiles
+            if (UseCuesheet)
+            {
+                if (CuesheetList.Length > 1)
+                    Log.WriteLine("*** Multiple cuesheet files exist, using: " + CuesheetList[0].Name);
+
+                if (CuesheetList.Length >= 1)
+                {
+                    Dir.CuesheetPath = CuesheetList[0].FullName;
+                    // choose current or parent directory
+                    if (UseCurrentDirInfo)
+                        TargetFilePath = Dir.Path + BACKSLASH + Dir.BaseName + PERIOD + INFOCUE;
+                    else
+                        TargetFilePath = Dir.ParentPath + BACKSLASH + Dir.ParentBaseName + PERIOD + INFOCUE;
+
+                    // rename info file if needed
+                    if (RenameInfoFiles
+                        && (Dir.CuesheetPath != TargetFilePath))
+                    {
+                        Log.WriteLine("  Renaming cuesheet file to: " + TargetFilePath);
+                        if (MoveFile(Dir.CuesheetPath, TargetFilePath))
+                            Dir.CuesheetPath = TargetFilePath;
+                    }
+                }
+            }
+        } //end GetDirTextFiles
 
         static void GetDirMetadata(AATB_DirInfo Dir)
         {
