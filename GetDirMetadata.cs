@@ -444,7 +444,8 @@ namespace AATB
              *   Dir   Directory as AATB_DirInfo class instance
              *     Dir.AlbumArtist
              *     Dir.Album
-             *     Dir.ConcertDate
+             *     Dir.ConcertDate (live recording)
+             *     Dir.Stage (live recording)
              */
 
             Log.WriteLine("  Deriving album metadata from directory name");
@@ -453,11 +454,12 @@ namespace AATB
                 case LIVE:
                 {
                     Dir.AlbumArtist = Dir.BaseNameTemp1;
-                    // album = artist + date + stage, separated by spaces
                     Dir.Album = Dir.AlbumArtist;
+                    // concatenate date to album if it exists
                     Dir.ConcertDate = Dir.BaseNameTemp2;
                     if (Dir.ConcertDate != String.Empty)
                         Dir.Album += SPACE + Dir.ConcertDate;
+                    // concatenate stage to album if it exists
                     Dir.Stage = Dir.BaseNameTemp3;
                     if (Dir.BaseNameTemp3 != String.Empty)
                         Dir.Album += SPACE + Dir.Stage;
@@ -481,6 +483,5 @@ namespace AATB
             Dir.Album = ConvertCase(Dir.Album);
 
         } // end GetDirMetadataFromDirectoryName
-
     }
 }
