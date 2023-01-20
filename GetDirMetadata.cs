@@ -64,7 +64,7 @@ namespace AATB
         static void GetDirTextFiles(AATB_DirInfo Dir, FileInfo[] InfotextList, FileInfo[] CuesheetList)
         {
             /* Reads infotext and cuesheet lists to get the first entry in the list
-             * and rename it if appropriate
+             * and rename it if appropriate. UseInfotext and UseCuesheet flags are mutually exclusive
              * Inputs:
              *   Lists of all text files in the directory
              *     Dir.InfotextList
@@ -353,7 +353,7 @@ namespace AATB
                     Log.WriteLine("*** Artist and concert date missing from info file");
             }
             else
-                Log.WriteLine("*** Infotext file does not exist:" + InfotextFileName);
+                Log.WriteLine("*** Infotext file not found:" + InfotextFileName);
 
         } // end GetDirMetadataFromInfotext
 
