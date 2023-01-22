@@ -17,7 +17,8 @@ namespace AATB
              *   Produces a text file to stdout
              */
             string
-                Data1, Data2,
+                Data1,
+                Data2,
                 FileName,
                 FLACFileNames = null,
                 ExternalProgram,

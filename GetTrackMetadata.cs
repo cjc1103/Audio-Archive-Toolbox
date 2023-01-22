@@ -54,12 +54,14 @@ namespace AATB
              * Outputs:
              *   Dir            Current directory class
              * Infotext file
-             * Track format is: "{dd}<.> title [Artist]", where dd is one or two digits 0-9
-             * Each track is assumed to be in sequence, information is added to next position in list
-             * track numbers in info file can restart for multiple sets/discs, and tracks may not
-             * be on contiguous lines, so "TrackNumber" variable counts tracks instead
-             * Note: Max track number is 99
-             * Note: Artist info in square brackets [ ] overrides the Album Artist
+             *   Track format is: "{dd}<.> title [Artist]", where dd is one or two digits 0-9
+             *   Each track is assumed to be in sequence, information is added to next position in list
+             *   Track numbers in info file can restart for multiple sets/discs, and tracks may not
+             *   be on contiguous lines, so "TrackNumber" variable counts tracks instead
+             * Notes:
+             *   (1) Max track number is 99
+             *   (2) Comments in brackets ( ) are ignored (typically songwriter name)
+             *   (3) Comments in square brackets [ ] assumed to be artist name (overrides "Album Artist")
              */
             bool
                 ArtistFound = false;
@@ -108,7 +110,7 @@ namespace AATB
                         // remove track number prefix with optional period and spaces (allows for blank title)
                         DataLine = Regex.Replace(DataLine, @"^\d{1,2}\.?\s*", "");
 
-                        // remove comments starting with a left bracket and ending with a right bracket
+                        // remove comments enclosed in brackets
                         DataLine = Regex.Replace(DataLine, @"\(.*\)", "");
 
                         // search for artist name within square brackets 
