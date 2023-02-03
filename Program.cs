@@ -378,15 +378,16 @@ namespace AATB
                             UseInfotext = true;
                             break;
 
-                        case "-e":
-                        case "--create-cuesheet":
-                            CreateCuesheet = true;
-                            break;
-
                         // extract metadata from cuesheet 
-                        case "-s":
+                        case "-e":
                         case "--use-cuesheet":
                             UseCuesheet = true;
+                            break;
+
+                        // create cuesheet
+                        case "-s":
+                        case "--create-cuesheet":
+                            CreateCuesheet = true;
                             break;
 
                         // create metadata tags
