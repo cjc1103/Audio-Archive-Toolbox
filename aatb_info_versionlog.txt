@@ -92,7 +92,7 @@ Program history
      Fixed bug: Artist and Album indexes off by one for commercial recordings (Artist - Title)
      Changed remove number prefix code in CreateDirName method to use Regex
      Fixed bug: Removed number prefix from Artist name, if present
-     Rewrote ConvertBitrate method to correctly build output filenames and do bitrate comparisons
+     Rewrote ConvertWAVBitrate method to correctly build output filenames and do bitrate comparisons
      Added Date metadata tag for all compressed audio file utility arguments
 
 3.2  2019-12-11
@@ -190,7 +190,7 @@ Program history
      Changed GetMetaData method to always use parent directory name for subdirectories even if using
        info.txt or cuesheet files. Artist, Venue, Stage, Location from info files is used for metadata. 
      Changed incrementing TrackNbr to start of loop in each method using this counter
-     Streamlined and corrected bugs in ConvertBitrate method, now uses Regex to build output filenames
+     Streamlined and corrected bugs in ConvertWAVBitrate method, now uses Regex to build output filenames
      Changed command line input to accept any bitrate for mp3's, although the resultant files for bitrates
        greater than 16-44 will be increased (e.g. 24-48 mp3's are about 4% bigger than 16-44 equivalents)
 
@@ -217,7 +217,7 @@ Program history
 4.5  2021-06-26	   
      Various code cleanups and variable renaming for consistency
 	 Removed MD5FileName, FFPFileName, SHNFileName variables as they were redundant
-	 Removed --cd option and changed VerifySHNReport method to check for bitrate 16-44 for CDR errors
+	 Changed VerifySHNReport method to check bitrate 16-44 for CDR errors
 	 Fixed off by one errors in VerifySHNReport method:
        when starting data checking, now starts at line=1, WAV problem flags now start at char=44
 	 Deleted null filename checks in CopyTextFile method as it was redundant
@@ -310,5 +310,8 @@ Program history
     Added default case for switch statement in CompressWAV and DecompressToWav methods
     Corrected search terms for building Album string in DirMetadataFromCuesheet
 	Corrected album metadata search term in GetTrackMetadataFromCuesheet method to TITLE
+
+5.7 2023-02-20
     Added RenameInfoFiles flag to rename info.txt and .cue files
     Added UseCurrentDirInfo flag for Verify mode - forces program to read info files in current dir
+    Added ConvertAIF flag and ConvertAIFtoWAV method to convert AIF format audio to WAV format

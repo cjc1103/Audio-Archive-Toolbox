@@ -19,11 +19,12 @@ namespace AATB
               + Convert.ToInt32(DecompressAudio)
               + Convert.ToInt32(JoinWAV)
               + Convert.ToInt32(DeleteAudio)
-              + Convert.ToInt32(ConvertAudioBitrate)
+              + Convert.ToInt32(ConvertAIF)
+              + Convert.ToInt32(ConvertBitrate)
               + Convert.ToInt32(CreateCuesheet) != 1)
             {
                 Log.WriteLine("Input error: Conflicting options\n"
-                   + "Choose compress, verify, decompress, delete, create cuesheet, or convert wav bitrate");
+                   + "Choose compress, verify, decompress, join, delete, convert aif, convert bitrate, or create cuesheet");
                 Environment.Exit(0);
             }
             if (CreateCuesheet && UseCuesheet)
@@ -157,7 +158,18 @@ namespace AATB
                 PrintCompressionOptions();
             }
 
-            if (ConvertAudioBitrate)
+            if (ConvertAIF)
+            {
+                Log.WriteLine("Convert AIF format audio to WAV format");
+                if (!CheckFormatBitrate(WAV, ANYBITRATE))
+                {
+                    Log.WriteLine("Input error: Select WAV bitrate '--wav=[<bitrate>|raw|all]'");
+                    Environment.Exit(0);
+                }
+                PrintCompressionOptions();
+            }
+
+            if (ConvertBitrate)
             {
                 // Conversion of WAV files to another bitrate
                 // (1) --wav=<ConversionFromBitrate>

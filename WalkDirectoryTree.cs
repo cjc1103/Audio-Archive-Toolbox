@@ -1,4 +1,5 @@
 ﻿using System;
+using Windows.Devices.AllJoyn;
 
 namespace AATB
 {
@@ -34,6 +35,7 @@ namespace AATB
             // Populate filelists for each type of file in this directory
             FileInfo[]
                 AllFilesList = CurrentDir.GetFiles(),
+                AIFFileList = CurrentDir.GetFiles(ALLAIF),
                 WAVFileList = CurrentDir.GetFiles(ALLWAV),
                 FLACFileList = CurrentDir.GetFiles(ALLFLAC),
                 CompAudioFileList, // populated as needed
@@ -485,10 +487,20 @@ namespace AATB
                 }
             } // end Join WAV Files section
 
+            // = = = = = = = = Convert AIF Files section = = = = = = = = 
+            // Command: --aif|--convert-aif-to-wav --wav=<bitrate>
+            // AIF files in the current directory will be in the AIFFileList
+            // Converted WAV files will be written to the current directory
+            else if (ConvertAIF)
+            {
+                if (Debug) Console.WriteLine("dbg: Convert Bitrate Section");
+                ConvertAIFToWAV(AIFFileList);
+            } // end Convert AIF Files section
+
             // = = = = = = = = Convert Audio Bitrate section = = = = = = = = 
             // Convert wav files from one bitrate to another
             // Command: -z|--convert-bitrate=<bitrate to> --wav=<bitrate from>
-            else if (ConvertAudioBitrate)
+            else if (ConvertBitrate)
             {
                 if (Debug) Console.WriteLine("dbg: Convert Bitrate Section");
 
@@ -499,7 +511,7 @@ namespace AATB
                 {
                     // ConversionToBitrate is entered as the "Convert" command line argument
                     // convert all wav files in list to the desired bitrate
-                    ConvertBitrate(Dir, WAVFileList, ConversionFromBitrate, ConversionToBitrate);
+                    ConvertWAVBitrate(Dir, WAVFileList, ConversionFromBitrate, ConversionToBitrate);
                 }
             } // end Convert Audio Bitrate section
 

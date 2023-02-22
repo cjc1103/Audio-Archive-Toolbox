@@ -5,7 +5,7 @@ namespace AATB
 {
     public partial class AATB_Main
     {
-        static void ConvertBitrate(AATB_DirInfo Dir, FileInfo[] WAVFileList,
+        static void ConvertWAVBitrate(AATB_DirInfo Dir, FileInfo[] WAVFileList,
                                    string ConversionFromBitrate, string ConversionToBitrate)
         {
             /* Converts FIles in input list from one bitrate to another
@@ -42,7 +42,7 @@ namespace AATB
 
             ExternalProgram = "sox.exe";
             OutputDirPath = Dir.ParentPath + BACKSLASH + ConversionToBitrate;
-			// create output directory or overwrite existing directory
+            // create output directory or overwrite existing directory
             if ((!Directory.Exists(OutputDirPath) && CreateDir(OutputDirPath))
                 || (Directory.Exists(OutputDirPath) && Overwrite))
             {
@@ -51,7 +51,7 @@ namespace AATB
                 Log.WriteLine("  Output Dir: " + OutputDirPath);
                 Log.Write("    Track: ");
                 // extract bitdepth and samplerate from ConversionToBitrate string
-				// using hyphen as delimiter, e.g., "16-44" --> (16, 44)
+                // using hyphen as delimiter, e.g., "16-44" --> (16, 44)
                 (BitDepth, SampleRate) = SplitString(ConversionToBitrate, HYPHEN);
                 switch (SampleRate)
                 {
@@ -106,7 +106,7 @@ namespace AATB
                     else
                     {
                         Log.WriteLine("\n*** Output file exists, use overwrite option to replace:\n"
-                                     +"    " + OutputFilePath);
+                                     + "    " + OutputFilePath);
                         break;
                     }
                 }
@@ -115,6 +115,63 @@ namespace AATB
             else
                 Log.WriteLine("*** Output directory exists, use overwrite option to replace\n"
                             + "    " + OutputDirPath);
-        } // end ConvertBitrate
+        } // end ConvertWAVBitrate
+
+        static void ConvertAIFToWAV(FileInfo[] AIFFileList)
+        {
+            /* Converts all AIF format files in the input list to WAV format
+             * Input:
+             *   Dir
+             *   AIFFileList    List of AIF files in the current directory
+             * Calls external program:
+             *   sox (Sound Output eXchange utility)
+             *     <input aif file> <output wav file>
+             * Output:
+             *   WAV format files are output to the current directory
+             */
+            int
+                TrackNumber = 0;
+            string
+                TrackNumberStr,
+                InputFileName,
+                InputFilePath,
+                RootPath,
+                Extension,
+                OutputFilePath,
+                ExternalArguments,
+                ExternalProgram = "sox.exe";
+
+            foreach (FileInfo fi in AIFFileList)
+            {
+                // increment tracknumber and convert to two place string
+                TrackNumber++;
+                TrackNumberStr = TrackNumber.ToString("00");
+                Log.Write(TrackNumberStr + "..");
+                // build filenames
+                InputFileName = fi.Name;
+                InputFilePath = fi.FullName;
+
+                // build output file pathname
+                (RootPath, Extension) = SplitString(InputFilePath, PERIOD);
+                OutputFilePath = RootPath + PERIOD + WAV;
+
+                // check output file does not exist, or overwrite existing file
+                if ((!File.Exists(OutputFilePath))
+                   || (File.Exists(OutputFilePath) && Overwrite))
+                {
+                    ExternalArguments = DBLQ + InputFilePath + DBLQ
+                                      + SPACE + DBLQ + OutputFilePath + DBLQ;
+                    // run external process, discard external output
+                    RunProcess(ExternalProgram, ExternalArguments);
+                }
+                else
+                {
+                    Log.WriteLine("\n*** Output file exists, use overwrite option to replace:\n"
+                                 + "    " + OutputFilePath);
+                    break;
+                }
+            }
+            Log.WriteLine();
+        }
     }
 }

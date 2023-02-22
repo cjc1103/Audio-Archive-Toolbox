@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace AATB
@@ -68,7 +69,7 @@ namespace AATB
             /* Separates input name into two strings separated by the last occurrence
              *   of the input delimiter
              * Inputs:
-             *   Directory or file name (e.g., filename.extension)
+             *   InputName: Directory or file name (e.g., filename.extension)
              *   Delimiter: character used to delimit name and extension
              * Outputs:
              *   Tuple (Prefix, Suffix) where
@@ -162,6 +163,25 @@ namespace AATB
             }
             return Data;
         } // end SearchList
+
+        static string ConvertCase(string InputName)
+        {
+            string OutputName;
+            TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
+
+            // title case and lowercase flags are mutually exclusive
+            if (UseTitleCase)
+                // capitalizes the first letter of each word in InputName
+                OutputName = ti.ToTitleCase(InputName);
+            else if (UseLowerCase)
+                // converts InputName string to lower case
+                OutputName = InputName.ToLower();
+            else
+                // no change
+                OutputName = InputName;
+
+            return (OutputName);
+        } // end ConvertCase
 
         static string CleanDataString(string Data)
         {

@@ -50,7 +50,8 @@ namespace AATB
             ALLBITRATES = "All Bitrates",
             ANYFORMAT = "Any Format",
             ANYBITRATE = "Any Bitrate",
-            WAV = "wav", ALLWAV = "*.wav", // subdir name for wav files is bitrate
+            AIF = "aif", ALLAIF = "*.aif",
+            WAV = "wav", ALLWAV = "*.wav",
             MP3 = "mp3", MP3F = "mp3f",
             M4A = "m4a", M4AF = "m4af", // M4A file format is MPEG-4 Audio wrapper for AAC
             OGG = "ogg", OGGF = "oggf",
@@ -81,7 +82,8 @@ namespace AATB
             DeleteAudio = false,
             DecompressAudio = false,
             JoinWAV = false,
-            ConvertAudioBitrate = false,
+            ConvertAIF = false,
+            ConvertBitrate = false,
             Overwrite = false,
             CreateMD5 = false,
             CreateFFP = false,
@@ -202,9 +204,15 @@ namespace AATB
                             DeleteAudio = true;
                             break;
 
+                        case "-y":
+                        case "--aif":
+                        case "--convert-aif-to-wav":
+                            ConvertAIF = true;
+                            break;
+
                         case "-z":
                         case "--convert-to-bitrate":
-                            ConvertAudioBitrate = true;
+                            ConvertBitrate = true;
                             switch (opt)
                             {
                                 case null: // no options: set conversion bitrate to 16-44
@@ -214,6 +222,11 @@ namespace AATB
                                     ConversionToBitrate = opt;
                                     break;
                             }
+                            break;
+
+                        case "-s":
+                        case "--create-cuesheet":
+                            CreateCuesheet = true;
                             break;
 
                         // OTHER FUNCTIONS
@@ -359,7 +372,7 @@ namespace AATB
                             break;
                         
                         // create all checksum and shntool reports
-                        case "-a":
+                        case "--all":
                         case "--all-reports":
                             CreateMD5 = true;
                             CreateFFP = true;
@@ -368,6 +381,7 @@ namespace AATB
 
                         // create m3u playlist
                         case "-p":
+                        case "--m3u":
                         case "--m3u-playlist":
                             CreateM3U = true;
                             break;
@@ -384,12 +398,6 @@ namespace AATB
                             UseCuesheet = true;
                             break;
 
-                        // create cuesheet
-                        case "-s":
-                        case "--create-cuesheet":
-                            CreateCuesheet = true;
-                            break;
-
                         // create metadata tags
                         case "-t":
                         case "--tag":
@@ -397,24 +405,24 @@ namespace AATB
                             break;
 
                         // convert to lower case
-                        case "-l":
+                        case "-lc":
                         case "--lower-case":
                             UseLowerCase = true;
                             break;
 
                         // convert to title case
-                        case "-u":
+                        case "-tc":
                         case "--title-case":
                             UseTitleCase = true;
                             break;
 
                         // rename info files
-                        case "-r":
+                        case "-ri":
                         case "--rename-infofiles":
                             RenameInfoFiles = true;
                             break;
 
-                        case "-f":
+                        case "-cd":
                         case "--use-currentdirinfo":
                             UseCurrentDirInfo = true;
                             break;
@@ -440,7 +448,7 @@ namespace AATB
                             break;
 
                         // error reporting for external processes
-                        case "-b":
+                        case "-hh":
                         case "--verbose":
                             Verbose = true;
                             break;
