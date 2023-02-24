@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using Windows.UI.ViewManagement;
 
 namespace AATB
 {
@@ -27,6 +28,8 @@ namespace AATB
             int
                 TrackNumber = 0,
                 ConversionBitrateComparison;
+            bool
+                OutputFileExists = false;
             string
                 TrackNumberStr,
                 BitDepth,
@@ -105,11 +108,12 @@ namespace AATB
                     }
                     else
                     {
-                        Log.WriteLine("\n*** Output file exists, use overwrite option to replace:\n"
-                                     + "    " + OutputFilePath);
+                        OutputFileExists = true;
+                        Log.WriteLine("\n*** Output file exists: " + OutputFileName);
                         break;
                     }
                 }
+                if (OutputFileExists) Log.WriteLine("*** Use overwrite option to replace");
                 Log.WriteLine();
             }
             else
@@ -131,12 +135,14 @@ namespace AATB
              */
             int
                 TrackNumber = 0;
+            bool
+                OutputFileExists = false;
             string
                 TrackNumberStr,
-                InputFileName,
                 InputFilePath,
                 RootPath,
                 Extension,
+                OutputFileName,
                 OutputFilePath,
                 ExternalArguments,
                 ExternalProgram = "sox.exe";
@@ -148,12 +154,12 @@ namespace AATB
                 TrackNumberStr = TrackNumber.ToString("00");
                 Log.Write(TrackNumberStr + "..");
                 // build filenames
-                InputFileName = fi.Name;
                 InputFilePath = fi.FullName;
 
                 // build output file pathname
                 (RootPath, Extension) = SplitString(InputFilePath, PERIOD);
                 OutputFilePath = RootPath + PERIOD + WAV;
+                OutputFileName = SplitFileName(OutputFilePath);
 
                 // check output file does not exist, or overwrite existing file
                 if ((!File.Exists(OutputFilePath))
@@ -166,11 +172,12 @@ namespace AATB
                 }
                 else
                 {
-                    Log.WriteLine("\n*** Output file exists, use overwrite option to replace:\n"
-                                 + "    " + OutputFilePath);
+                    OutputFileExists = true;
+                    Log.WriteLine("\n*** Output file exists: " + OutputFileName);
                     break;
                 }
             }
+            if (OutputFileExists) Log.WriteLine("*** Use overwrite option to replace");
             Log.WriteLine();
         }
     }
