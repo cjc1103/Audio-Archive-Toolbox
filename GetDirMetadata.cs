@@ -219,8 +219,8 @@ namespace AATB
                 // metadata later, if the file is present and the information is correct
                 Dir.MetadataSource = DIRNAME;
 
-                // get metadata from infotext
-                if (UseInfotext)
+                // get metadata from infotext (live concerts only)
+                if (Dir.RecordingType == LIVE && UseInfotext)
                     GetDirMetadataFromInfotext(Dir);
 
                 // get metadata from cuesheet
@@ -345,12 +345,22 @@ namespace AATB
                 if (Dir.Stage != null)
                     Dir.Album += (SPACE + Dir.Stage);
 
-                // verify metadata has been found and reset MetadataSource
-                // artist and concert date are minimum required to document concert
-                if (Dir.AlbumArtist != null && Dir.ConcertDate != null)
+                // verify minimum metadata has been found
+                if (Dir.AlbumArtist == null)
+                    Log.WriteLine("*** Artist missing from info file");
+                if (Dir.RecordingType == LIVE && Dir.ConcertDate == null)
+                    Log.WriteLine("*** Concert date missing from info file");
+                else if (Dir.RecordingType == CD && Dir.Album == null)
+                    Log.WriteLine("*** Album name missing from info file");
+
+                if ((Dir.RecordingType == LIVE
+                    && Dir.AlbumArtist != null && Dir.ConcertDate != null)
+                    ||
+                    (Dir.RecordingType == CD
+                    && Dir.AlbumArtist != null && Dir.Album != null))
+                    // Reset metadata source to "INFOFILE"
                     Dir.MetadataSource = INFOFILE;
-                else
-                    Log.WriteLine("*** Artist and concert date missing from info file");
+                    // otherwise Dir.Metadatasource remains "DIR"
             }
             else
                 Log.WriteLine("*** Infotext file not found:" + InfotextFileName);
@@ -418,13 +428,22 @@ namespace AATB
                         Dir.Album += (SPACE + Dir.Stage);
                 }
 
-                // verify metadata has been found and reset MetadataSource
-                // artist and album name are minimum required
-                if (Dir.AlbumArtist != null && Dir.Album != null)
+                // verify minimum metadata has been found
+                if (Dir.AlbumArtist == null)
+                    Log.WriteLine("*** Artist missing from cuesheet");
+                if (Dir.RecordingType == LIVE && Dir.ConcertDate == null)
+                    Log.WriteLine("*** Concert date missing from cuesheet");
+                else if (Dir.RecordingType == CD && Dir.Album == null)
+                    Log.WriteLine("*** Album name missing from cuesheet");
+
+                if ((Dir.RecordingType == LIVE
+                    && Dir.AlbumArtist != null && Dir.ConcertDate != null)
+                    ||
+                    (Dir.RecordingType == CD
+                    && Dir.AlbumArtist != null && Dir.Album != null))
+                    // Reset metadata source to "CUESHEET"
                     Dir.MetadataSource = CUESHEET;
-                // otherwise Dir.Metadatasource remains Directory
-                else
-                    Log.WriteLine("*** Performer and Title information missing from cuesheet");
+                    // otherwise Dir.Metadatasource remains "DIR"
             }
             else
                 Log.WriteLine("*** Cuesheet not found: " + CuesheetFileName);
