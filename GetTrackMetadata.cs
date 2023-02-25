@@ -139,7 +139,7 @@ namespace AATB
                         // remove any trailing spaces
                         DataLine = Regex.Replace(DataLine, @"\s*$", "");
 
-                        // TrackTitle is remander of data line
+                        // TrackTitle is remainder of data line
                         TrackTitle = DataLine;
 
                         // if TrackTitle is empty, change it to "Track dd"
