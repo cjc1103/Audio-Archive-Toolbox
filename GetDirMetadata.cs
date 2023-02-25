@@ -217,18 +217,18 @@ namespace AATB
                 // initialize metadata source to directory name
                 // infotext or cuesheet information may be used later to overwrite this
                 // metadata later, if the file is present and the information is correct
-                Dir.MetadataSource = DIRNAME;
+                Dir.DirMetadataSource = DIRNAME;
 
                 // get metadata from infotext (live concerts only)
-                if (Dir.RecordingType == LIVE && UseInfotext)
+                if (UseInfotext)
                     GetDirMetadataFromInfotext(Dir);
 
                 // get metadata from cuesheet
                 else if (UseCuesheet)
                     GetDirMetadataFromCuesheet(Dir);
 
-                // if infotext or cuesheet data is not valid, MetadataSource remains DIRNAME
-                if (Dir.MetadataSource == DIRNAME)
+                // if infotext or cuesheet data is not valid, DirMetadataSource remains DIRNAME
+                if (Dir.DirMetadataSource == DIRNAME)
                     GetDirMetadataFromDirectoryName(Dir);
 
                 // remove any leading spaces from Album string
@@ -359,8 +359,8 @@ namespace AATB
                     (Dir.RecordingType == CD
                     && Dir.AlbumArtist != null && Dir.Album != null))
                     // Reset metadata source to "INFOFILE"
-                    Dir.MetadataSource = INFOFILE;
-                    // otherwise Dir.Metadatasource remains "DIR"
+                    Dir.DirMetadataSource = INFOFILE;
+                    // otherwise Dir.Metadatasource remains "DIRNAME"
             }
             else
                 Log.WriteLine("*** Infotext file not found:" + InfotextFileName);
@@ -442,8 +442,8 @@ namespace AATB
                     (Dir.RecordingType == CD
                     && Dir.AlbumArtist != null && Dir.Album != null))
                     // Reset metadata source to "CUESHEET"
-                    Dir.MetadataSource = CUESHEET;
-                    // otherwise Dir.Metadatasource remains "DIR"
+                    Dir.DirMetadataSource = CUESHEET;
+                    // otherwise Dir.Metadatasource remains "DIRNAME"
             }
             else
                 Log.WriteLine("*** Cuesheet not found: " + CuesheetFileName);

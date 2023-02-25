@@ -28,7 +28,8 @@ namespace AATB
             Stage,
             ConcertDate,
             Comment,
-            MetadataSource,
+            DirMetadataSource,
+            TrackMetadataSource,
             InfotextPath,
             CuesheetPath;
         public Match

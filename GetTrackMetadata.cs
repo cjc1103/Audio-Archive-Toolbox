@@ -24,21 +24,19 @@ namespace AATB
             Dir.TitleList.Clear();
             Dir.TrackDurationList.Clear();
 
-            // Determine where to get track metadata
-            // Dir.MetadataSource is previously set in GetDirMetadata
-            // get metadata from infotext
-            if (UseInfotext
-                && Dir.MetadataSource == INFOFILE)
-                GetTrackMetadataFromInfotext(Dir, FileList);
+            // Get track metadata
+            // Initialize track metadata location to directory name
+            Dir.TrackMetadataSource = DIRNAME;
             
-            // get metadata from cuesheet
-            else if (UseCuesheet
-                && Dir.MetadataSource == CUESHEET)
+            if (UseInfotext)
+                GetTrackMetadataFromInfotext(Dir, FileList);
+
+            else if (UseCuesheet)
                 GetTrackMetadataFromCuesheet(Dir, FileList);
             
             // if infotext or cuesheet data is not valid, source reverts to DIRNAME
             // get metadata from file names in FileList
-            if (Dir.MetadataSource == DIRNAME)
+            if (Dir.TrackMetadataSource == DIRNAME)
                 GetTrackMetadataFromFileNames(Dir, FileList);
 
         } // end GetTrackMetadata
@@ -165,14 +163,13 @@ namespace AATB
                     if (TrackNumber == FileListCount)
                         break;
                 }
-                // check track number is correct, otherwise revert to directory metadata
+                // if track number is correct, change track metadata source
                 // (Note: track number will be one more than actual number) 
                 if (TrackNumber != FileListCount)
-                {
                     Log.WriteLine("*** Info file tracks: " + Convert.ToString(TrackNumber)
                                 + "; Actual number of tracks: " + Convert.ToString(FileListCount));
-                    Dir.MetadataSource = DIRNAME;
-                }
+                else
+                    Dir.TrackMetadataSource = INFOFILE;
             }
             else
                 Log.WriteLine("*** Infotext file not found");
@@ -241,7 +238,7 @@ namespace AATB
                         if (TrackNumber > 0 && TrackNumber <= FileListCount)
                         {
                             // find corresponding audio file and populate track duration
-                             TrackFilePath = FileList[TrackNumber - 1].FullName;
+                            TrackFilePath = FileList[TrackNumber - 1].FullName;
                             Dir.TrackDurationList.Add(GetTrackDuration(TrackFilePath));
                             Dir.TitleList.Add(TrackTitle);
                             Dir.ArtistList.Add(TrackArtist);
@@ -260,7 +257,7 @@ namespace AATB
                         // reset artist and title flags
                         ArtistFound = TitleFound = false;
                     }
-                   
+
                     // search for track artist (performer) - this may be different than the album artist
                     PatternMatch = Regex.Match(DataLine, @"^PERFORMER");
                     if (PatternMatch.Success)
@@ -293,7 +290,7 @@ namespace AATB
 
                 // populate last track data
                 // track number bounds check, don't write data for first track number
-                if (TrackNumber > 0  && TrackNumber <= FileListCount)
+                if (TrackNumber > 0 && TrackNumber <= FileListCount)
                 {
                     // find corresponding audio file and populate track duration
                     TrackFilePath = FileList[TrackNumber - 1].FullName;
@@ -311,14 +308,13 @@ namespace AATB
                 // check track number is correct, otherwise revert to directory metadata
                 // (Note: track number will be one more than actual number)
                 if (TrackNumber != FileListCount)
-                {
                     Log.WriteLine("*** Cuesheet tracks: " + TrackNumberStr
                                 + "; Actual number of tracks: " + Convert.ToString(FileListCount));
-                    Dir.MetadataSource = DIRNAME;
-                }
+                else
+                    Dir.TrackMetadataSource = CUESHEET;
             }
             else
-                Log.WriteLine("*** Cuesheet not found: " + Dir.CuesheetPath);
+                Log.WriteLine("*** Cuesheet not found");
 
         }  // end GetTrackMetadataFromCuesheet
 
