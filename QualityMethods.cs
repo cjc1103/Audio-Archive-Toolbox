@@ -4,7 +4,6 @@ namespace AATB
 {
     public partial class AATB_Main
     {
-
         static void SetQValue(string AudioCompFormat, string qValueStr)
         {
             /* Inputs:

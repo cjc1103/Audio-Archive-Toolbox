@@ -221,27 +221,5 @@ namespace AATB
             // compare both data lists and return true if they are identical
             return (Data1.SequenceEqual(Data2));
         } // end FilesAreEquivalent
-
-        static bool BaseNamesAreEqual(string Filename1, string Filename2)
-        {
-            /* Checks if input filenames are equal
-             * Inputs:
-             *   File name 1, File name 2
-             * Outputs:
-             *   Boolean value representing equivalency
-             */
-            string
-                BaseName1,
-                BaseName2,
-                Extension1,
-                Extension2;
-
-            // extract basename from each input string
-            (BaseName1, Extension1) = SplitString(Filename1, PERIOD);
-            (BaseName2, Extension2) = SplitString(Filename2, PERIOD);
-
-            // compare both basenames and return true if they are equal
-            return (BaseName1 == BaseName2);
-        } // end BaseNamesAreEqual
     }
 }

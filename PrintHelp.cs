@@ -23,14 +23,14 @@ namespace AATB
             + "  --flac-quality=<q>\n"
             + "[-v|--verify]\n"
             + "  [-i|--use-infotext] | [-e|--use-cuesheet]\n"
-            + "  [-p|--m3u]\n"
+            + "  [-p|--m3u|--m3u-playlist]\n"
             + "  --mp3[=<bitrate>](16-44)\n"
             + "  --[aac|m4a]=[<bitrate>|all](all)\n"
             + "  --ogg[=<bitrate>|all](all)\n"
             + "  --opus[=<bitrate>|all](all)\n"
             + "  --alac[=<bitrate>|all](all)\n"
             + "  --flac[=<bitrate>|all](all)\n"
-            + "  [--md5, --ffp, --shn]|[-a|--all]\n"
+            + "  [--md5, --ffp, --shn]|[-a|--all|--all-reports]\n"
             + "  [-t|--tag]\n"
             + "[-d|--decompress]\n"
             + "  --flac[=<bitrate>|all](all)\n"
@@ -64,14 +64,5 @@ namespace AATB
             + "  o Metadata in info.txt and info.cue files can be used to tag compressed audio\n"
             );
         } // end PrintHelp
-
-        static void PrintFileList(string FileType, FileInfo[] FileList)
-        {
-            /* print contents of FileList for debugging purposes
-             */
-            Console.WriteLine("dbg: File dump type: {0}", FileType);
-            for (int i = 0; i < FileList.Length; i++)
-                Console.WriteLine("dbg: FileList Name {0}", FileList[i].Name);
-        } //end PrintFileList
     }
 }

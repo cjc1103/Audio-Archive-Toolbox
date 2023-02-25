@@ -119,6 +119,27 @@ namespace AATB
             return Data;
         } // end SplitDirPath
 
+        static bool BaseNamesAreEqual(string Filename1, string Filename2)
+        {
+            /* Checks if input filenames are equal
+             * Inputs:
+             *   File name 1, File name 2
+             * Outputs:
+             *   Boolean value representing equivalency
+             */
+            string
+                BaseName1,
+                BaseName2,
+                Extension1,
+                Extension2;
+
+            // extract basename from each input string
+            (BaseName1, Extension1) = SplitString(Filename1, PERIOD);
+            (BaseName2, Extension2) = SplitString(Filename2, PERIOD);
+
+            // compare both basenames and return true if they are equal
+            return (BaseName1 == BaseName2);
+        } // end BaseNamesAreEqual
 
         static string[] SplitDataByLine(string Data)
         {
@@ -163,6 +184,15 @@ namespace AATB
             }
             return Data;
         } // end SearchList
+
+        static void PrintFileList(string FileType, FileInfo[] FileList)
+        {
+            /* print contents of FileList for debugging purposes
+             */
+            Console.WriteLine("dbg: File dump type: {0}", FileType);
+            for (int i = 0; i < FileList.Length; i++)
+                Console.WriteLine("dbg: FileList Name {0}", FileList[i].Name);
+        } //end PrintFileList
 
         static string ConvertCase(string InputName)
         {
