@@ -150,7 +150,7 @@ namespace AATB
 
             if (RenameWAV)
             {
-                Log.WriteLine("Rename audio files");
+                Log.WriteLine("Rename WAV audio files");
                 if (!CheckFormatBitrate(WAV, ANYBITRATE))
                 {
                     Log.WriteLine("Input error: A WAV bitrate was not specified");
@@ -236,16 +236,23 @@ namespace AATB
             if ((CompressAudio  || VerifyAudio ) && UseCuesheet)
                 Log.WriteLine("Use metadata from cuesheet");
 
-            if (UseTitleCase && UseLowerCase)
+            if (UseLowerCase && UseTitleCase)
             {
                 Log.WriteLine("Input error: Can't use both lower case and title case options");
                 Environment.Exit(0);
             }
-            if (UseTitleCase)
-                Log.WriteLine("Convert directory names to title case");
 
             if (UseLowerCase)
                 Log.WriteLine("Convert directory names to lower case");
+
+            if (UseTitleCase)
+                Log.WriteLine("Convert directory names to title case");
+
+            if (RenameInfoFiles)
+                Log.WriteLine("Rename info files according to directory name convention");
+
+            if (UseCurrentDirInfo)
+                Log.WriteLine("Use current directory for info files");
 
             if (!DeleteAudio  && Overwrite)
                 Log.WriteLine("Overwrite existing files");

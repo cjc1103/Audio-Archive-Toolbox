@@ -159,9 +159,6 @@ namespace AATB
                         // reset ArtistFound flag
                         ArtistFound = false;
                     }
-                    // exit loop when TrackNumber = FileListLineCount so remainder of file is not read
-                    if (TrackNumber == FileListCount)
-                        break;
                 }
                 // if track number is correct, change track metadata source
                 // (Note: track number will be one more than actual number) 

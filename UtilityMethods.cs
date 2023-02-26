@@ -179,7 +179,6 @@ namespace AATB
                     // remove extraneous characters
                     Data = CleanDataString(Data);
                     // exit loop, only first match in list will be used
-                    if (Debug) Console.WriteLine("dbg: Data found: " + Data);
                     break;
                 }
             }

@@ -269,13 +269,12 @@ namespace AATB
              *     Location
              *     Concert Date (yyyy-mm-dd)
              *   Info alternate header using labels
-             *     PERFORMER: <artist>
-             *     EVENT: <event>
-             *     VENUE: <venue>
-             *     STAGE: <stage>
-             *     LOCATION: <location>
-             *     DATE: <yyyy-mm-dd>
-             *     
+             *     PERFORMER <artist>
+             *     EVENT<event>
+             *     VENUE <venue>
+             *     STAGE <stage>
+             *     LOCATION <location>
+             *     DATE <yyyy-mm-dd>
              * Outputs:
              *   Dir class
              *     Dir.AlbumArtist

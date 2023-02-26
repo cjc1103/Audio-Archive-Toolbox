@@ -309,7 +309,6 @@ Program history
       it from the DirInfo structure. This value is populated in DirInfo when reading track metadata.
     Added default case for switch statement in CompressWAV and DecompressToWav methods
     Corrected search terms for building Album string in DirMetadataFromCuesheet
-	Corrected album metadata search term in GetTrackMetadataFromCuesheet method to TITLE
 
 5.7 2023-02-20
     Added RenameInfoFiles flag to rename info.txt and .cue files
@@ -317,4 +316,7 @@ Program history
     Added ConvertAIF flag and ConvertAIFtoWAV method to convert AIF format audio to WAV format
     Added two string variables to AATB_DirInfo class: DirMetadataSource and TrackMetadataSource,
       to record the source of metadata for Albums and Tracks respectively
+    Added RenameWAV flag and RenameWAVFiles method to rename WAV files in <bitrate> directory to match
+      the accompanying setlist in infotext file
+    Streamlined generation of metadata terms from infotext and cuesheet files
     
