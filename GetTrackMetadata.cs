@@ -40,6 +40,9 @@ namespace AATB
             if (Dir.TrackMetadataSource == DIRNAME)
                 GetTrackMetadataFromFileNames(Dir, FileList);
 
+            // update track duration list
+            PopulateTrackDurationList(Dir, FileList);
+
         } // end GetTrackMetadata
 
         static void GetTrackMetadataFromInfotext(AATB_DirInfo Dir, FileInfo[] FileList)
@@ -76,7 +79,6 @@ namespace AATB
                 DataLine,
                 TrackNumberStr,
                 TrackTitle,
-                TrackFilePath,
                 TrackArtist;
             Match
                 TrackPatternMatch,
@@ -151,10 +153,6 @@ namespace AATB
                         // add track title to Dir TitleList
                         Dir.TitleList.Add(TrackTitle);
 
-                        // find corresponding audio file in FileList and add track duration to Dir TrackDurationList
-                        // TrackFilePath = FileList[TrackNumber - 1].FullName;
-                        // Dir.TrackDurationList.Add(GetTrackDuration(TrackFilePath));
-
                         // write extracted track and artist info to log
                         Log.Write("    " + TrackNumberStr + SPACE + TrackTitle);
                         if (ArtistFound && TrackArtist != Dir.AlbumArtist)
@@ -165,15 +163,19 @@ namespace AATB
                         ArtistFound = false;
                     }
                 }
-                // if track number is correct, change track metadata source
-                // (Note: track number will be one more than actual number) 
+                // check ending track number in info file is correct
+                // (the track number will be one more than actual number)
                 if (TrackNumber == FileListCount)
+                {
+                    // reset track metadata source flag
                     Dir.TrackMetadataSource = INFOFILE;
+                }
                 else
                 {
                     Log.WriteLine("*** Info file tracks: " + Convert.ToString(TrackNumber)
                                     + "; Actual number of tracks: " + Convert.ToString(FileListCount));
-                    // reset Dir.TitleList
+                    // reset title list
+                    // title list will be repopulated using directory names
                     Dir.TitleList = new List<string>();
                 }
             }
@@ -208,7 +210,6 @@ namespace AATB
                 DataLine,
                 TrackNumberStr = null,
                 TrackTitle = null,
-                TrackFilePath,
                 TrackArtist = null;
             Match
                 PatternMatch;
@@ -244,10 +245,6 @@ namespace AATB
                         // track number bounds check, don't write data for first track number
                         if (TrackNumber > 0 && TrackNumber <= FileListCount)
                         {
-                            // find corresponding audio file and populate track duration
-                            //TrackFilePath = FileList[TrackNumber - 1].FullName;
-                            //Dir.TrackDurationList.Add(GetTrackDuration(TrackFilePath));
-
                             Dir.TitleList.Add(TrackTitle);
                             Dir.ArtistList.Add(TrackArtist);
 
@@ -307,8 +304,6 @@ namespace AATB
                 // (the track number will be one more than actual number)
                 if (TrackNumber == FileListCount)
                 {
-                    // update track duration list
-                    UpdateTrackDurationInfo(Dir, FileList);
                     // reset track metadata source flag
                     Dir.TrackMetadataSource = CUESHEET;
                 }
@@ -368,14 +363,14 @@ namespace AATB
             }
         }  // end GetTrackMetadataFromFileNames
 
-        static void UpdateTrackDurationInfo(AATB_DirInfo Dir, FileInfo[] FileList)
+        static void PopulateTrackDurationList(AATB_DirInfo Dir, FileInfo[] FileList)
         {
             /* Reads track data from FileList, and populates TrackDurationList
              * Inputs:
              *   Dir class
              *   FileList   List of audio tracks
              * Calls:
-             *   GetTrackDutration
+             *   GetTrackDuration
              * Outputs:
              *   Dir.TrackDurationList
              */
@@ -384,10 +379,19 @@ namespace AATB
 
             for (i = 0; i < FileList.Length; i++)
             {
-                // read audio filename and populate corresponding track duration
-                TrackFilePath = FileList[i].FullName;
-                Dir.TrackDurationList.Add(GetTrackDuration(TrackFilePath));
+                try
+                {
+                    // read audio filename and populate corresponding track duration
+                    TrackFilePath = FileList[i].FullName;
+                    Dir.TrackDurationList.Add(GetTrackDuration(TrackFilePath));
+                }
+                catch (Exception e)
+                {
+                    Log.WriteLine("*** Fatal program exception reading file: " + FileList);
+                    if (Debug) Log.WriteLine(e.Message);
+                    Environment.Exit(0);
+                }
             }
-        } // end UpdateTrackDurationInfo
+        } // end PopulateTrackDurationList
     }
 }

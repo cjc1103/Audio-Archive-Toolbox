@@ -318,5 +318,6 @@ Program history
       to record the source of metadata for Albums and Tracks respectively
     Added RenameWAV flag and RenameWAVFiles method to rename WAV files in <bitrate> directory to match
       the accompanying setlist in infotext file
-    Streamlined generation of metadata terms from infotext and cuesheet files
+    Streamlined generation of metadata terms from infotext and cuesheet files and added
+      PopulateTrackDurationList method to move FileList access to GetTrackMetadata method
     
