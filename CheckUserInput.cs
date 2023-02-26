@@ -18,6 +18,7 @@ namespace AATB
               + Convert.ToInt32(VerifyAudio )
               + Convert.ToInt32(DecompressAudio)
               + Convert.ToInt32(JoinWAV)
+              + Convert.ToInt32(RenameWAV)
               + Convert.ToInt32(DeleteAudio)
               + Convert.ToInt32(ConvertAIF)
               + Convert.ToInt32(ConvertBitrate)
@@ -134,6 +135,22 @@ namespace AATB
             {
                 Log.WriteLine("Join tracked WAV audio files");
                 // check for unique WAV bitrate
+                if (!CheckFormatBitrate(WAV, ANYBITRATE))
+                {
+                    Log.WriteLine("Input error: A WAV bitrate was not specified");
+                    Environment.Exit(0);
+                }
+                if (!CheckUniqueBitrate(WAV))
+                {
+                    Log.WriteLine("Input error: Multiple or invalid WAV conversion bitrates selected");
+                    Environment.Exit(0);
+                }
+                PrintCompressionOptions();
+            }
+
+            if (RenameWAV)
+            {
+                Log.WriteLine("Rename audio files");
                 if (!CheckFormatBitrate(WAV, ANYBITRATE))
                 {
                     Log.WriteLine("Input error: A WAV bitrate was not specified");

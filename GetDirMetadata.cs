@@ -207,7 +207,8 @@ namespace AATB
                 Dir.ParentBaseName = BaseName;
                 // no further metadata or parent base name required
             }
-            if (Debug) Console.WriteLine("dbg: ParentBasename = {0}", Dir.ParentBaseName);
+            if (Debug) Console.WriteLine("dbg: Recording Type: {0}", Dir.RecordingType);
+            if (Debug) Console.WriteLine("dbg: ParentBasename: {0}", Dir.ParentBaseName);
 
             // for wav or compressed audio directories only
             if ((CompressAudio || CreateCuesheet) && Dir.Type == TRACKEDAUDIO
@@ -231,8 +232,8 @@ namespace AATB
                 if (Dir.DirMetadataSource == DIRNAME)
                     GetDirMetadataFromDirectoryName(Dir);
 
-                // remove any leading spaces from Album string
-                Dir.Album = Regex.Replace(Dir.Album, @"^\s*", "");
+                // remove leading/trailing quotes or spaces from Album string
+                Dir.Album = CleanDataString(Dir.Album);
 
                 // log metadata info
                 Log.WriteLine("    Artist: " + Dir.AlbumArtist);
@@ -257,23 +258,23 @@ namespace AATB
              *   Dir class
              *   InfotextPath   location of info.txt file with recording information
              *   Info header format with four lines:
-             *     Artist
+             *     Performer (Artist)
              *     Venue
              *     Location
              *     Concert Date (yyyy-mm-dd)
              *   Info header format with five lines:
-             *     Artist
+             *     Performer (Artist)
              *     Event
              *     Stage
              *     Location
              *     Concert Date (yyyy-mm-dd)
              *   Info alternate header using labels
-             *     Artist: <artist>
-             *     Event: <event>
-             *     Venue: <venue>
-             *     Stage: <stage>
-             *     Location: <location>
-             *     Date: <yyyy-mm-dd>
+             *     PERFORMER: <artist>
+             *     EVENT: <event>
+             *     VENUE: <venue>
+             *     STAGE: <stage>
+             *     LOCATION: <location>
+             *     DATE: <yyyy-mm-dd>
              *     
              * Outputs:
              *   Dir class
@@ -327,40 +328,50 @@ namespace AATB
                     // otherwise search for metadata labels, find first instance of each label
                     else
                     {
-                        Dir.AlbumArtist = SearchList(DataList, "Artist: ");
-                        Dir.Event = SearchList(DataList, "Event: ");
-                        Dir.Venue = SearchList(DataList, "Venue: ");
-                        Dir.Stage = SearchList(DataList, "Stage: ");
-                        Dir.Location = SearchList(DataList, "Location: ");
-                        Dir.ConcertDate = SearchList(DataList, "Date: ");
+                        Dir.AlbumArtist = SearchList(DataList, "PERFORMER");
+                        Dir.Album = SearchList(DataList, "TITLE");
+                        Dir.Event = SearchList(DataList, "EVENT");
+                        Dir.Venue = SearchList(DataList, "VENUE");
+                        Dir.Stage = SearchList(DataList, "STAGE");
+                        Dir.Location = SearchList(DataList, "LOCATION");
+                        Dir.ConcertDate = SearchList(DataList, "DATE");
                     }
                 }
-
-                // album = event + venue + date + stage, separated by spaces
-                Dir.Album = Dir.Event;
-                if (Dir.Venue != null)
-                    Dir.Album += (SPACE + Dir.Venue);
-                if (Dir.ConcertDate != null)
-                    Dir.Album += (SPACE + Dir.ConcertDate);
-                if (Dir.Stage != null)
-                    Dir.Album += (SPACE + Dir.Stage);
 
                 // verify minimum metadata has been found
                 if (Dir.AlbumArtist == null)
                     Log.WriteLine("*** Artist missing from info file");
-                if (Dir.RecordingType == LIVE && Dir.ConcertDate == null)
-                    Log.WriteLine("*** Concert date missing from info file");
-                else if (Dir.RecordingType == CD && Dir.Album == null)
-                    Log.WriteLine("*** Album name missing from info file");
-
-                if ((Dir.RecordingType == LIVE
-                    && Dir.AlbumArtist != null && Dir.ConcertDate != null)
-                    ||
-                    (Dir.RecordingType == CD
-                    && Dir.AlbumArtist != null && Dir.Album != null))
-                    // Reset metadata source to "INFOFILE"
-                    Dir.DirMetadataSource = INFOFILE;
-                    // otherwise Dir.Metadatasource remains "DIRNAME"
+                switch (Dir.RecordingType)
+                {
+                    case LIVE:
+                    {
+                        if (Dir.Album == null)
+                        {
+                            // build album string: event + venue + date + stage
+                            Dir.Album = Dir.Event;
+                            if (Dir.Venue != null)
+                                Dir.Album += (SPACE + Dir.Venue);
+                            if (Dir.ConcertDate != null)
+                                Dir.Album += (SPACE + Dir.ConcertDate);
+                            if (Dir.Stage != null)
+                                Dir.Album += (SPACE + Dir.Stage);
+                        }
+                        if (Dir.ConcertDate == null)
+                            Log.WriteLine("*** Concert date missing from info file");
+                        if (Dir.AlbumArtist != null && Dir.ConcertDate != null)
+                            Dir.DirMetadataSource = INFOFILE;
+                        break;
+                    }
+                    case CD:
+                    case OTHER:
+                    {
+                        if (Dir.Album == null)
+                            Log.WriteLine("*** Title missing from info file");
+                        if (Dir.AlbumArtist != null && Dir.Album != null)
+                            Dir.DirMetadataSource = INFOFILE;
+                        break;
+                    }
+                }
             }
             else
                 Log.WriteLine("*** Infotext file not found:" + InfotextFileName);
@@ -407,43 +418,48 @@ namespace AATB
                 DataList = ReadTextFile(Dir.CuesheetPath);
 
                 // search for standard metadata labels
-                Dir.AlbumArtist = SearchList(DataList, "PERFORMER ");
-                Dir.Album = SearchList(DataList, "TITLE ");
-                Dir.Event = SearchList(DataList, "EVENT ");
-                Dir.Venue = SearchList(DataList, "VENUE ");
-                Dir.Stage = SearchList(DataList, "STAGE ");
-                Dir.Location = SearchList(DataList, "LOCATION ");
-                Dir.ConcertDate = SearchList(DataList, "DATE ");
-
-                // if album not found in cuesheet, then build album string
-                // album = event + venue + date + stage, separated by spaces
-                if (Dir.Album == null)
-                {
-                    Dir.Album = Dir.Event;
-                    if (Dir.Venue != null && Dir.Venue.Length > 0)
-                        Dir.Album += (SPACE + Dir.Venue);
-                    if (Dir.ConcertDate != null && Dir.ConcertDate.Length > 0)
-                        Dir.Album += (SPACE + Dir.ConcertDate);
-                    if (Dir.Stage != null && Dir.Stage.Length > 0)
-                        Dir.Album += (SPACE + Dir.Stage);
-                }
+                Dir.AlbumArtist = SearchList(DataList, "PERFORMER");
+                Dir.Album = SearchList(DataList, "TITLE");
+                Dir.Event = SearchList(DataList, "EVENT");
+                Dir.Venue = SearchList(DataList, "VENUE");
+                Dir.Stage = SearchList(DataList, "STAGE");
+                Dir.Location = SearchList(DataList, "LOCATION");
+                Dir.ConcertDate = SearchList(DataList, "DATE");
 
                 // verify minimum metadata has been found
                 if (Dir.AlbumArtist == null)
                     Log.WriteLine("*** Artist missing from cuesheet");
-                if (Dir.RecordingType == LIVE && Dir.ConcertDate == null)
-                    Log.WriteLine("*** Concert date missing from cuesheet");
-                else if (Dir.RecordingType == CD && Dir.Album == null)
-                    Log.WriteLine("*** Album name missing from cuesheet");
-
-                if ((Dir.RecordingType == LIVE
-                    && Dir.AlbumArtist != null && Dir.ConcertDate != null)
-                    ||
-                    (Dir.RecordingType == CD
-                    && Dir.AlbumArtist != null && Dir.Album != null))
-                    // Reset metadata source to "CUESHEET"
-                    Dir.DirMetadataSource = CUESHEET;
-                    // otherwise Dir.Metadatasource remains "DIRNAME"
+                switch (Dir.RecordingType)
+                {
+                    case LIVE:
+                    {
+                        if (Dir.Album == null)
+                        {
+                            // build album string: event + venue + date + stage
+                            Dir.Album = Dir.Event;
+                            if (Dir.Venue != null)
+                                Dir.Album += (SPACE + Dir.Venue);
+                            if (Dir.ConcertDate != null)
+                                Dir.Album += (SPACE + Dir.ConcertDate);
+                            if (Dir.Stage != null)
+                                Dir.Album += (SPACE + Dir.Stage);
+                        }
+                        if (Dir.ConcertDate == null)
+                            Log.WriteLine("*** Concert date missing from cuesheet");
+                        if (Dir.AlbumArtist != null && Dir.ConcertDate != null)
+                            Dir.DirMetadataSource = CUESHEET;
+                        break;
+                    }
+                    case CD:
+                    case OTHER:
+                    {
+                        if (Dir.Album == null)
+                            Log.WriteLine("*** Title missing from cuesheet");
+                        if (Dir.AlbumArtist != null && Dir.Album != null)
+                            Dir.DirMetadataSource = CUESHEET;
+                        break;
+                    }
+                }
             }
             else
                 Log.WriteLine("*** Cuesheet not found: " + CuesheetFileName);

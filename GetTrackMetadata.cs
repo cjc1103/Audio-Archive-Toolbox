@@ -165,11 +165,15 @@ namespace AATB
                 }
                 // if track number is correct, change track metadata source
                 // (Note: track number will be one more than actual number) 
-                if (TrackNumber != FileListCount)
-                    Log.WriteLine("*** Info file tracks: " + Convert.ToString(TrackNumber)
-                                + "; Actual number of tracks: " + Convert.ToString(FileListCount));
-                else
+                if (TrackNumber == FileListCount)
                     Dir.TrackMetadataSource = INFOFILE;
+                else
+                {
+                    Log.WriteLine("*** Info file tracks: " + Convert.ToString(TrackNumber)
+                                    + "; Actual number of tracks: " + Convert.ToString(FileListCount));
+                    // reset Dir.TitleList
+                    Dir.TitleList = new List<string>();
+                }
             }
             else
                 Log.WriteLine("*** Infotext file not found");
@@ -307,11 +311,15 @@ namespace AATB
 
                 // check track number is correct, otherwise revert to directory metadata
                 // (Note: track number will be one more than actual number)
-                if (TrackNumber != FileListCount)
+                if (TrackNumber == FileListCount)
+                    Dir.TrackMetadataSource = CUESHEET;
+                else
+                {
                     Log.WriteLine("*** Cuesheet tracks: " + TrackNumberStr
                                 + "; Actual number of tracks: " + Convert.ToString(FileListCount));
-                else
-                    Dir.TrackMetadataSource = CUESHEET;
+                    // reset Dir.TitleList
+                    Dir.TitleList = new List<string>();
+                }
             }
             else
                 Log.WriteLine("*** Cuesheet not found");
@@ -327,18 +335,25 @@ namespace AATB
              * Outputs:
              *   Dir        Current directory class
              */
-            int i;
+            int
+                TrackNumber;
             string
+                TrackNumberStr,
                 TrackTitle,
                 TrackFilePath;
 
             Log.WriteLine("  Deriving track metadata from file names");
             // build title for each track from basename, ignore prefix, extension
             // artist name will be the same for each track
-            for (i = 0; i < FileList.Length; i++)
+
+            TrackNumber = 0;
+            foreach (FileInfo fi in FileList)
             {
+                // increment track number and convert to two place string
+                TrackNumber++;
+                TrackNumberStr = TrackNumber.ToString("00");
                 // get filename
-                TrackTitle = FileList[i].Name;
+                TrackTitle = fi.Name;
                 // remove track number prefix
                 // (one or more digits, optional period, one or more spaces)
                 TrackTitle = Regex.Replace(TrackTitle, @"^\d+\.?\s+", "");
@@ -346,10 +361,10 @@ namespace AATB
                 TrackTitle = Regex.Replace(TrackTitle, @"\.[a-z0-9]{3,5}$", "");
                 // populate track metadata
                 Dir.TitleList.Add(TrackTitle);
-                TrackFilePath = FileList[i].FullName;
+                TrackFilePath = fi.FullName;
                 Dir.TrackDurationList.Add(GetTrackDuration(TrackFilePath));
                 Dir.ArtistList.Add(Dir.AlbumArtist);
-                Log.WriteLine("    " + (i + 1).ToString("00") + SPACE + TrackTitle);
+                Log.WriteLine("    " + TrackNumberStr + SPACE + TrackTitle);
             }
         }  // end GetTrackMetadataFromFileNames
     }

@@ -221,5 +221,56 @@ namespace AATB
             // compare both data lists and return true if they are identical
             return (Data1.SequenceEqual(Data2));
         } // end FilesAreEquivalent
+
+        static void RenameWAVFiles(AATB_DirInfo Dir, FileInfo[] FileList)
+        {
+            /* renames all files in File list to the names embedded in the infotext file
+             * if no infotext file exists then return error
+             * Input
+             *   Dir Class
+             *      InfotextPath    *Must* have a set list with one name for each file
+             *      TitleList       Previously populated by GetTrackMetadatafromInfotext method
+             *   Filelist               List of files
+             * Outputs
+             *   Files are renamed, extension remains the same
+             */
+
+            int 
+                FileListCount,
+                TitleListCount,
+                TrackNumber;
+            string
+                Path, FileName,
+                RootFileName, Extension,
+                NewFileName, NewFilePath,
+                TrackNumberStr;
+
+            // WAVFile list must contain the same number of files as exists in Dir.TitleList
+            FileListCount = FileList.Count();
+            TitleListCount = Dir.TitleList.Count();
+            if (FileListCount == TitleListCount)
+            {
+                TrackNumber = 0;
+                foreach (FileInfo fi in FileList)
+                {
+                    // increment track number and convert to two place string
+                    TrackNumber++;
+                    TrackNumberStr = TrackNumber.ToString("00");
+                    // split file name in root, extension
+                    (Path, FileName) = SplitFilePath(fi.FullName);
+                    (RootFileName, Extension) = SplitString(FileName, PERIOD);
+                    //build new file name, number prefic has to added back
+                    NewFileName = TrackNumberStr + SPACE + Dir.TitleList[TrackNumber - 1] + PERIOD + Extension;
+                    NewFilePath = Path + BACKSLASH + NewFileName;
+                    Log.WriteLine("  Renaming " + fi.Name + " ==> " + NewFileName);
+                    // rename file
+                    MoveFile(fi.FullName, NewFilePath);
+                }
+            }
+            else
+                Log.WriteLine("*** Track list (" + TitleListCount + ")"
+                            + " not equal to WAV files (" + FileListCount + ")");
+
+        } // end RenameWAVFiles
     }
 }

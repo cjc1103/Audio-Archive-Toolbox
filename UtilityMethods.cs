@@ -30,7 +30,7 @@ namespace AATB
             return FileName;
         } // end SplitFileName
 
-        static (string, string) SplitFilePathName(string InputPath)
+        static (string, string) SplitFilePath(string InputPath)
         {
             /* Separates input path into two strings separated by the last occurrence
              *   of the delimiter BACKSLASH
@@ -62,7 +62,7 @@ namespace AATB
                 }
             }
             return (Path, FileName);
-        } // end SplitFilePathName
+        } // end SplitFilePath
 
         static (string, string) SplitString(string InputName, string Delimiter)
         {
@@ -170,15 +170,16 @@ namespace AATB
             {
                 // search for pattern in string
                 PatternMatch = Regex.Match(DataList[i], @SearchTerm);
-                if ((PatternMatch.Success)
+                // check that there are characters in data string after search term
+                if (PatternMatch.Success
                     && (DataList[i].Length > SearchTerm.Length))
                 {
                     // get index of data following SearchName
-                    // assume SearchName
                     Data = DataList[i].Substring(PatternMatch.Index + SearchTerm.Length);
-                    // remove quotation marks, if they exist
-                    Data = Regex.Replace(Data, @"""", "");
+                    // remove extraneous characters
+                    Data = CleanDataString(Data);
                     // exit loop, only first match in list will be used
+                    if (Debug) Console.WriteLine("dbg: Data found: " + Data);
                     break;
                 }
             }

@@ -82,6 +82,7 @@ namespace AATB
             DeleteAudio = false,
             DecompressAudio = false,
             JoinWAV = false,
+            RenameWAV = false,
             ConvertAIF = false,
             ConvertBitrate = false,
             Overwrite = false,
@@ -197,6 +198,11 @@ namespace AATB
                         case "-j":
                         case "--join":
                             JoinWAV = true;
+                            break;
+
+                        case "-r":
+                        case "--rename-wav-files":
+                            RenameWAV = true;
                             break;
 
                         case "-x":

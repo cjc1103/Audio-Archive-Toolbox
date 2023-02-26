@@ -36,6 +36,8 @@ namespace AATB
             + "  --flac[=<bitrate>|all](all)\n"
             + "[-j|--join]\n"
             + "  --wav=<bitrate>\n"
+            + "[-r|rename-wav-files]\n"
+            + "  --wav=<bitrate>\n"
             + "[-x|--delete]\n"
             + "  --wav[=<bitrate>|raw|all](all)\n"
             + "[-y|--convert-aif-to-wav]\n"

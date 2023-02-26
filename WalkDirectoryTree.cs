@@ -348,6 +348,50 @@ namespace AATB
 
             } // end Decompress Audio section
 
+            // = = = = = = = = Join WAV Files section = = = = = = = = 
+            // Concatenate separate WAV files into one combined wav file
+            // Note: WAV files must exist in WAVFileList
+            // Note: the directory name Dir.Name = bitrate
+            // Command: -j|--join --wav=<bitrate>
+            else if (JoinWAV)
+            {
+                if (Debug) Console.WriteLine("dbg: Join WAV Files Section");
+                if (CheckFormatBitrate(WAV, Dir.Name)
+                    && WAVExists)
+                {
+                    // populate directory metadata
+                    GetDirTextFiles(Dir, ParentInfotextList, ParentCuesheetList);
+                    GetDirMetadata(Dir);
+
+                    JoinedWAVFilename = Dir.ParentBaseName + PERIOD + Dir.Bitrate + PERIOD + WAV;
+                    ConcatentateWAVFiles(Dir, WAVFileList, JoinedWAVFilename);
+                }
+            } // end Join WAV Files section
+
+            // = = = = = = = = Rename WAV files section = = = = = = = = 
+            // Rename all wav files in curent directory using track metadata from infotext file
+            // Note: WAV files must exist in WAVFileList
+            // Note: the directory name Dir.Name = bitrate
+            // Command: -r|--rename-wav-files --wav=<bitrate>
+            if (RenameWAV)
+            {
+                if (Debug) Console.WriteLine("dbg: Rename WAV Files Section");
+
+                if (CheckFormatBitrate(WAV, Dir.Name)
+                    && WAVExists)
+                {
+                    // populate directory metadata
+                    GetDirTextFiles(Dir, ParentInfotextList, ParentCuesheetList);
+                    GetDirMetadata(Dir);
+
+                    // populate track metadata
+                    GetTrackMetadata(Dir, WAVFileList);
+
+                    // rename files in WAVFileList
+                    RenameWAVFiles(Dir, WAVFileList);
+                }
+            } // end Rename WAV Files section
+
             // = = = = = = = = Delete Audio section = = = = = = = = 
             // (1) Delete unneeded wav files after compression from:
             //     a. RAW directory
@@ -466,26 +510,6 @@ namespace AATB
                     }
                 }
             } // end Delete Audio section
-
-            // = = = = = = = = Join WAV Files section = = = = = = = = 
-            // Concatenate separate WAV files into one combined wav file
-            // Note: wav files must exist in the specified directory
-            // Note: the directory name Dir.Name = bitrate
-            // Command: -j|--join --wav=<bitrate>
-            else if (JoinWAV)
-            {
-                if (Debug) Console.WriteLine("dbg: Join WAV Files Section");
-                if (CheckFormatBitrate(WAV, Dir.Name)
-                    && WAVExists)
-                {
-                    // populate directory metadata
-                    GetDirTextFiles(Dir, ParentInfotextList, ParentCuesheetList);
-                    GetDirMetadata(Dir);
-
-                    JoinedWAVFilename = Dir.ParentBaseName + PERIOD + Dir.Bitrate + PERIOD + WAV;
-                    ConcatentateWAVFiles(Dir, WAVFileList, JoinedWAVFilename);
-                }
-            } // end Join WAV Files section
 
             // = = = = = = = = Convert AIF Files section = = = = = = = = 
             // Command: --aif|--convert-aif-to-wav --wav=<bitrate>

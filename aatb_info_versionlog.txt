@@ -313,8 +313,8 @@ Program history
 
 5.7 2023-02-20
     Added RenameInfoFiles flag to rename info.txt and .cue files
-    Added UseCurrentDirInfo flag for Verify mode - forces program to read info files in current dir
+    Added UseCurrentDirInfo flag for Verify mode to force program to read info files in current dir
     Added ConvertAIF flag and ConvertAIFtoWAV method to convert AIF format audio to WAV format
-    Added string variables to AATB_DirInfo class: DirMetadataSource and TrackMetadataSource,
-      to record the source of metadata for Album and Tracks respectively
+    Added two string variables to AATB_DirInfo class: DirMetadataSource and TrackMetadataSource,
+      to record the source of metadata for Albums and Tracks respectively
     
