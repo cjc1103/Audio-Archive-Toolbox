@@ -110,7 +110,7 @@ namespace AATB
                 }
                 catch (Exception)
                 {
-                    Log.WriteLine("*** Unable to move or rename file" + SourceFilePath);
+                    Log.WriteLine("*** Unable to move or rename file:" + SourceFilePath);
                 }
             }
             else
@@ -172,7 +172,7 @@ namespace AATB
             TargetFilePath = TargetDirPath + BACKSLASH + SourceFileName;
             
             // CopyFile method will catch errors
-            Log.WriteLine("    Copying information file " + SourceFileName);
+            Log.WriteLine("    Copying information file: " + SourceFileName);
             CopyFile(SourceFilePath, TargetFilePath);
 
         } // end CopyTextFile
