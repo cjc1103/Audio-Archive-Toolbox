@@ -411,35 +411,53 @@ namespace AATB
                             break;
 
                         // convert to lower case
-                        case "-lc":
+                        case "--lc":
                         case "--lower-case":
                             UseLowerCase = true;
                             break;
 
                         // convert to title case
-                        case "-tc":
+                        case "--tc":
                         case "--title-case":
                             UseTitleCase = true;
                             break;
 
                         // rename info files
-                        case "-ri":
+                        case "--ri":
                         case "--rename-infofiles":
                             RenameInfoFiles = true;
                             break;
 
-                        case "-cd":
+                        case "--cd":
                         case "--use-currentdirinfo":
                             UseCurrentDirInfo = true;
                             break;
 
+                        // other options
                         // overwrite existing files
                         case "-o":
                         case "--overwrite":
                             Overwrite = true;
                             break;
 
-                        // other options
+                        // print program options and exit
+                        case "-h":
+                        case "--help":
+                            PrintHelp();
+                            Environment.Exit(0);
+                            break;
+
+                        // error reporting for external processes
+                        case "--hh":
+                        case "--verbose":
+                            Verbose = true;
+                            break;
+
+                        // additonal logging for debugging
+                        case "--debug":
+                            Debug = true;
+                            break;
+
                         case "--cjc":
                             // that's my initials.. :-)
                             // --compress --aac|m4a=all --flac=all --all-reports --m3u-playlist
@@ -451,24 +469,6 @@ namespace AATB
                             CreateFFP = true;
                             CreateSHN = true;
                             CreateM3U = true;
-                            break;
-
-                        // error reporting for external processes
-                        case "-hh":
-                        case "--verbose":
-                            Verbose = true;
-                            break;
-
-                        // print program options and exit
-                        case "-h":
-                        case "--help":
-                            PrintHelp();
-                            Environment.Exit(0);
-                            break;
-
-                        // additonal logging for debugging
-                        case "--debug":
-                            Debug = true;
                             break;
 
                         // argument not parsed

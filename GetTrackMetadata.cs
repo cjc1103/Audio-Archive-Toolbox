@@ -357,7 +357,6 @@ namespace AATB
                 // populate track metadata
                 Dir.TitleList.Add(TrackTitle);
                 TrackFilePath = fi.FullName;
-                Dir.TrackDurationList.Add(GetTrackDuration(TrackFilePath));
                 Dir.ArtistList.Add(Dir.AlbumArtist);
                 Log.WriteLine("    " + TrackNumberStr + SPACE + TrackTitle);
             }

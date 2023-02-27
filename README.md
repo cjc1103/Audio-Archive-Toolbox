@@ -84,6 +84,7 @@
  * Directory naming conventions
  *
  * Input directory and file structure format
+ *	 Note: <D> signifies directory name <dd> is a two digit string
  *   Commercial recording
  *   <D><dd> <artist> - <album>
  *      <D>16-44 (Note: only valid bitrate, ripped from commercial CDs)
@@ -101,13 +102,13 @@
  *    Limitations: Any prefix number in directory name is ignored, for when concert
  *	    folder names are prefaced with a sequence number. This means any band with a
  *		name beginning with a number will not work, the artist name will be missing the 
- *		number, e.g. "18 South" => "South". The folders can be remed afterwards if desired,
+ *		number, e.g. "18 South" => "South". The folders can be renamed afterwards if desired,
  *		without affecting the file names, checksums, or playlists.
  *		
  * Output directory name formats for compressed files, created under the input directory
- *   Commercial recording
+ *   Commercial recording:
  *      <D><artist> - <album>.<bitrate>.<compressiontype>f
- *   Live recording
+ *   Live recording:
  *      <D><artist>_<date>.<bitrate>.<compressiontype>f
  *      <D><Artist>_<date>.<stage>.<bitrate>.<compressiontype>f
  *   <artist>: artist name
@@ -117,7 +118,10 @@
  *      e.g 16-44, 24-48, etc.
  *   <compressiontype>
  *      mp3, m4a, ogg, opus, alac, or flac
- *      Note: the letter f is appended to the name to signify a "folder" (directory)
+ *      Note: The letter f is appended to the name to signify a "folder" (directory)\
+ *		Note: Although ALAC is a lossless audio compression algorithm, it is treated
+ *			  like a lossy algorithm in this program. FLAC is the only lossless
+ *			  compression scheme supported to simplify the program.
  *   
  * Info file format
  *   (info header format #1 - no labels):
@@ -134,12 +138,12 @@
  *   Date
  *   
  *   (alternate info header format, using labels as follows):
- *   Artist: <Artist name>
- *   Event: <Event name>
- *   Venue: <Venue name>
- *   Stage: <Stage name>
- *   Location: <Location>
- *   Date: <yyyy-mm-dd>
+ *   PERFORMER <Artist name>
+ *   TITLE <Event name>
+ *   VENUE <Venue name>
+ *   STAGE <Stage name>
+ *   LOCATION <Location>
+ *   DATE <yyyy-mm-dd>
  *
  *   Artist member lineup info
  *   
@@ -189,6 +193,8 @@
  *      --flac=<bitrate>|raw|all Freeware Lossless Audio Compresson
  *   -j|--join				joins tracked wav format files into one contiguous wav file
  *		--wav=<bitrate>		specifies bitrate of wav files to be joined
+ *   -r|--rename-wav-files	renames wav files in <bitrate> directory
+ *		--wav=<bitrate>		specifies bitrate of wav files to be renamed
  *   -x|--delete            delete redundant files after compression is complete
  *      --wav=<bitrate>|raw|all  Delete all input wav directories for the specified bitrate
  *   -z|--convert-to-bitrate   convert wav files to bitrate
@@ -197,9 +203,9 @@
  *        -i|--use-infotext  read metadata from an info.txt concert information file
  *
  * compression and verification arguments
- *   --mp3=<bitrate>        compress wav to mp3 format (.mp3)
+ *   --mp3=<bitrate>        compress wav to mp3 format (.mp3) (16-44 is default)
  *   --mp3-quality=<value>  mp3 compression parameter
- *   --[aac|m4a]=<bitrate>        compress wav to aac format, mp4 audio container (.m4a)
+ *   --[aac|m4a]=<bitrate>  compress wav to aac format, mp4 audio container (.m4a)
  *   --[aac-quality|m4a-quality]=<value>  aac compression parameter
  *   --ogg=<bitrate>        compress wav to vorbis format, ogg container (.ogg)
  *   --ogg-quality=<value>  ogg compression parameter
@@ -211,18 +217,18 @@
  *   --flac-quality=<value> flac compression parameter
  * 
  * compression <bitrate>
- *   =<bitdepth>-<samplerate> e.g =16-44, =24-48, etc.
- *   =raw                   raw audio format
+ *   =<bitdepth>-<samplerate> e.g 16-44, 24-48, etc.
+ *   =raw                   raw audio format, in the "Audio" subdirectory
  *   =all or no option      all bitrates
  *   
  * additional options
- *   -l|--lower-case        convert subdirectory names to lower case
- *   -u|--title-case        convert subdirectory names to title case (capitalize first letter of each word)
- *   -r|--rename-infofiles  rename info.txt and info.cue files
- *   -f|--use-currentdirinfo  use current directory for info files
+ *   --lc|--lower-case      convert subdirectory names to lower case
+ *   --uc|--title-case      convert subdirectory names to title case (capitalize first letter of each word)
+ *   --ri|--rename-infofiles  rename info.txt and info.cue files
+ *   --cd|--use-currentdirinfo  use current directory for infotext file when verifying compressed files
  *   -o|--overwrite         overwrite existing files
- *   -b|--verbose           write StandardError datastream to console
  *   -h|--help              display options list on console
+ *   --hh|--verbose         write StandardError datastream to console
  *   --debug                switch to write debug files to console
  *
  * Dependencies and limitations
@@ -259,7 +265,7 @@
  *   Adds aatb and sox program locations to the Windows environment path
  * 
  * Uninstallation script (uninst000.exe):
- *   Removes all required programs and exteranl tools (above)
+ *   Removes all required programs and external tools (above)
  *   Does not remove the following programs, as they may be used by other programs. These
  *   may be uninstalled manually if desired:
  *     Apple Application Support 64bit
