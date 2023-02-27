@@ -61,7 +61,7 @@ namespace AATB
             + "  o Tracked wav files are in <bitrate> subdirectory\n"
             + "  o Raw (unedited or tracked) audio files are in <" + RAW + "> subdirectory\n"
             + "  o FLAC is only compression type supported for raw files\n"
-            + "  o AAC compressed files are saved in MPEG-4 Audio (.m4a) format\n"
+            + "  o AAC compressed files are saved in MPEG-4 Audio (.m4a) container\n"
             + "  o If compression bitrates are not specified, all bitrates are assumed\n"
             + "  o Metadata in info.txt and info.cue files can be used to tag compressed audio\n"
             );
