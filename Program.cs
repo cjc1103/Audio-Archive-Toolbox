@@ -7,16 +7,13 @@
  * 
  * Overview
  * Audio Archive Toolbox (AATB) is a command line utility to perform audio file compression,
- * decompression, tagging, and conversion from one bitrate to another. It must be started from
+ * decompression, tagging, bitrate conversion, and WAV file concatenation. It must be started from
  * the command line in the parent directory to the directory(s) containing the input wav files.
  * The program walks the directory tree under the starting directory to find and operate on
  * relevant audio files in various formats.
  */
 
 using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace AATB
