@@ -88,7 +88,7 @@ namespace AATB
             CreateSHN = false,
             CreateM3U = false,
             CreateCuesheet = false,
-            UpdateTags = false,
+            CreateTags = false,
             UseInfotext = false,
             UseCuesheet = false,
             UseLowerCase = false,
@@ -404,7 +404,7 @@ namespace AATB
                         // create metadata tags
                         case "-t":
                         case "--tag":
-                            UpdateTags = true;
+                            CreateTags = true;
                             break;
 
                         // convert to lower case
