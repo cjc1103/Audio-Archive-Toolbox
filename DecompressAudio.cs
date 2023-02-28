@@ -34,7 +34,7 @@ namespace AATB
                 ExternalProgram,
                 ExternalArguments;
             int
-                TrackNumber = 0 ;
+                TrackNumber = 0;
 
             // initialize external program parameters
             ExternalProgram = ExternalArguments = null;
