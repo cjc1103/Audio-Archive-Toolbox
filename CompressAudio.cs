@@ -31,7 +31,7 @@ namespace AATB
                 ExternalProgram,
                 ExternalArguments;
             int
-                TrackNumber = 0 ,
+                TrackNumber = 0,
                 CompTypeIndex,
                 QualityValue;
 
