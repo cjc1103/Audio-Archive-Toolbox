@@ -97,8 +97,8 @@ namespace AATB
                 // initialize flags and counters
                 TrackNumber = 0;
 
-                // read info file, ignoring concert info on first 5 lines)
-                for (i = 5; i < DataListCount; i++)
+                // read data from info file
+                for (i = 0; i < DataListCount; i++)
                 {
                     DataLine = DataList[i];
                     if (Debug) Console.WriteLine("dbg: Line: {0:D2} Data: {1}", i, DataLine);
@@ -228,7 +228,7 @@ namespace AATB
                 TitleFound = ArtistFound = false;
                 TrackNumber = 0;
 
-                // read cuesheet, search for keywords
+                // read data from cuesheet file
                 for (i = 0; i < DataListCount; i++)
                 {
                     DataLine = DataList[i];
