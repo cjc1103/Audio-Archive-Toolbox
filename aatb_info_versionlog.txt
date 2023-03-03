@@ -310,7 +310,7 @@ Program history
     Added default case for switch statement in CompressWAV and DecompressToWav methods
     Corrected search terms for building Album string in DirMetadataFromCuesheet
 
-5.7 2023-02-20
+5.7 2023-03-03
     Added RenameInfoFiles flag to rename info.txt and .cue files
     Added UseCurrentDirInfo flag for Verify mode to force program to read info files in current dir
     Added ConvertAIF flag and ConvertAIFtoWAV method to convert AIF format audio to WAV format
@@ -318,5 +318,6 @@ Program history
       to record the source of metadata for Albums and Tracks respectively
     Added RenameWAV flag and RenameWAVFiles method to rename WAV files in <bitrate> directory to match
       the accompanying setlist in infotext file
-	Streamlined generation of metadata terms from infotext and cuesheet files, and moved GetTrackDuration to a new method PopulateTrackDurationList as this function was in three different methods, and also enabled proper exception handling for file access.
-    
+	Streamlined generation of metadata terms from infotext and cuesheet files, and moved GetTrackDuration
+      to a new method PopulateTrackDurationList, and also enabled proper exception handling for file access.
+    Added SearchListForDate method to search for a vlaid concert date in an infotext file
