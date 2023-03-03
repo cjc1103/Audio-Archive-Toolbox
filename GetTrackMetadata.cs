@@ -142,8 +142,8 @@ namespace AATB
                         // add track artist to Dir ArtistList
                         Dir.ArtistList.Add(TrackArtist);
 
-                        // keep alphanumeric, special characters (escaped with \), spaces
-                        DataLine = Regex.Replace(DataLine, @"[^a-zA-Z0-9\.\,\!\?\-\>\'\s]", "");
+                        // remove any special characters at the end of the  line
+                        DataLine = Regex.Replace(DataLine, @"[^a-zA-Z0-9]*$", "");
 
                         // remove any trailing spaces
                         DataLine = Regex.Replace(DataLine, @"\s*$", "");
