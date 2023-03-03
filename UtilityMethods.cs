@@ -185,7 +185,7 @@ namespace AATB
             return Data;
         } // end SearchList
 
-        static int SearchListforDate(string[] DataList)
+        static int SearchListForDate(string[] DataList)
         {
             /* Returns the line number in data list containg a valid date yyyy-mm-dd 
              * Inputs:

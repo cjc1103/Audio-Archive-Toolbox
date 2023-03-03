@@ -98,8 +98,8 @@ namespace AATB
                 // initialize flags and counters
                 TrackNumber = 0;
                 // search for valid date yyyy-mm-dd
-                // if date not found, then method returns 0
-                DateLineNumber = SearchListforDate(DataList);
+                // if date not found, then method returns -1
+                DateLineNumber = SearchListForDate(DataList);
 
                 // read data from info file, skip lines up to date, if found
                 for (i = DateLineNumber + 1; i < DataListCount; i++)
