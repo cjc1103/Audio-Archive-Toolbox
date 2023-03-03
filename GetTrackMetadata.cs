@@ -70,6 +70,7 @@ namespace AATB
             int
                 i,
                 TrackNumber,
+                DateLineNumber,
                 DataListCount,
                 FileListCount;
             string[]
@@ -96,9 +97,12 @@ namespace AATB
                 FileListCount = FileList.Length;
                 // initialize flags and counters
                 TrackNumber = 0;
+                // search for valid date yyyy-mm-dd
+                // if date not found, then method returns 0
+                DateLineNumber = SearchListforDate(DataList);
 
-                // read data from info file
-                for (i = 0; i < DataListCount; i++)
+                // read data from info file, skip lines up to date, if found
+                for (i = DateLineNumber + 1; i < DataListCount; i++)
                 {
                     DataLine = DataList[i];
                     if (Debug) Console.WriteLine("dbg: Line: {0:D2} Data: {1}", i, DataLine);

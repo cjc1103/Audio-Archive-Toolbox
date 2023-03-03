@@ -204,7 +204,7 @@ namespace AATB
                     return i;
             }
             // valid date not found
-            return 0;
+            return -1;
         }
 
 
