@@ -284,13 +284,11 @@ namespace AATB
              *     Dir.Location
              *     Dir.ConcertDate
              */
+            int DateLineNumber;
             string
                 InfotextFileName;
             string[]
                 DataList;
-            Match
-                DateMatchLine4,
-                DateMatchLine5;
 
             InfotextFileName = SplitFileName(Dir.InfotextPath);
             if (File.Exists(Dir.InfotextPath))
@@ -298,43 +296,37 @@ namespace AATB
                 Log.WriteLine("  Reading album metadata from info file: " + InfotextFileName);
                 // read data from text file
                 DataList = ReadTextFile(Dir.InfotextPath);
-                if (DataList.Length > 4)
+                DateLineNumber = SearchListforDate(DataList);
+                // valid date on line number 4
+                if (DateLineNumber == 4)
                 {
-                    // check for date on 4th and 5th lines
-                    // Regex expression to match date format 1xxx-xx-xx or 2xxx-xx-xx
-                    DateMatchLine4 = Regex.Match(DataList[3], @"^[1-2]\d{3}-\d{2}-\d{2}");
-                    DateMatchLine5 = Regex.Match(DataList[4], @"^[1-2]\d{3}-\d{2}-\d{2}");
-                    // date is on 4th line
-                    if (DateMatchLine4.Success)
-                    {
-                        Dir.AlbumArtist = DataList[0];
-                        Dir.Event = null;
-                        Dir.Venue = DataList[1];
-                        Dir.Stage = null;
-                        Dir.Location = DataList[2];
-                        Dir.ConcertDate = DataList[3];
-                    }
-                    // date is on 5th line
-                    else if (DateMatchLine5.Success)
-                    {
-                        Dir.AlbumArtist = DataList[0];
-                        Dir.Event = DataList[1];
-                        Dir.Venue = null;
-                        Dir.Stage = DataList[2];
-                        Dir.Location = DataList[3];
-                        Dir.ConcertDate = DataList[4];
-                    }
-                    // otherwise search for metadata labels, find first instance of each label
-                    else
-                    {
-                        Dir.AlbumArtist = SearchList(DataList, "PERFORMER");
-                        Dir.Album = SearchList(DataList, "TITLE");
-                        Dir.Event = SearchList(DataList, "EVENT");
-                        Dir.Venue = SearchList(DataList, "VENUE");
-                        Dir.Stage = SearchList(DataList, "STAGE");
-                        Dir.Location = SearchList(DataList, "LOCATION");
-                        Dir.ConcertDate = SearchList(DataList, "DATE");
-                    }
+                    Dir.AlbumArtist = DataList[0];
+                    Dir.Event = null;
+                    Dir.Venue = DataList[1];
+                    Dir.Stage = null;
+                    Dir.Location = DataList[2];
+                    Dir.ConcertDate = DataList[3];
+                }
+                // valid date on line number 4
+                else if (DateLineNumber == 5)
+                {
+                    Dir.AlbumArtist = DataList[0];
+                    Dir.Event = DataList[1];
+                    Dir.Venue = null;
+                    Dir.Stage = DataList[2];
+                    Dir.Location = DataList[3];
+                    Dir.ConcertDate = DataList[4];
+                }
+                // otherwise search for metadata labels, find first instance of each label
+                else
+                {
+                    Dir.AlbumArtist = SearchList(DataList, "PERFORMER");
+                    Dir.Album = SearchList(DataList, "TITLE");
+                    Dir.Event = SearchList(DataList, "EVENT");
+                    Dir.Venue = SearchList(DataList, "VENUE");
+                    Dir.Stage = SearchList(DataList, "STAGE");
+                    Dir.Location = SearchList(DataList, "LOCATION");
+                    Dir.ConcertDate = SearchList(DataList, "DATE");
                 }
 
                 // verify minimum metadata has been found
