@@ -296,7 +296,7 @@ namespace AATB
                 Log.WriteLine("  Reading album metadata from info file: " + InfotextFileName);
                 // read data from text file
                 DataList = ReadTextFile(Dir.InfotextPath);
-                DateLineNumber = SearchListforDate(DataList);
+                DateLineNumber = SearchListForDate(DataList);
                 // valid date on line number 4
                 if (DateLineNumber == 4)
                 {
