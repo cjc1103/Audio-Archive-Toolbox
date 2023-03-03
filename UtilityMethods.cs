@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AATB
 {
@@ -154,17 +155,16 @@ namespace AATB
 
         static string SearchList(string[] DataList, string SearchTerm)
         {
-            /* Inputs:
+            /* Returns line in data list containing the desired search term
+             * Inputs:
              *   DataList   list containing data
              *   Name       string search term, e.g: "Artist: "
              * Outputs:
              *   Data       string found by pattern match, null if not found
              */
             int i;
-            string
-                Data = null;
-            Match
-                PatternMatch;
+            string Data = null;
+            Match PatternMatch;
 
             for (i = 0; i < DataList.Length; i++)
             {
@@ -184,6 +184,29 @@ namespace AATB
             }
             return Data;
         } // end SearchList
+
+        static int SearchListforDate(string[] DataList)
+        {
+            /* Returns the line number in data list containg a valid date yyyy-mm-dd 
+             * Inputs:
+             *   DataList   list containing data
+             * Outputs:
+             *   Data       string found by pattern match, null if not found
+             */
+            int i;
+            Match PatternMatch;
+
+            for (i = 0; i < DataList.Length; i++)
+            {
+                // search for date in string
+                PatternMatch = Regex.Match(DataList[i], @"^[1-2]\d{3}-\d{2}-\d{2}");
+                if (PatternMatch.Success)
+                    return i;
+            }
+            // valid date not found
+            return 0;
+        }
+
 
         static void PrintFileList(string FileType, FileInfo[] FileList)
         {
