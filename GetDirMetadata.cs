@@ -296,9 +296,10 @@ namespace AATB
                 Log.WriteLine("  Reading album metadata from info file: " + InfotextFileName);
                 // read data from text file
                 DataList = ReadTextFile(Dir.InfotextPath);
+                // search for date; returns zero based line number for valid date, otherwise -1
                 DateLineNumber = SearchListForDate(DataList);
-                // valid date on line number 4
-                if (DateLineNumber == 4)
+                // valid date on line number 3
+                if (DateLineNumber == 3)
                 {
                     Dir.AlbumArtist = DataList[0];
                     Dir.Event = null;
@@ -308,7 +309,7 @@ namespace AATB
                     Dir.ConcertDate = DataList[3];
                 }
                 // valid date on line number 4
-                else if (DateLineNumber == 5)
+                else if (DateLineNumber == 4)
                 {
                     Dir.AlbumArtist = DataList[0];
                     Dir.Event = DataList[1];
