@@ -321,3 +321,5 @@ Program history
 	Streamlined generation of metadata terms from infotext and cuesheet files, and moved GetTrackDuration
       to a new method PopulateTrackDurationList, and also enabled proper exception handling for file access.
     Added SearchListForDate method to search for a vlaid concert date in an infotext file
+    Added WMA conversion method using wma3wav.exe utility
+    Enabled use of either .aif or .aiff file extension for Audio Interchange File Format AIFF
