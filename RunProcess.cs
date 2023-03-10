@@ -74,9 +74,9 @@ namespace AATB
             string[] DataList;
             bool ErrorFound = false;
 
-            // print ExternalOutput stream for debugging only
+            // print ExternalOutput stream for debugging or verbose output modes
             // typically stream has only a single line with a CR/LF at end
-            if (Debug && ExternalOutput.Length > 0)
+            if ((Debug || Verbose) && ExternalOutput.Length > 0)
                 Log.Write("dbg: External Output: " + ExternalOutput);
 
             // ExternalError stream is null except in verbose mode
@@ -95,11 +95,11 @@ namespace AATB
                         if (Debug)
                             Log.Write("\n" + li);
 
-                        // otherwise print line only if it contains the word "error" (case insensitive)
+                        // otherwise print line only if it contains "error" or "fail" (case insensitive)
                         // flush output buffer first so error message starts on a new line
                         else
                         {
-                            ErrorMatch = Regex.Match(li, @"error", RegexOptions.IgnoreCase);
+                            ErrorMatch = Regex.Match(li, @"error|fail", RegexOptions.IgnoreCase);
                             if (ErrorMatch.Success)
                             {
                                 ErrorFound = true;

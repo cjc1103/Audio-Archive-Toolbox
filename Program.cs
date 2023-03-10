@@ -49,7 +49,7 @@ namespace AATB
             ANYBITRATE = "Any Bitrate",
             WAV = "wav", ALLWAV = "*.wav",
             WMA = "wma", ALLWMA = "*.wma",
-            AIF = "aif", ALLAIF = "*.aif",
+            AIF = "aif", ALLAIF = "*.aif*",
             MP3 = "mp3", MP3F = "mp3f",
             M4A = "m4a", M4AF = "m4af", // M4A file format is MPEG-4 Audio wrapper for AAC
             OGG = "ogg", OGGF = "oggf",
@@ -455,7 +455,7 @@ namespace AATB
                             break;
 
                         // error reporting for external processes
-                        case "--hh":
+                        case "-hh":
                         case "--verbose":
                             Verbose = true;
                             break;
@@ -476,6 +476,12 @@ namespace AATB
                             CreateFFP = true;
                             CreateSHN = true;
                             CreateM3U = true;
+                            break;
+
+                        case "--ver":
+                        case "--version":
+                            // Log initialization has already printed version, so exit
+                            Environment.Exit(0);
                             break;
 
                         // argument not parsed
