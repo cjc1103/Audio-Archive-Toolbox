@@ -310,7 +310,7 @@ Program history
     Added default case for switch statement in CompressWAV and DecompressToWav methods
     Corrected search terms for building Album string in DirMetadataFromCuesheet
 
-5.7 2023-03-03
+5.7 2023-03-09
     Added RenameInfoFiles flag to rename info.txt and .cue files
     Added UseCurrentDirInfo flag for Verify mode to force program to read info files in current dir
     Added ConvertAIF flag and ConvertAIFtoWAV method to convert AIF format audio to WAV format
