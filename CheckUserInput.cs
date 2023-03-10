@@ -21,11 +21,12 @@ namespace AATB
               + Convert.ToInt32(RenameWAV)
               + Convert.ToInt32(DeleteAudio)
               + Convert.ToInt32(ConvertAIF)
+              + Convert.ToInt32(ConvertWMA)
               + Convert.ToInt32(ConvertBitrate)
               + Convert.ToInt32(CreateCuesheet) != 1)
             {
                 Log.WriteLine("Input error: Conflicting options\n"
-                   + "Choose compress, verify, decompress, join, delete, convert aif, convert bitrate, or create cuesheet");
+                   + "Choose compress, verify, decompress, join, delete, aif, wma, convert bitrate, or create cuesheet");
                 Environment.Exit(0);
             }
             if (CreateCuesheet && UseCuesheet)
@@ -178,6 +179,17 @@ namespace AATB
             if (ConvertAIF)
             {
                 Log.WriteLine("Convert AIF format audio to WAV format");
+                if (!CheckFormatBitrate(WAV, ANYBITRATE))
+                {
+                    Log.WriteLine("Input error: Select WAV bitrate '--wav=[<bitrate>|raw|all]'");
+                    Environment.Exit(0);
+                }
+                PrintCompressionOptions();
+            }
+
+            if (ConvertWMA)
+            {
+                Log.WriteLine("Convert WMA format audio to WAV format");
                 if (!CheckFormatBitrate(WAV, ANYBITRATE))
                 {
                     Log.WriteLine("Input error: Select WAV bitrate '--wav=[<bitrate>|raw|all]'");

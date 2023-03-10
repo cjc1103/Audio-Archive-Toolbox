@@ -47,8 +47,9 @@ namespace AATB
             ALLBITRATES = "All Bitrates",
             ANYFORMAT = "Any Format",
             ANYBITRATE = "Any Bitrate",
-            AIF = "aif", ALLAIF = "*.aif",
             WAV = "wav", ALLWAV = "*.wav",
+            WMA = "wma", ALLWMA = "*.wma",
+            AIF = "aif", ALLAIF = "*.aif",
             MP3 = "mp3", MP3F = "mp3f",
             M4A = "m4a", M4AF = "m4af", // M4A file format is MPEG-4 Audio wrapper for AAC
             OGG = "ogg", OGGF = "oggf",
@@ -81,6 +82,7 @@ namespace AATB
             JoinWAV = false,
             RenameWAV = false,
             ConvertAIF = false,
+            ConvertWMA = false,
             ConvertBitrate = false,
             Overwrite = false,
             CreateMD5 = false,
@@ -111,11 +113,15 @@ namespace AATB
         static readonly string[]
             // line delimiters for dos and unix text files
             LineDelimeters = { "\r\n", "\r", "\n" },
-            // audio formats (FLAC and WAV must be the last two entries in this list)
+            // audio formats
+            // AIF and WMA are for conversion to WAV only, so are not included
+            // FLAC and WAV must be the last two entries in this list
             AudioFormats = { MP3, M4A, OGG, OPUS, ALAC, FLAC, WAV },
-            // audio bitrates (RAW must be last entry in this list)
+            // audio bitrates
+            // RAW must be last entry in this list
             AudioBitrates = { BR1644, BR1648, BR2444, BR2448, BR2488, BR2496, RAW },
             // compressed audio directory extensions
+            // same formats as the AudioFormats list without WAV
             CompressedDirExtensions = { MP3F, M4AF, OGGF, OPUSF, ALACF, FLACF },
             // miscellaneous files to delete for cleanup
             FilesToDelete = { ".npr", ".HDP", ".H2", ".sfk", ".bak", ".BAK", "BAK.VIP", ".peak", ".reapeaks", ".tmp" },
@@ -207,10 +213,14 @@ namespace AATB
                             DeleteAudio = true;
                             break;
 
-                        case "-y":
                         case "--aif":
                         case "--convert-aif-to-wav":
                             ConvertAIF = true;
+                            break;
+
+                        case "--wma":
+                        case "--convert-wma-to-wav":
+                            ConvertWMA = true;
                             break;
 
                         case "-z":

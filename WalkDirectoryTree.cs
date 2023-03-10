@@ -36,6 +36,7 @@ namespace AATB
             FileInfo[]
                 AllFilesList = CurrentDir.GetFiles(),
                 AIFFileList = CurrentDir.GetFiles(ALLAIF),
+                WMAFileList = CurrentDir.GetFiles(ALLWMA),
                 WAVFileList = CurrentDir.GetFiles(ALLWAV),
                 FLACFileList = CurrentDir.GetFiles(ALLFLAC),
                 CompAudioFileList, // populated as needed
@@ -511,15 +512,24 @@ namespace AATB
                 }
             } // end Delete Audio section
 
-            // = = = = = = = = Convert AIF Files section = = = = = = = = 
+            // = = = = = = = = Convert Audio Files section = = = = = = = = 
             // Command: --aif|--convert-aif-to-wav --wav=<bitrate>
             // AIF files in the current directory will be in the AIFFileList
             // Converted WAV files will be written to the current directory
             else if (ConvertAIF)
             {
-                if (Debug) Console.WriteLine("dbg: Convert Bitrate Section");
+                if (Debug) Console.WriteLine("dbg: Convert AIF Section");
                 ConvertAIFToWAV(AIFFileList);
             } // end Convert AIF Files section
+
+            // Command: --wma|--convert-wma-to-wav --wav=<bitrate>
+            // WMA files in the current directory will be in the WMAFileList
+            // Converted WAV files will be written to the current directory
+            else if (ConvertWMA)
+            {
+                if (Debug) Console.WriteLine("dbg: Convert WMA Section");
+                ConvertWMAToWAV(WMAFileList);
+            } // end Convert WMA Files section
 
             // = = = = = = = = Convert Audio Bitrate section = = = = = = = = 
             // Convert wav files from one bitrate to another
