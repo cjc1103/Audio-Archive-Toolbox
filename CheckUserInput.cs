@@ -20,13 +20,14 @@ namespace AATB
               + Convert.ToInt32(JoinWAV)
               + Convert.ToInt32(RenameWAV)
               + Convert.ToInt32(DeleteAudio)
+              + Convert.ToInt32(ConvertSHN)
               + Convert.ToInt32(ConvertAIF)
               + Convert.ToInt32(ConvertWMA)
               + Convert.ToInt32(ConvertBitrate)
               + Convert.ToInt32(CreateCuesheet) != 1)
             {
                 Log.WriteLine("Input error: Conflicting options\n"
-                   + "Choose compress, verify, decompress, join, delete, aif, wma, convert bitrate, or create cuesheet");
+                   + "Choose compress, verify, decompress, join, delete, shn, aif, wma, convert bitrate, or create cuesheet");
                 Environment.Exit(0);
             }
             if (CreateCuesheet && UseCuesheet)
@@ -72,8 +73,8 @@ namespace AATB
                     if (CreateFFP)
                         Log.WriteLine("Create FLAC Fingerprint (FFP)");
                     // shntool report
-                    if (CreateSHN)
-                        Log.WriteLine("Create SHNTool report (SHN)");
+                    if (CreateSHNRPT)
+                        Log.WriteLine("Create SHNTool report (SHNRPT)");
                 }
                 // M3U Playlist
                 if (CreateM3U)
@@ -89,7 +90,7 @@ namespace AATB
                     // continue with program, other modes are supported
                 }
                 // check at least one flag is set
-                if (!CreateMD5 && !CreateFFP && !CreateSHN && !CreateTags & !CreateM3U)
+                if (!CreateMD5 && !CreateFFP && !CreateSHNRPT && !CreateTags & !CreateM3U)
                 {
                     Log.WriteLine("Input error: Specify options [--md5 --ffp --shn]|--all-reports, --tag, --m3u");
                     Environment.Exit(0);
@@ -108,8 +109,8 @@ namespace AATB
                     if (CreateFFP)
                         Log.WriteLine("  Verify FLAC Fingerprint (FFP)");
                     // shntool report
-                    if (CreateSHN)
-                        Log.WriteLine("  Verify SHNTool report (SHN)");
+                    if (CreateSHNRPT)
+                        Log.WriteLine("  Verify SHNTool report (SHNRPT)");
                 }
                 // ID3 tags
                 if (CreateTags)
@@ -173,6 +174,15 @@ namespace AATB
                     Log.WriteLine("Input error: Select WAV bitrate '--wav=[<bitrate>|raw|all]'");
                     Environment.Exit(0);
                 }
+                PrintCompressionOptions();
+            }
+
+            if (ConvertSHN)
+            {
+                Log.WriteLine("Convert SHN format audio to WAV format");
+                // only valid format for SHN files is 16-44
+                if (!CheckFormatBitrate(WAV, BR1644))
+                    SetFormatBitrate(WAV, BR1644);
                 PrintCompressionOptions();
             }
 
@@ -308,8 +318,6 @@ namespace AATB
                         for (j = 0; j <= AudioBitrates.Length - 1; j++)
                             if (AudioFormatBitrate[i, j])
                                 Log.Write(" (" + AudioBitrates[j] + ")");
-                    //if (CheckFormatBitrate(AudioCompFormat, RAW))
-                    //    Log.Write(" (" + RAW + ")");
 
                     // print q values in CompressedAudioQuality list for CompressAudio function
                     if (CompressAudio)

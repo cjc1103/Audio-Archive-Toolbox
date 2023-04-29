@@ -67,7 +67,7 @@ Program history
        OPUS Bitrate --opus-bitrate
        FLAC compression level --flac-level
      Rewrote format conversion procedures to use FileInfo[], and moved metadata
-       (MD5, FFP, SHN) creation to main procedure
+       (MD5, FFP, SHNRPT) creation to main procedure
      Moved log time stamp to after the user accepts (enters "y") the command inputs
      Moved command line check code to separate procedure "CheckCommandLineInput"
      Added procedure to parse info.txt file for metadata (artist, album, track names)
@@ -265,8 +265,8 @@ Program history
 
 5.2  2022-04-14
      Added join function using SoX utility to concatenate wav or flac audio files into one joined file
-     Modified Compress function to only generate MD5 FFP and SHN reports if the appropriate flag is set
-     SHN function (shntool len report) requires FLAC 1.3.2 for 24 bit FLACs, does not work with 1.3.4
+     Modified Compress function to only generate MD5 FFP and SHNRPT reports if the appropriate flag is set
+     SHNRPT function (shntool len report) requires FLAC 1.3.2 for 24 bit FLACs, does not work with 1.3.4
      Changed Dir structure to add ParentInfotextPath and ParentCuesheetPath
      Changed all references to ParentInfotextPath and ParentCuesheetPath to the Dir variables
      Enforced standard naming scheme for parent infotext and cuesheet files, if they are not in the
@@ -313,13 +313,16 @@ Program history
 5.7 2023-03-09
     Added RenameInfoFiles flag to rename info.txt and .cue files
     Added UseCurrentDirInfo flag for Verify mode to force program to read info files in current dir
-    Added ConvertAIF flag and ConvertAIFtoWAV method to convert AIF format audio to WAV format
     Added two string variables to AATB_DirInfo class: DirMetadataSource and TrackMetadataSource,
       to record the source of metadata for Albums and Tracks respectively
     Added RenameWAV flag and RenameWAVFiles method to rename WAV files in <bitrate> directory to match
       the accompanying setlist in infotext file
 	Streamlined generation of metadata terms from infotext and cuesheet files, and moved GetTrackDuration
       to a new method PopulateTrackDurationList, and also enabled proper exception handling for file access.
-    Added SearchListForDate method to search for a vlaid concert date in an infotext file
-    Added WMA conversion method using wma3wav.exe utility
+    Added SearchListForDate method to search for a valid concert date in an infotext file
+
+5.8 2023-04-29
+    Added ConvertSHN, ConvertAIF, and ConvertWMA flags
+    Added ConvertToWav method to convert SHN, AIF, and WMA files to WAV format
     Enabled use of either .aif or .aiff file extension for Audio Interchange File Format AIFF
+    Renamed previous SHN variable to SHNRPT to deconflict with the SHN compressed audio format

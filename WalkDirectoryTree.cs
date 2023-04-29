@@ -35,6 +35,7 @@ namespace AATB
             // Populate filelists for each type of file in this directory
             FileInfo[]
                 AllFilesList = CurrentDir.GetFiles(),
+                SHNFileList = CurrentDir.GetFiles(ALLSHN),
                 AIFFileList = CurrentDir.GetFiles(ALLAIF),
                 WMAFileList = CurrentDir.GetFiles(ALLWMA),
                 WAVFileList = CurrentDir.GetFiles(ALLWAV),
@@ -42,7 +43,7 @@ namespace AATB
                 CompAudioFileList, // populated as needed
                 MD5FileList = CurrentDir.GetFiles(ALLMD5),
                 FFPFileList = CurrentDir.GetFiles(ALLFFP),
-                SHNReportList = CurrentDir.GetFiles(ALLSHN),
+                SHNReportList = CurrentDir.GetFiles(ALLSHNRPT),
                 InfotextList = CurrentDir.GetFiles(ALLINFOTXT),
                 CuesheetList = CurrentDir.GetFiles(ALLINFOCUE),
                 ParentInfotextList = CurrentDir.Parent.GetFiles(ALLINFOTXT),
@@ -139,9 +140,9 @@ namespace AATB
                                         }
 
                                         // create shntool length report (requires flac 1.3.2)
-                                        if (CreateSHN)
+                                        if (CreateSHNRPT)
                                         {
-                                            SHNReportPath = CompAudioDirPath + BACKSLASH + CompAudioDirName + PERIOD + SHN;
+                                            SHNReportPath = CompAudioDirPath + BACKSLASH + CompAudioDirName + PERIOD + SHNRPT;
                                             CreateSHNReport(SHNReportPath, CompAudioFileList);
                                         }
                                     }
@@ -191,7 +192,7 @@ namespace AATB
             // (1) Verify metadata in compressed audio directories only
             //     a. MD5 checksums - all commpressed audio files
             //     b. FFP (FLAC Fingerprint) checksums - FLAC files
-            //     c. SHN (shntool file length and CD sector boundary report) - FLAC files
+            //     c. SHNRPT (shntool file length and CD sector boundary report) - FLAC files
             // (2) Create/Update ID3 tags (rewrites MD5 checksum files)
             // (3) Create/update M3U Playlists
             // Command: -v|--verify  --<compformat>=<bitrate>|all
@@ -263,9 +264,9 @@ namespace AATB
                                 }
 
                                 // Verify shntool report - FLAC only
-                                if (FLACExists && CreateSHN)
+                                if (FLACExists && CreateSHNRPT)
                                 {
-                                    SHNReportPath = Dir.Path + BACKSLASH + Dir.Name + PERIOD + SHN;
+                                    SHNReportPath = Dir.Path + BACKSLASH + Dir.Name + PERIOD + SHNRPT;
                                     if (File.Exists(SHNReportPath) && !Overwrite)
                                         VerifySHNReport(SHNReportPath, SHNReportList, Dir.Bitrate);
                                     else
@@ -513,13 +514,22 @@ namespace AATB
             } // end Delete Audio section
 
             // = = = = = = = = Convert Audio Files section = = = = = = = = 
+            // Command: --shn|--convert-shn-to-wav --wav=16-44
+            // SHN files in the current directory will be in the SHNFileList
+            // Converted WAV files will be written to the current directory
+            else if (ConvertSHN)
+            {
+                if (Debug) Console.WriteLine("dbg: Convert SHN Section");
+                ConvertToWAV(SHN, SHNFileList);
+            } // end Convert SHN Files section
+
             // Command: --aif|--convert-aif-to-wav --wav=<bitrate>
             // AIF files in the current directory will be in the AIFFileList
             // Converted WAV files will be written to the current directory
             else if (ConvertAIF)
             {
                 if (Debug) Console.WriteLine("dbg: Convert AIF Section");
-                ConvertAIFToWAV(AIFFileList);
+                ConvertToWAV(AIF, AIFFileList);
             } // end Convert AIF Files section
 
             // Command: --wma|--convert-wma-to-wav --wav=<bitrate>
@@ -528,7 +538,7 @@ namespace AATB
             else if (ConvertWMA)
             {
                 if (Debug) Console.WriteLine("dbg: Convert WMA Section");
-                ConvertWMAToWAV(WMAFileList);
+                ConvertToWAV(WMA, WMAFileList);
             } // end Convert WMA Files section
 
             // = = = = = = = = Convert Audio Bitrate section = = = = = = = = 

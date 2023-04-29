@@ -121,7 +121,7 @@ namespace AATB
                             + "    " + OutputDirPath);
         } // end ConvertWAVBitrate
 
-        static void ConvertAIFToWAV(FileInfo[] AIFFileList)
+        static void ConvertToWAV(String CompType, FileInfo[] FileList)
         {
             /* Converts all AIF format files in the input list to WAV format
              * Input:
@@ -144,10 +144,10 @@ namespace AATB
                 Extension,
                 OutputFileName,
                 OutputFilePath,
-                ExternalArguments,
-                ExternalProgram = "sox.exe";
+                ExternalProgram = null,
+                ExternalArguments = null;
 
-            foreach (FileInfo fi in AIFFileList)
+            foreach (FileInfo fi in FileList)
             {
                 // increment tracknumber and convert to two place string
                 TrackNumber++;
@@ -165,69 +165,33 @@ namespace AATB
                 if ((!File.Exists(OutputFilePath))
                    || (File.Exists(OutputFilePath) && Overwrite))
                 {
-                    ExternalArguments = DBLQ + InputFilePath + DBLQ
-                                      + SPACE + DBLQ + OutputFilePath + DBLQ;
-                    // run external process, discard external output
-                    RunProcess(ExternalProgram, ExternalArguments);
-                }
-                else
-                {
-                    OutputFileExists = true;
-                    Log.WriteLine("\n*** Output file exists: " + OutputFileName);
-                    break;
-                }
-            }
-            if (OutputFileExists) Log.WriteLine("*** Use overwrite option to replace");
-            Log.WriteLine();
-        } // end ConvertAIFToWAV
+                    switch (CompType)
+                    {
+                        case SHN:
+                            ExternalProgram = "shorten.exe";
+                            ExternalArguments = "-x " + DBLQ + InputFilePath + DBLQ
+                                              + SPACE + DBLQ + OutputFilePath + DBLQ;
+                            break;
 
-        static void ConvertWMAToWAV(FileInfo[] WMAFileList)
-        {
-            /* Converts all AIF format files in the input list to WAV format
-             * Input:
-             *   Dir
-             *   AIFFileList    List of AIF files in the current directory
-             * Calls external program:
-             *   sox (Sound Output eXchange utility)
-             *     <input aif file> <output wav file>
-             * Output:
-             *   WAV format files are output to the current directory
-             */
-            int
-                TrackNumber = 0;
-            bool
-                OutputFileExists = false;
-            string
-                TrackNumberStr,
-                InputFilePath,
-                RootPath,
-                Extension,
-                OutputFileName,
-                OutputFilePath,
-                ExternalArguments,
-                ExternalProgram = "wma2wav.exe";
+                        case AIF:
+                            ExternalProgram = "sox.exe";
+                            ExternalArguments = DBLQ + InputFilePath + DBLQ
+                                              + SPACE + DBLQ + OutputFilePath + DBLQ;
+                            break;
 
-            foreach (FileInfo fi in WMAFileList)
-            {
-                // increment tracknumber and convert to two place string
-                TrackNumber++;
-                TrackNumberStr = TrackNumber.ToString("00");
-                Log.Write(TrackNumberStr + "..");
-                // build filenames
-                InputFilePath = fi.FullName;
+                        case WMA:
+                            ExternalProgram = "wma2wav.exe";
+                            ExternalArguments = "-i " + DBLQ + InputFilePath + DBLQ
+                                              + " -o " + DBLQ + OutputFilePath + DBLQ
+                                              + " -f";
+                            break;
 
-                // build output file pathname
-                (RootPath, Extension) = SplitString(InputFilePath, PERIOD);
-                OutputFilePath = RootPath + PERIOD + WAV;
-                OutputFileName = SplitFileName(OutputFilePath);
+                        default:
+                            Log.WriteLine("*** Undefined external program in ConvertToWAV: " + ExternalProgram);
+                            Environment.Exit(0);
+                            break;
+                    }
 
-                // check output file does not exist, or overwrite existing file
-                if ((!File.Exists(OutputFilePath))
-                   || (File.Exists(OutputFilePath) && Overwrite))
-                {
-                    ExternalArguments = " -i " + DBLQ + InputFilePath + DBLQ
-                                      + " -o " + DBLQ + OutputFilePath + DBLQ
-                                      + " -f";
                     // run external process, discard external output
                     RunProcess(ExternalProgram, ExternalArguments);
                 }

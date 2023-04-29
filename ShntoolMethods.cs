@@ -6,9 +6,9 @@ namespace AATB
     {
         static void CreateSHNReport(string SHNReportPath, FileInfo[] FLACFileList)
         {
-            /* Creates shntool report
+            /* Create shntool report
              * Inputs:
-             *   SHNReportPath pathname of SHN report file
+             *   SHNReportPath pathname of SHNRPT report file
              *   FLACFileList  list of all FLAC files to include in report
              * Calls external programs:
              *   shntool
@@ -80,16 +80,16 @@ namespace AATB
 
         static void VerifySHNReport(string SHNReportPath, FileInfo[] SHNReportList, string Bitrate)
         {
-            /* check for errors in shntool report. If SHN filename is incorrect, it
-             * is changed to the correct name
+            /* Verify shntool report
+             * If shntool report filename is incorrect, it is changed to the correct name
              * Inputs:
-             *   SHNReportPath pathname of SHN report file
+             *   SHNReportPath: Pathname of shntool report file
              *      column / description
              *      0              32-34 38-39 43-47        65
              *      length exp32size cbs   WAV  problems fmt filename
              *      ("x" character may be reported if shntool can't recognize wav format
              *       e.g., 24bit wav files, but are not treated as errors in this program)
-             *   SHNReportlist  List of all SHN report files in input directory
+             *   SHNReportlist: List of all SHNRPT report files in input directory
              *      only the first one is valid. If multiple entries, none are verified
              * Outputs:
              *   Errors are written to log and stdout
@@ -111,12 +111,12 @@ namespace AATB
             {
                 Log.Write("    Verifying shntool report..");
 
-                // check existing SHN filename is correct, otherwise rename it
+                // check existing SHNRPT filename is correct, otherwise rename it
                 ExistingSHNReportPath = SHNReportList[0].FullName;
                 if (ExistingSHNReportPath != SHNReportPath)
                     MoveFile(ExistingSHNReportPath, SHNReportPath);
 
-                // read SHN data, ignore first line, read until one less then the line count
+                // read SHNRPT data, ignore first line, read until one less then the line count
                 // Note all character numbers referenced start at 0 to match substring index
                 DataList = ReadTextFile(SHNReportPath);
                 for (i = 1; i < DataList.Length; i++)

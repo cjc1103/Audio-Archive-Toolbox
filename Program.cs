@@ -59,7 +59,8 @@ namespace AATB
             M3U = "m3u",
             MD5 = "md5", ALLMD5 = "*.md5",
             FFP = "ffp", ALLFFP = "*.ffp",
-            SHN = "shntool.txt", ALLSHN = "*.shntool.txt",
+            SHN = "shn", ALLSHN = "*.shn",
+            SHNRPT = "shntool.txt", ALLSHNRPT = "*.shntool.txt",
             INFOTXT = "info.txt", ALLINFOTXT = "*.info.txt",
             INFOCUE = "info.cue", ALLINFOCUE = "*.info.cue",
             NEW = "new",
@@ -83,11 +84,12 @@ namespace AATB
             RenameWAV = false,
             ConvertAIF = false,
             ConvertWMA = false,
+            ConvertSHN = false,
             ConvertBitrate = false,
             Overwrite = false,
             CreateMD5 = false,
             CreateFFP = false,
-            CreateSHN = false,
+            CreateSHNRPT = false,
             CreateM3U = false,
             CreateCuesheet = false,
             CreateTags = false,
@@ -114,7 +116,7 @@ namespace AATB
             // line delimiters for dos and unix text files
             LineDelimeters = { "\r\n", "\r", "\n" },
             // audio formats
-            // AIF and WMA are for conversion to WAV only, so are not included
+            // SHN, AIF and WMA formats are for conversion to WAV only, so are not included
             // FLAC and WAV must be the last two entries in this list
             AudioFormats = { MP3, M4A, OGG, OPUS, ALAC, FLAC, WAV },
             // audio bitrates
@@ -221,6 +223,11 @@ namespace AATB
                         case "--wma":
                         case "--convert-wma-to-wav":
                             ConvertWMA = true;
+                            break;
+
+                        case "--shn":
+                        case "--convert-shn-to-wav":
+                            ConvertSHN = true;
                             break;
 
                         case "-z":
@@ -380,8 +387,8 @@ namespace AATB
                             break;
                         
                         // create shntool report
-                        case "--shn":
-                            CreateSHN = true;
+                        case "--shnrpt":
+                            CreateSHNRPT = true;
                             break;
                         
                         // create all checksum and shntool reports
@@ -389,7 +396,7 @@ namespace AATB
                         case "--all-reports":
                             CreateMD5 = true;
                             CreateFFP = true;
-                            CreateSHN = true;
+                            CreateSHNRPT = true;
                             break;
 
                         // create m3u playlist
@@ -474,7 +481,7 @@ namespace AATB
                             SetFormatBitrate(FLAC, RAW);
                             CreateMD5 = true;
                             CreateFFP = true;
-                            CreateSHN = true;
+                            CreateSHNRPT = true;
                             CreateM3U = true;
                             break;
 
