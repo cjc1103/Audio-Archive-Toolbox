@@ -346,7 +346,38 @@ namespace AATB
                         Log.WriteLine("*** No FLAC format files found");
                 }
 
-                // other Dir.Type values not processed in this section
+                // = = = = = = = = Decompress SHN files to WAV = = = = = = = = 
+                // Command: --shn|--convert-shn-to-wav --wav=16-44
+                // SHN files in the current directory will be in the SHNFileList
+                // Converted WAV files will be written to the current directory
+                else if (ConvertSHN)
+                {
+                    if (Debug) Console.WriteLine("dbg: Convert SHN Section");
+                    WAVDirPath = CurrentDir.FullName;
+                    DecompressToWAV(SHN, WAVDirPath, SHNFileList);
+                } // end Convert SHN Files section
+
+                // = = = = = = = = Decompress AIF files to WAV = = = = = = = = 
+                // Command: --aif|--convert-aif-to-wav --wav=<bitrate>
+                // AIF files in the current directory will be in the AIFFileList
+                // Converted WAV files will be written to the current directory
+                else if (ConvertAIF)
+                {
+                    if (Debug) Console.WriteLine("dbg: Convert AIF Section");
+                    WAVDirPath = CurrentDir.FullName;
+                    DecompressToWAV(AIF, WAVDirPath, AIFFileList);
+                } // end Convert AIF Files section
+
+                // = = = = = = = = Decompress WMA files to WAV = = = = = = = = 
+                // Command: --wma|--convert-wma-to-wav --wav=<bitrate>
+                // WMA files in the current directory will be in the WMAFileList
+                // Converted WAV files will be written to the current directory
+                else if (ConvertWMA)
+                {
+                    if (Debug) Console.WriteLine("dbg: Convert WMA Section");
+                    WAVDirPath = CurrentDir.FullName;
+                    DecompressToWAV(WMA, WAVDirPath, WMAFileList);
+                } // end Convert WMA Files section
 
             } // end Decompress Audio section
 
@@ -512,34 +543,6 @@ namespace AATB
                     }
                 }
             } // end Delete Audio section
-
-            // = = = = = = = = Convert Audio Files section = = = = = = = = 
-            // Command: --shn|--convert-shn-to-wav --wav=16-44
-            // SHN files in the current directory will be in the SHNFileList
-            // Converted WAV files will be written to the current directory
-            else if (ConvertSHN)
-            {
-                if (Debug) Console.WriteLine("dbg: Convert SHN Section");
-                ConvertToWAV(SHN, SHNFileList);
-            } // end Convert SHN Files section
-
-            // Command: --aif|--convert-aif-to-wav --wav=<bitrate>
-            // AIF files in the current directory will be in the AIFFileList
-            // Converted WAV files will be written to the current directory
-            else if (ConvertAIF)
-            {
-                if (Debug) Console.WriteLine("dbg: Convert AIF Section");
-                ConvertToWAV(AIF, AIFFileList);
-            } // end Convert AIF Files section
-
-            // Command: --wma|--convert-wma-to-wav --wav=<bitrate>
-            // WMA files in the current directory will be in the WMAFileList
-            // Converted WAV files will be written to the current directory
-            else if (ConvertWMA)
-            {
-                if (Debug) Console.WriteLine("dbg: Convert WMA Section");
-                ConvertToWAV(WMA, WMAFileList);
-            } // end Convert WMA Files section
 
             // = = = = = = = = Convert Audio Bitrate section = = = = = = = = 
             // Convert wav files from one bitrate to another

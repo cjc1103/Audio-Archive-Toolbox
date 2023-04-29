@@ -13,9 +13,10 @@ namespace AATB
              *   WAVDirPath   Output directory
              *   CompFileList List of all FLAC files to be converted
              * Calls external programs, defined in code
-             *   Note: FLAC is currently the only compression method supported to reduce complexity
-             *   Other lossless compression methods like ALAC and APE could be supported with some
-             *   code changes
+             *   shorten.exe
+             *   sox.exe
+             *   wma2wav.exe
+             *   flac.exe
              * Outputs:
              *   WAV audio files are written to the output directory
              * Returns:
@@ -57,6 +58,25 @@ namespace AATB
 
                 switch (CompType)
                 {
+                    case SHN:
+                        ExternalProgram = "shorten.exe";
+                        ExternalArguments = "-x " + DBLQ + CompFilePath + DBLQ
+                                          + SPACE + DBLQ + WAVFilePath + DBLQ;
+                        break;
+
+                    case AIF:
+                        ExternalProgram = "sox.exe";
+                        ExternalArguments = DBLQ + CompFilePath + DBLQ
+                                          + SPACE + DBLQ + WAVFilePath + DBLQ;
+                        break;
+
+                    case WMA:
+                        ExternalProgram = "wma2wav.exe";
+                        ExternalArguments = "-i " + DBLQ + CompFilePath + DBLQ
+                                          + " -o " + DBLQ + WAVFilePath + DBLQ
+                                          + " -f";
+                        break;
+
                     case FLAC:
                         ExternalProgram = "flac.exe";
                         ExternalArguments = "-d"

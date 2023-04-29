@@ -179,10 +179,7 @@ namespace AATB
 
             if (ConvertSHN)
             {
-                Log.WriteLine("Convert SHN format audio to WAV format");
-                // only valid format for SHN files is 16-44
-                if (!CheckFormatBitrate(WAV, BR1644))
-                    SetFormatBitrate(WAV, BR1644);
+                Log.WriteLine("Decompress SHN format audio to WAV format");
                 PrintCompressionOptions();
             }
 
@@ -190,21 +187,12 @@ namespace AATB
             {
                 Log.WriteLine("Convert AIF format audio to WAV format");
                 if (!CheckFormatBitrate(WAV, ANYBITRATE))
-                {
-                    Log.WriteLine("Input error: Select WAV bitrate '--wav=[<bitrate>|raw|all]'");
-                    Environment.Exit(0);
-                }
                 PrintCompressionOptions();
             }
 
             if (ConvertWMA)
             {
                 Log.WriteLine("Convert WMA format audio to WAV format");
-                if (!CheckFormatBitrate(WAV, ANYBITRATE))
-                {
-                    Log.WriteLine("Input error: Select WAV bitrate '--wav=[<bitrate>|raw|all]'");
-                    Environment.Exit(0);
-                }
                 PrintCompressionOptions();
             }
 

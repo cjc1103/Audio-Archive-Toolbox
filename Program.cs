@@ -82,6 +82,7 @@ namespace AATB
             DecompressAudio = false,
             JoinWAV = false,
             RenameWAV = false,
+            ConvertAudio = false,
             ConvertAIF = false,
             ConvertWMA = false,
             ConvertSHN = false,
@@ -111,22 +112,20 @@ namespace AATB
         static bool[,]
             // combined audio format and bitrate flag array
             // this must be at least the size of AudioFormats, AudioBitrates arrays
-            AudioFormatBitrate = new bool[7, 7];
+            AudioFormatBitrate = new bool[10, 6];
         static readonly string[]
             // line delimiters for dos and unix text files
             LineDelimeters = { "\r\n", "\r", "\n" },
             // audio formats
-            // SHN, AIF and WMA formats are for conversion to WAV only, so are not included
             // FLAC and WAV must be the last two entries in this list
-            AudioFormats = { MP3, M4A, OGG, OPUS, ALAC, FLAC, WAV },
+            AudioFormats = { MP3, M4A, OGG, OPUS, SHN, AIF, WMA, ALAC, FLAC, WAV },
             // audio bitrates
             // RAW must be last entry in this list
             AudioBitrates = { BR1644, BR1648, BR2444, BR2448, BR2488, BR2496, RAW },
             // compressed audio directory extensions
-            // same formats as the AudioFormats list without WAV
             CompressedDirExtensions = { MP3F, M4AF, OGGF, OPUSF, ALACF, FLACF },
             // miscellaneous files to delete for cleanup
-            FilesToDelete = { ".npr", ".HDP", ".H2", ".sfk", ".bak", ".BAK", "BAK.VIP", ".peak", ".reapeaks", ".tmp" },
+            FilesToDelete = { ".npr", ".HDP", ".H2", ".sfk", ".bak*", ".BAK*", ".peak", ".reapeaks", ".tmp" },
             // miscellaneous directories to delete for cleanup
             DirsToDelete = { "Images" };
         static int[]
@@ -215,19 +214,9 @@ namespace AATB
                             DeleteAudio = true;
                             break;
 
-                        case "--aif":
-                        case "--convert-aif-to-wav":
-                            ConvertAIF = true;
-                            break;
-
-                        case "--wma":
-                        case "--convert-wma-to-wav":
-                            ConvertWMA = true;
-                            break;
-
-                        case "--shn":
-                        case "--convert-shn-to-wav":
-                            ConvertSHN = true;
+                        case "-y":
+                        case "--convert-to-wav":
+                            ConvertAudio = true;
                             break;
 
                         case "-z":
@@ -320,7 +309,25 @@ namespace AATB
                             SetQValue(OPUS, opt);
                             break;
 
-                        // ALAC compression
+                        // AIF (Apple native audio format)
+                        // convert to WAV only
+                        case "--aif":
+                            ConvertAIF = true;
+                            break;
+
+                        // WMA (Windows Media audio format)
+                        // convert to WAV only
+                        case "--wma":
+                            ConvertWMA = true;
+                            break;
+
+                        // SHN (Shorten lossless compressed audio format)
+                        // decompress/convert to WAV only
+                        case "--shn":
+                            ConvertSHN = true;
+                            break;
+
+                        // ALAC lossless compression
                         case "--alac":
                             switch (opt)
                             {
@@ -337,7 +344,7 @@ namespace AATB
                             // placeholder
                             break;
 
-                        // FLAC compression
+                        // FLAC lossless compression
                         case "--flac":
                             switch (opt)
                             {
