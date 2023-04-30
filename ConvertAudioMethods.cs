@@ -78,6 +78,15 @@ namespace AATB
                                           + " -f";
                         break;
 
+                    case ALAC:
+                        ExternalProgram = "qaac64.exe";
+                        ExternalArguments = "--alac"
+                                          + " --decode"
+                                          + " --threading"
+                                          + SPACE + DBLQ + CompFilePath + DBLQ
+                                          + " -o " + DBLQ + WAVFilePath + DBLQ;
+                        break;
+
                     case FLAC:
                         ExternalProgram = "flac.exe";
                         ExternalArguments = "-d"

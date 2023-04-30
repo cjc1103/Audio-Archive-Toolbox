@@ -309,22 +309,22 @@ namespace AATB
                             SetQValue(OPUS, opt);
                             break;
 
+                        // SHN (Shorten lossless compressed audio format)
+                        // decompress/convert to WAV only
+                        case "--shn":
+                            ConvertSHN = true;
+                            break;
+
                         // AIF (Apple native audio format)
                         // convert to WAV only
                         case "--aif":
                             ConvertAIF = true;
                             break;
 
-                        // WMA (Windows Media audio format)
+                        // WMA (Windows Media Audio lossless compressed audio format)
                         // convert to WAV only
                         case "--wma":
                             ConvertWMA = true;
-                            break;
-
-                        // SHN (Shorten lossless compressed audio format)
-                        // decompress/convert to WAV only
-                        case "--shn":
-                            ConvertSHN = true;
                             break;
 
                         // ALAC lossless compression
