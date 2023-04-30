@@ -33,6 +33,7 @@ namespace AATB
             + "  [--md5, --ffp, --shn]|[-a|--all|--all-reports]\n"
             + "  [-t|--tag]\n"
             + "[-d|--decompress]\n"
+            + "  --alac[=<bitrate>|all](all)\n"
             + "  --flac[=<bitrate>|all](all)\n"
             + "[-j|--join]\n"
             + "  --wav=<bitrate>\n"

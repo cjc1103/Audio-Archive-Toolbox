@@ -111,13 +111,13 @@ namespace AATB
             ConversionToBitrate = null;
         static bool[,]
             // combined audio format and bitrate flag array
-            // this must be at least the size of AudioFormats, AudioBitrates arrays
-            AudioFormatBitrate = new bool[10, 6];
+            // size must be at least equal to [AudioFormats, AudioBitrates]
+            AudioFormatBitrate = new bool[10, 10];
         static readonly string[]
             // line delimiters for dos and unix text files
             LineDelimeters = { "\r\n", "\r", "\n" },
             // audio formats
-            // FLAC and WAV must be the last two entries in this list
+            // WAV must be the last entry in this list
             AudioFormats = { MP3, M4A, OGG, OPUS, SHN, AIF, WMA, ALAC, FLAC, WAV },
             // audio bitrates
             // RAW must be last entry in this list
@@ -128,7 +128,7 @@ namespace AATB
             FilesToDelete = { ".npr", ".HDP", ".H2", ".sfk", ".bak*", ".BAK*", ".peak", ".reapeaks", ".tmp" },
             // miscellaneous directories to delete for cleanup
             DirsToDelete = { "Images" };
-        static int[]
+        static readonly int[]
             // quality parameter lists { lower, active, upper }
             mp3Quality = { 0, 0, 4 }, // 0 is best
             aacQuality = { 0, 127, 127 },
@@ -136,7 +136,7 @@ namespace AATB
             opusQuality = { 64, 256, 256 }, // placeholder only
             alacQuality = { 0, 0, 0}, // placeholder only
             flacQuality = { 1, 6, 10 };
-        static int[][]
+        static readonly int[][]
             // Two dimensional list of all quality parameters - must be in same order as AudioFormats list
             CompressedAudioQuality = new[]
               { mp3Quality,

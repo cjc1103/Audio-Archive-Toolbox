@@ -122,7 +122,7 @@ namespace AATB
 
             if (DecompressAudio)
             {
-                Log.WriteLine("Decompress FLAC audio files");
+                Log.WriteLine("Decompress audio files");
                 // check for unique FLAC bitrate or raw
                 if (!CheckUniqueBitrate(FLAC)
                     && !CheckFormatBitrate(FLAC, RAW))
@@ -177,23 +177,25 @@ namespace AATB
                 PrintCompressionOptions();
             }
 
-            if (ConvertSHN)
+            if (ConvertAudio)
             {
-                Log.WriteLine("Decompress SHN format audio to WAV format");
-                PrintCompressionOptions();
-            }
+                if (ConvertSHN)
+                {
+                    Log.WriteLine("Decompress SHN format audio to WAV format");
+                    PrintCompressionOptions();
+                }
 
-            if (ConvertAIF)
-            {
-                Log.WriteLine("Convert AIF format audio to WAV format");
-                if (!CheckFormatBitrate(WAV, ANYBITRATE))
-                PrintCompressionOptions();
-            }
+                if (ConvertAIF)
+                {
+                    Log.WriteLine("Convert AIF format audio to WAV format");
+                    PrintCompressionOptions();
+                }
 
-            if (ConvertWMA)
-            {
-                Log.WriteLine("Convert WMA format audio to WAV format");
-                PrintCompressionOptions();
+                if (ConvertWMA)
+                {
+                    Log.WriteLine("Convert WMA format audio to WAV format");
+                    PrintCompressionOptions();
+                }
             }
 
             if (ConvertBitrate)

@@ -323,6 +323,7 @@ Program history
 
 5.8 2023-04-29
     Added ConvertAudio, ConvertSHN, ConvertAIF, and ConvertWMA flags
-    Renamed DecompressWAV method to ConvertToWAV method, added SHN, AIF, and WMA conversion to WAV format
+    Renamed DecompressWAV method to ConvertToWAV method
+    Added ALAC, SHN, AIF, and WMA conversion to WAV format
     Enabled use of either .aif or .aiff file extension for Audio Interchange File Format AIFF
     Renamed previous SHN variable to SHNRPT to deconflict with the SHN compressed audio format
