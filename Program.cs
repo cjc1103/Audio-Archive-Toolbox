@@ -47,19 +47,20 @@ namespace AATB
             ALLBITRATES = "All Bitrates",
             ANYFORMAT = "Any Format",
             ANYBITRATE = "Any Bitrate",
-            WAV = "wav", ALLWAV = "*.wav",
-            WMA = "wma", ALLWMA = "*.wma",
-            AIF = "aif", ALLAIF = "*.aif*",
+            WAV = "wav",
+            AIF = "aif", AIFF = "aiff",
             MP3 = "mp3", MP3F = "mp3f",
             M4A = "m4a", M4AF = "m4af", // M4A file format is MPEG-4 Audio wrapper for AAC
             OGG = "ogg", OGGF = "oggf",
             OPUS = "opus", OPUSF = "opusf",
+            SHN = "shn", SHNF = "shnf",
+            WMA = "wma", WMAF = "wmaf",
             ALAC = "alac", ALACF = "alacf",
-            FLAC = "flac", ALLFLAC = "*.flac", FLACF = "flacf",
+            FLAC = "flac", FLACF = "flacf",
+            ALLWAV = "*.wav", ALLFLAC = "*.flac",
             M3U = "m3u",
             MD5 = "md5", ALLMD5 = "*.md5",
             FFP = "ffp", ALLFFP = "*.ffp",
-            SHN = "shn", ALLSHN = "*.shn",
             SHNRPT = "shntool.txt", ALLSHNRPT = "*.shntool.txt",
             INFOTXT = "info.txt", ALLINFOTXT = "*.info.txt",
             INFOCUE = "info.cue", ALLINFOCUE = "*.info.cue",
@@ -82,10 +83,6 @@ namespace AATB
             DecompressAudio = false,
             JoinWAV = false,
             RenameWAV = false,
-            ConvertAudio = false,
-            ConvertAIF = false,
-            ConvertWMA = false,
-            ConvertSHN = false,
             ConvertBitrate = false,
             Overwrite = false,
             CreateMD5 = false,
@@ -100,6 +97,7 @@ namespace AATB
             UseTitleCase = false,
             RenameInfoFiles = false,
             UseCurrentDirInfo = false,
+            OutputToCurrentDir = false,
             WriteLogMessage = true,
             NoLogMessage = false,
             Verbose = false,
@@ -119,11 +117,15 @@ namespace AATB
             // audio formats
             // WAV must be the last entry in this list
             AudioFormats = { MP3, M4A, OGG, OPUS, SHN, AIF, WMA, ALAC, FLAC, WAV },
+            // allowable compression formats (lossy and lossless)
+            CompressionAudioFormats = { MP3, M4A, OGG, OPUS, ALAC, FLAC },
+            // allowable decompression/conversion formats (lossy and lossless)
+            DecompressionAudioFormats = { SHN, AIF, WMA, ALAC, FLAC },
             // audio bitrates
             // RAW must be last entry in this list
             AudioBitrates = { BR1644, BR1648, BR2444, BR2448, BR2488, BR2496, RAW },
             // compressed audio directory extensions
-            CompressedDirExtensions = { MP3F, M4AF, OGGF, OPUSF, ALACF, FLACF },
+            CompressedDirExtensions = { MP3F, M4AF, OGGF, OPUSF, SHNF, AIFF, WMAF, ALACF, FLACF },
             // miscellaneous files to delete for cleanup
             FilesToDelete = { ".npr", ".HDP", ".H2", ".sfk", ".bak*", ".BAK*", ".peak", ".reapeaks", ".tmp" },
             // miscellaneous directories to delete for cleanup
@@ -212,11 +214,6 @@ namespace AATB
                         case "-x":
                         case "--delete":
                             DeleteAudio = true;
-                            break;
-
-                        case "-y":
-                        case "--convert-to-wav":
-                            ConvertAudio = true;
                             break;
 
                         case "-z":
@@ -310,21 +307,39 @@ namespace AATB
                             break;
 
                         // SHN (Shorten lossless compressed audio format)
-                        // decompress/convert to WAV only
+                        // decompress/convert to WAV, 16-44 only
                         case "--shn":
-                            ConvertSHN = true;
+                            SetFormatBitrate(SHN, BR1644);
                             break;
 
                         // AIF (Apple native audio format)
                         // convert to WAV only
                         case "--aif":
-                            ConvertAIF = true;
+                            switch (opt)
+                            {
+                                case null: // no options: all bitrates
+                                case "all":
+                                    SetFormatBitrate(AIF, ALLBITRATES);
+                                    break;
+                                default: // all other options: set bitrate
+                                    SetFormatBitrate(AIF, opt);
+                                    break;
+                            }
                             break;
 
                         // WMA (Windows Media Audio lossless compressed audio format)
                         // convert to WAV only
                         case "--wma":
-                            ConvertWMA = true;
+                            switch (opt)
+                            {
+                                case null: // no options: all bitrates
+                                case "all":
+                                    SetFormatBitrate(WMA, ALLBITRATES);
+                                    break;
+                                default: // all other options: set bitrate
+                                    SetFormatBitrate(WMA, opt);
+                                    break;
+                            }
                             break;
 
                         // ALAC lossless compression
@@ -408,7 +423,6 @@ namespace AATB
 
                         // create m3u playlist
                         case "-p":
-                        case "--m3u":
                         case "--m3u-playlist":
                             CreateM3U = true;
                             break;
@@ -449,9 +463,16 @@ namespace AATB
                             RenameInfoFiles = true;
                             break;
 
-                        case "--cd":
-                        case "--use-currentdirinfo":
+                        // use info files in current directory
+                        case "--icd":
+                        case "--get-info-from-current-dir":
                             UseCurrentDirInfo = true;
+                            break;
+
+                        // output to current directory
+                        case "--ocd":
+                        case "--output-to-current-dir":
+                            OutputToCurrentDir = true;
                             break;
 
                         // other options

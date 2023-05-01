@@ -322,8 +322,10 @@ Program history
     Added SearchListForDate method to search for a valid concert date in an infotext file
 
 5.8 2023-04-29
-    Added ConvertAudio, ConvertSHN, ConvertAIF, and ConvertWMA flags
-    Renamed DecompressWAV method to ConvertToWAV method
-    Added ALAC, SHN, AIF, and WMA conversion to WAV format
+    Added new lists for valid compression and decompression formats
+    Changed "Decompress" option to handle both decompression and conversion to WAV
+    Removed ConvertAudio option, removed Conversion section in WalkDirectoryTree
+    Renamed DecompressWAV method to ConvertToWAV method, and added ALAC, SHN, AIF, and WMA formats
+    Rewrote Decompression section in WalkDirectoryTree to use decompression format list
     Enabled use of either .aif or .aiff file extension for Audio Interchange File Format AIFF
     Renamed previous SHN variable to SHNRPT to deconflict with the SHN compressed audio format

@@ -37,9 +37,6 @@ namespace AATB
             // Populate filelists for each type of file in this directory
             FileInfo[]
                 AllFilesList = CurrentDir.GetFiles(),
-                SHNFileList = CurrentDir.GetFiles(ALLSHN),
-                AIFFileList = CurrentDir.GetFiles(ALLAIF),
-                WMAFileList = CurrentDir.GetFiles(ALLWMA),
                 WAVFileList = CurrentDir.GetFiles(ALLWAV),
                 FLACFileList = CurrentDir.GetFiles(ALLFLAC),
                 CompAudioFileList, // populated as needed
@@ -85,11 +82,10 @@ namespace AATB
                 if (CheckFormatBitrate(ANYFORMAT, Dir.Name)
                     && WAVExists)
                 {
-                    // loop through all compressed audio formats in AudioFormats list
-                    // ignore last entry in list = WAV
-                    for (index = 0; index <= AudioFormats.Length - 2; index++)
+                    // loop through all audio formats in CompressedAudioFormats list
+                    for (index = 0; index <= CompressionAudioFormats.Length - 1; index++)
                     {
-                        CompAudioFormat = AudioFormats[index];
+                        CompAudioFormat = CompressionAudioFormats[index];
                         CompAudioDirExtension = CompressedDirExtensions[index];
 
                         // check format and bitrate (directory name) flag is set
@@ -212,7 +208,7 @@ namespace AATB
                     else
                         GetDirTextFiles(Dir, ParentInfotextList, ParentCuesheetList);
 
-                    // loop through all compressed audio formats in AudioFormats list
+                    // loop through all audio formats in AudioFormats list
                     // ignore last entry in list = WAV
                     for (index = 0; index <= AudioFormats.Length - 2; index++)
                     {
@@ -300,93 +296,53 @@ namespace AATB
             else if (DecompressAudio)
             {
                 if (Debug) Console.WriteLine("dbg: Decompress Section");
-
-                // compressed flac directory
-                if (Dir.Type == COMPRESSEDAUDIO
-                    && Dir.AudioCompressionFormat == FLAC
-                    && CheckFormatBitrate(FLAC, Dir.Bitrate))
+                
+                // loop through all audio formats in DecompressionAudioFormats list
+                for (index = 0; index <= DecompressionAudioFormats.Length - 1; index++)
                 {
-                    // FLACFileList is populated during initialization for each traversal of WalkDirectory
-                    if (FLACFileList != null)
+                    CompAudioFormat = DecompressionAudioFormats[index];
+
+                    // check appropriate flag is set for directory
+                    if (CheckFormatBitrate(CompAudioFormat, Dir.Bitrate)
+                        && Dir.AudioCompressionFormat == CompAudioFormat)
                     {
-                        // WAV output directory is a parent subdir <Bitrate>
-                        WAVDirName = Dir.Bitrate;
-                        WAVDirPath = Dir.ParentPath + BACKSLASH + WAVDirName;
-                        if ((Directory.Exists(WAVDirPath) && Overwrite)
-                            || (!Directory.Exists(WAVDirPath) && CreateDir(WAVDirPath)))
+                        // get list of compressed audio files
+                        CompAudioFileList = CurrentDir.GetFiles("*." + CompAudioFormat);
+
+                        if (CompAudioFileList != null)
                         {
-                            Log.WriteLine("  Decompressing to WAV directory: " + WAVDirName);
-                            ConvertToWAV(FLAC, WAVDirPath, FLACFileList);
+                            if (Dir.Type == COMPRESSEDAUDIO
+                                && !OutputToCurrentDir)
+                            {
+                                // WAV output directory is a parent subdir <Bitrate>
+                                WAVDirName = Dir.Bitrate;
+                                WAVDirPath = Dir.ParentPath + BACKSLASH + WAVDirName;
+                                if ((Directory.Exists(WAVDirPath) && Overwrite)
+                                    || (!Directory.Exists(WAVDirPath) && CreateDir(WAVDirPath)))
+                                {
+                                    Log.WriteLine("  Decompressing to directory: " + WAVDirName);
+                                    ConvertToWAV(CompAudioFormat, WAVDirPath, CompAudioFileList);
+                                }
+                                else
+                                    Log.WriteLine("*** WAV directory already exists, use overwrite option to replace\n"
+                                                + "    " + WAVDirPath);
+                            }
+                            else if ((Dir.Type == RAWAUDIO)
+                                 || (Dir.Type == COMPRESSEDAUDIO
+                                    && OutputToCurrentDir))
+                            {
+                                // decompress to current directory
+                                WAVDirName = Dir.Name;
+                                WAVDirPath = Dir.Path;
+                                Log.WriteLine("  Decompressing to directory: " + WAVDirName);
+                                ConvertToWAV(CompAudioFormat, WAVDirPath, CompAudioFileList);
+                            }
                         }
                         else
-                            Log.WriteLine("*** WAV directory already exists, use overwrite option to replace\n"
-                                        + "    " + WAVDirPath);
+                            Log.WriteLine("*** No FLAC format files found");
                     }
-                    else
-                        Log.WriteLine("*** No FLAC format files found");
                 }
-
-                // raw audio directory
-                else if (Dir.Type == RAWAUDIO
-                        && CheckFormatBitrate(FLAC, Dir.Bitrate))
-                {
-                    // check FLAC format files exist
-                    if (FLACExists)
-                    {
-                        // wav file output directory is the input directory
-                        WAVDirName = Dir.Name;
-                        WAVDirPath = Dir.Path;
-                        if (!WAVExists || (WAVExists && Overwrite))
-                        {
-                            Log.WriteLine("  Decompressing to WAV directory: " + WAVDirName);
-                            ConvertToWAV(FLAC, WAVDirPath, FLACFileList);
-                        }
-                        else
-                            Log.WriteLine("*** WAV file(s) already exist, use overwrite option to replace");
-                    }
-                    else
-                        Log.WriteLine("*** No FLAC format files found");
-                }
-
             } // end Decompress Audio section
-
-            // = = = = = = = = Convert Audio section = = = = = = = = 
-            else if (ConvertAudio)
-            {
-                // = = = = = = = = Convert/decompress SHN files to WAV = = = = = = = = 
-                // Command: -y --shn|--convert-shn-to-wav
-                // SHN files in the current directory will be in the SHNFileList
-                // Converted WAV files will be written to the current directory
-                if (ConvertSHN)
-                {
-                    if (Debug) Console.WriteLine("dbg: Convert SHN Section");
-                    WAVDirPath = CurrentDir.FullName;
-                    ConvertToWAV(SHN, WAVDirPath, SHNFileList);
-                } // end Convert SHN Files section
-
-                // = = = = = = = = Convert AIF files to WAV = = = = = = = = 
-                // Command: -y --aif|--convert-aif-to-wav
-                // AIF files in the current directory will be in the AIFFileList
-                // Converted WAV files will be written to the current directory
-                if (ConvertAIF)
-                {
-                    if (Debug) Console.WriteLine("dbg: Convert AIF Section");
-                    WAVDirPath = CurrentDir.FullName;
-                    ConvertToWAV(AIF, WAVDirPath, AIFFileList);
-                } // end Convert AIF Files section
-
-                // = = = = = = = = Convert/decompress WMA files to WAV = = = = = = = = 
-                // Command: -y --wma|--convert-wma-to-wav
-                // WMA files in the current directory will be in the WMAFileList
-                // Converted WAV files will be written to the current directory
-                if (ConvertWMA)
-                {
-                    if (Debug) Console.WriteLine("dbg: Convert WMA Section");
-                    WAVDirPath = CurrentDir.FullName;
-                    ConvertToWAV(WMA, WAVDirPath, WMAFileList);
-                } // end Convert WMA Files section
-            
-            } // end Convert Audio section
 
             // = = = = = = = = Join WAV Files section = = = = = = = = 
             // Concatenate separate WAV files into one combined wav file
@@ -571,7 +527,7 @@ namespace AATB
 
             // = = = = = = = = Create Cuesheet section = = = = = = = = 
             // Create cuesheet from directory and wav track metadata
-            // Command: -k|--create-cuesheet --wav=<bitrate>
+            // Command: -s|--create-cuesheet --wav=<bitrate>
             if (CreateCuesheet)
             {
                 if (Debug) Console.WriteLine("dbg: Create Cuesheet Section");

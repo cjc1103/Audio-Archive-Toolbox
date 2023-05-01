@@ -6,7 +6,8 @@ namespace AATB
     {
         static void CreateM3UPlaylist(AATB_DirInfo Dir, string M3UFilePath, FileInfo[] FileList)
         {
-            /* Build M3UPlaylist from track information in FileList
+            /* Build M3U playlist from track information in FileList
+             * If M3U playlist exists, it will be overwritten
              * Inputs:
              *   Dir          Directory as AATB_DirInfo class instance
              *     Dir.AlbumArtist
@@ -76,8 +77,9 @@ namespace AATB
         {
             /* Creates the CD cuesheet from input directory data structure, which is
              * populated in GetTrackMetadata
+             * If cuesheet exists, requires overwrite option to replace it
              * Inputs:
-             *   Dir          Directory as AATB_DirInfo class instance
+             *   Dir  AATB_DirInfo class instance
              *     Dir.TitleList    List of track titles
              *     Dir.ArtistList   List of artists corresponding to each track
              *   CuesheetPath   Path to cuesheet

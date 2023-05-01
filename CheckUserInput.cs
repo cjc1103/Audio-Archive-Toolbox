@@ -20,9 +20,6 @@ namespace AATB
               + Convert.ToInt32(JoinWAV)
               + Convert.ToInt32(RenameWAV)
               + Convert.ToInt32(DeleteAudio)
-              + Convert.ToInt32(ConvertSHN)
-              + Convert.ToInt32(ConvertAIF)
-              + Convert.ToInt32(ConvertWMA)
               + Convert.ToInt32(ConvertBitrate)
               + Convert.ToInt32(CreateCuesheet) != 1)
             {
@@ -122,14 +119,7 @@ namespace AATB
 
             if (DecompressAudio)
             {
-                Log.WriteLine("Decompress audio files");
-                // check for unique FLAC bitrate or raw
-                if (!CheckUniqueBitrate(FLAC)
-                    && !CheckFormatBitrate(FLAC, RAW))
-                {
-                    Log.WriteLine("Input error: Use '--flac=[<bitrate>|raw|all]'");
-                    Environment.Exit(0);
-                }
+                Log.WriteLine("Decompress/convert audio files");
                 PrintCompressionOptions();
             }
 
@@ -175,27 +165,6 @@ namespace AATB
                     Environment.Exit(0);
                 }
                 PrintCompressionOptions();
-            }
-
-            if (ConvertAudio)
-            {
-                if (ConvertSHN)
-                {
-                    Log.WriteLine("Decompress SHN format audio to WAV format");
-                    PrintCompressionOptions();
-                }
-
-                if (ConvertAIF)
-                {
-                    Log.WriteLine("Convert AIF format audio to WAV format");
-                    PrintCompressionOptions();
-                }
-
-                if (ConvertWMA)
-                {
-                    Log.WriteLine("Convert WMA format audio to WAV format");
-                    PrintCompressionOptions();
-                }
             }
 
             if (ConvertBitrate)
@@ -265,6 +234,9 @@ namespace AATB
 
             if (UseCurrentDirInfo)
                 Log.WriteLine("Use current directory for info files");
+
+            if (OutputToCurrentDir)
+                Log.WriteLine("Output converted files to current directory");
 
             if (!DeleteAudio  && Overwrite)
                 Log.WriteLine("Overwrite existing files");
