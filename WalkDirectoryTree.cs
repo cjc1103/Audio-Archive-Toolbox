@@ -83,9 +83,9 @@ namespace AATB
                     && WAVExists)
                 {
                     // loop through all audio formats in CompressedAudioFormats list
-                    for (index = 0; index <= CompressionAudioFormats.Length - 1; index++)
+                    for (index = 0; index <= AudioCompressionFormats.Length - 1; index++)
                     {
-                        CompAudioFormat = CompressionAudioFormats[index];
+                        CompAudioFormat = AudioCompressionFormats[index];
                         CompAudioDirExtension = CompressedDirExtensions[index];
 
                         // check format and bitrate (directory name) flag is set
@@ -297,10 +297,10 @@ namespace AATB
             {
                 if (Debug) Console.WriteLine("dbg: Decompress Section");
                 
-                // loop through all audio formats in DecompressionAudioFormats list
-                for (index = 0; index <= DecompressionAudioFormats.Length - 1; index++)
+                // loop through all audio formats in AudioDecompressionFormats list
+                for (index = 0; index <= AudioDecompressionFormats.Length - 1; index++)
                 {
-                    CompAudioFormat = DecompressionAudioFormats[index];
+                    CompAudioFormat = AudioDecompressionFormats[index];
 
                     // check appropriate flag is set for directory
                     if (CheckFormatBitrate(CompAudioFormat, Dir.Bitrate)
@@ -343,6 +343,36 @@ namespace AATB
                     }
                 }
             } // end Decompress Audio section
+
+            // = = = = = = = = Convert Audio to WAV files section = = = = = = = = 
+            // Convert other audio formats to WAV files
+            // RAW flag is used to specify a specific format to convert to WAV
+            // Command: -y|--convert-to-wav
+            else if (ConvertAudio)
+            {
+                if (Debug) Console.WriteLine("dbg: Convert Audio Section");
+
+                // loop through all audio formats in AudioConversionFormats list
+                for (index = 0; index <= AudioConversionFormats.Length - 1; index++)
+                {
+                    CompAudioFormat = AudioConversionFormats[index];
+
+                    // check RAW flag is set for this format = convert
+                    if (CheckFormatBitrate(CompAudioFormat, RAW))
+                    {
+                        // get list of compressed audio files
+                        CompAudioFileList = CurrentDir.GetFiles("*." + CompAudioFormat);
+                        if (CompAudioFileList != null)
+                        {
+                            // convert to WAV in current directory
+                            WAVDirName = Dir.Name;
+                            WAVDirPath = Dir.Path;
+                            Log.WriteLine("  Decompressing to directory: " + WAVDirName);
+                            ConvertToWAV(CompAudioFormat, WAVDirPath, CompAudioFileList);
+                        }
+                    }
+                }
+            } // end Convert Audio section
 
             // = = = = = = = = Join WAV Files section = = = = = = = = 
             // Concatenate separate WAV files into one combined wav file

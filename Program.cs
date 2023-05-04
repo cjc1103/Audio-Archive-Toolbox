@@ -79,17 +79,18 @@ namespace AATB
             // set default value
             CompressAudio = false,
             VerifyAudio = false,
-            DeleteAudio = false,
             DecompressAudio = false,
+            ConvertAudio = false,
             JoinWAV = false,
             RenameWAV = false,
             ConvertBitrate = false,
+            CreateCuesheet = false,
+            DeleteAudio = false,
             Overwrite = false,
             CreateMD5 = false,
             CreateFFP = false,
             CreateSHNRPT = false,
             CreateM3U = false,
-            CreateCuesheet = false,
             CreateTags = false,
             UseInfotext = false,
             UseCuesheet = false,
@@ -118,20 +119,24 @@ namespace AATB
             // WAV must be the last entry in this list
             AudioFormats = { MP3, M4A, OGG, OPUS, SHN, AIF, WMA, ALAC, FLAC, WAV },
             // allowable compression formats (lossy and lossless)
-            CompressionAudioFormats = { MP3, M4A, OGG, OPUS, ALAC, FLAC },
-            // allowable decompression/conversion formats (lossy and lossless)
-            DecompressionAudioFormats = { SHN, AIF, WMA, ALAC, FLAC },
+            AudioCompressionFormats = { MP3, M4A, OGG, OPUS, ALAC, FLAC },
+            // allowable decompression formats (lossless)
+            AudioDecompressionFormats = { ALAC, FLAC },
+            // allowable conversion formats (lossy and lossless)
+            AudioConversionFormats = { SHN, AIF, WMA },
             // audio bitrates
             // RAW must be last entry in this list
             AudioBitrates = { BR1644, BR1648, BR2444, BR2448, BR2488, BR2496, RAW },
             // compressed audio directory extensions
-            CompressedDirExtensions = { MP3F, M4AF, OGGF, OPUSF, SHNF, AIFF, WMAF, ALACF, FLACF },
+            // must correspond to AudioCompressionFormats list
+            CompressedDirExtensions = { MP3F, M4AF, OGGF, OPUSF, ALACF, FLACF },
             // miscellaneous files to delete for cleanup
             FilesToDelete = { ".npr", ".HDP", ".H2", ".sfk", ".bak*", ".BAK*", ".peak", ".reapeaks", ".tmp" },
             // miscellaneous directories to delete for cleanup
             DirsToDelete = { "Images" };
         static readonly int[]
             // quality parameter lists { lower, active, upper }
+            // must correspond to and be in same order as AudioCompressionFormats list
             mp3Quality = { 0, 0, 4 }, // 0 is best
             aacQuality = { 0, 127, 127 },
             oggQuality = { 0, 8, 10 },
@@ -139,8 +144,9 @@ namespace AATB
             alacQuality = { 0, 0, 0}, // placeholder only
             flacQuality = { 1, 6, 10 };
         static readonly int[][]
-            // Two dimensional list of all quality parameters - must be in same order as AudioFormats list
-            CompressedAudioQuality = new[]
+            // Two dimensional list of all quality parameters
+            // must correspond to and be in same order as AudioCompressionFormats list
+            AudioCompressionQuality = new[]
               { mp3Quality,
                 aacQuality,
                 oggQuality,
@@ -201,6 +207,11 @@ namespace AATB
                             DecompressAudio = true;
                             break;
 
+                        case "-y":
+                        case "--convert-to-wav":
+                            ConvertAudio = true;
+                            break;
+
                         case "-j":
                         case "--join":
                             JoinWAV = true;
@@ -209,11 +220,6 @@ namespace AATB
                         case "-r":
                         case "--rename-wav-files":
                             RenameWAV = true;
-                            break;
-
-                        case "-x":
-                        case "--delete":
-                            DeleteAudio = true;
                             break;
 
                         case "-z":
@@ -233,6 +239,11 @@ namespace AATB
                         case "-s":
                         case "--create-cuesheet":
                             CreateCuesheet = true;
+                            break;
+
+                        case "-x":
+                        case "--delete":
+                            DeleteAudio = true;
                             break;
 
                         // OTHER FUNCTIONS
@@ -309,37 +320,19 @@ namespace AATB
                         // SHN (Shorten lossless compressed audio format)
                         // decompress/convert to WAV, 16-44 only
                         case "--shn":
-                            SetFormatBitrate(SHN, BR1644);
+                            SetFormatBitrate(SHN, RAW);
                             break;
 
                         // AIF (Apple native audio format)
                         // convert to WAV only
                         case "--aif":
-                            switch (opt)
-                            {
-                                case null: // no options: all bitrates
-                                case "all":
-                                    SetFormatBitrate(AIF, ALLBITRATES);
-                                    break;
-                                default: // all other options: set bitrate
-                                    SetFormatBitrate(AIF, opt);
-                                    break;
-                            }
+                            SetFormatBitrate(AIF, RAW);
                             break;
 
                         // WMA (Windows Media Audio lossless compressed audio format)
                         // convert to WAV only
                         case "--wma":
-                            switch (opt)
-                            {
-                                case null: // no options: all bitrates
-                                case "all":
-                                    SetFormatBitrate(WMA, ALLBITRATES);
-                                    break;
-                                default: // all other options: set bitrate
-                                    SetFormatBitrate(WMA, opt);
-                                    break;
-                            }
+                            SetFormatBitrate(WMA, RAW);
                             break;
 
                         // ALAC lossless compression

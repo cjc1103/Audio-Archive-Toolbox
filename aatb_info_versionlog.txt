@@ -321,7 +321,7 @@ Program history
       to a new method PopulateTrackDurationList, and also enabled proper exception handling for file access.
     Added SearchListForDate method to search for a valid concert date in an infotext file
 
-5.8 2023-04-29
+5.8 2023-05-01
     Added new lists for valid compression and decompression formats
     Changed "Decompress" option to handle both decompression and conversion to WAV
     Removed ConvertAudio option, removed Conversion section in WalkDirectoryTree

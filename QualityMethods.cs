@@ -24,9 +24,9 @@ namespace AATB
             {
                 // index corresponds to location of bounds in CompresssionAudioQuality list
                 // update CompresssionAudioQuality list with qValue between LOWER and UPPER bounds
-                qValue = Math.Max(qValue, CompressedAudioQuality[index][LOWER]);
-                qValue = Math.Min(qValue, CompressedAudioQuality[index][UPPER]);
-                CompressedAudioQuality[index][ACTIVE] = qValue;
+                qValue = Math.Max(qValue, AudioCompressionQuality[index][LOWER]);
+                qValue = Math.Min(qValue, AudioCompressionQuality[index][UPPER]);
+                AudioCompressionQuality[index][ACTIVE] = qValue;
             }
         } // end SetQValue
     }

@@ -17,11 +17,12 @@ namespace AATB
             if (Convert.ToInt32(CompressAudio )
               + Convert.ToInt32(VerifyAudio )
               + Convert.ToInt32(DecompressAudio)
+              + Convert.ToInt32(ConvertAudio)
               + Convert.ToInt32(JoinWAV)
               + Convert.ToInt32(RenameWAV)
-              + Convert.ToInt32(DeleteAudio)
               + Convert.ToInt32(ConvertBitrate)
-              + Convert.ToInt32(CreateCuesheet) != 1)
+              + Convert.ToInt32(CreateCuesheet)
+              + Convert.ToInt32(DeleteAudio) != 1)
             {
                 Log.WriteLine("Input error: Conflicting options\n"
                    + "Choose compress, verify, decompress, join, delete, shn, aif, wma, convert bitrate, or create cuesheet");
@@ -119,7 +120,13 @@ namespace AATB
 
             if (DecompressAudio)
             {
-                Log.WriteLine("Decompress/convert audio files");
+                Log.WriteLine("Decompress audio files to WAV");
+                PrintCompressionOptions();
+            }
+            
+            if (ConvertAudio)
+            {
+                Log.WriteLine("Convert audio files to WAV");
                 PrintCompressionOptions();
             }
 
@@ -264,10 +271,10 @@ namespace AATB
             string AudioCompFormat;
             int i, j;
 
-            // Loop through all compressed audio formats
-            for (i = 0; i <= AudioFormats.Length - 1; i++)
+            // loop through all compression formats
+            for (i = 0; i <= AudioCompressionFormats.Length - 1; i++)
             {
-                AudioCompFormat = AudioFormats[i];
+                AudioCompFormat = AudioCompressionFormats[i];
                 // check for any valid bitrates for each format
                 if (CheckFormatBitrate(AudioCompFormat, ANYBITRATE)
                     || CheckFormatBitrate(AudioCompFormat, RAW))
@@ -281,15 +288,25 @@ namespace AATB
                             if (AudioFormatBitrate[i, j])
                                 Log.Write(" (" + AudioBitrates[j] + ")");
 
-                    // print q values in CompressedAudioQuality list for CompressAudio function
+                    // print q values in AudioCompressionQuality list for CompressAudio function
                     if (CompressAudio)
                     {
-                        Log.Write("  <" + Convert.ToString(CompressedAudioQuality[i][LOWER])
-                                + ".. q=" + Convert.ToString(CompressedAudioQuality[i][ACTIVE])
-                                + " .." + Convert.ToString(CompressedAudioQuality[i][UPPER]) + ">");
+                        Log.Write("  <" + Convert.ToString(AudioCompressionQuality[i][LOWER])
+                                + ".. q=" + Convert.ToString(AudioCompressionQuality[i][ACTIVE])
+                                + " .." + Convert.ToString(AudioCompressionQuality[i][UPPER]) + ">");
                     }
                     // flush print buffer
                     Log.WriteLine();
+                }
+            }
+            // loop through all conversion formats
+            for (i = 0; i <= AudioConversionFormats.Length - 1; i++)
+            {
+                AudioCompFormat = AudioConversionFormats[i];
+                j = AudioBitrates.Length - 1;  // index of RAW flag
+                if (AudioFormatBitrate[i, j])
+                {
+                    Log.WriteLine("  " + AudioCompFormat.ToUpper());
                 }
             }
         } // end PrintCompressionOptions
