@@ -10,14 +10,16 @@ namespace AATB
             *  Inputs: Flags and arguments are set from the command line
             *  Outputs: Log messages
             */
+            int i;
+            bool FoundValidFormat = false;
 
             // sanity check for conflicts and errors in command line parameters
             // if any of these conditions is true, the program is terminated immediately  
             // check mutually exclusive flags, only one should be set
             if (Convert.ToInt32(CompressAudio )
               + Convert.ToInt32(VerifyAudio )
-              + Convert.ToInt32(DecompressAudio)
               + Convert.ToInt32(ConvertAudio)
+              + Convert.ToInt32(DecompressAudio)
               + Convert.ToInt32(JoinWAV)
               + Convert.ToInt32(RenameWAV)
               + Convert.ToInt32(ConvertBitrate)
@@ -25,7 +27,7 @@ namespace AATB
               + Convert.ToInt32(DeleteAudio) != 1)
             {
                 Log.WriteLine("Input error: Conflicting options\n"
-                   + "Choose compress, verify, decompress, join, delete, shn, aif, wma, convert bitrate, or create cuesheet");
+                   + "Choose compress, verify, decompress, join, rename, delete, convert, convert bitrate, or create cuesheet");
                 Environment.Exit(0);
             }
             if (CreateCuesheet && UseCuesheet)
@@ -120,12 +122,32 @@ namespace AATB
 
             if (DecompressAudio)
             {
+                for (i = 0; i == AudioDecompressionFormats.Length - 1; i++)
+                {
+                    if (CheckFormatBitrate(AudioDecompressionFormats[i], ANYBITRATE))
+                        FoundValidFormat = true;
+                }
+                if (!FoundValidFormat)
+                {
+                    Log.WriteLine("No valid decompression format specified");
+                    Environment.Exit(0);
+                }
                 Log.WriteLine("Decompress audio files to WAV");
                 PrintCompressionOptions();
             }
             
             if (ConvertAudio)
             {
+                for (i = 0; i == AudioConversionFormats.Length - 1; i++)
+                {
+                    if (CheckFormatBitrate(AudioConversionFormats[i], ANYBITRATE))
+                        FoundValidFormat = true;
+                }
+                if (!FoundValidFormat)
+                {
+                    Log.WriteLine("No valid decompression format specified");
+                    Environment.Exit(0);
+                }
                 Log.WriteLine("Convert audio files to WAV");
                 PrintCompressionOptions();
             }

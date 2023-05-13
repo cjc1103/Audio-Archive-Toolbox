@@ -118,7 +118,7 @@ namespace AATB
                                 {
                                     // compress audio files
                                     Log.WriteLine("  Converting to " + CompAudioFormat.ToUpper() + ": " + CompAudioDirName);
-                                    CompAudioFileList = CompressWAV(CompAudioFormat, Dir, CompAudioDirPath, WAVFileList);
+                                    CompAudioFileList = ConvertFromWAV(CompAudioFormat, Dir, CompAudioDirPath, WAVFileList);
 
                                     // create MD5 Checksum
                                     if (CreateMD5)
@@ -174,7 +174,7 @@ namespace AATB
                                     Log.WriteLine("  Converting to FLAC: " + CompAudioDirName);
 
                                     // compress raw audio files, return list is discarded
-                                    CompressWAV(FLAC, Dir, CompAudioDirPath, WAVFileList);
+                                    ConvertFromWAV(FLAC, Dir, CompAudioDirPath, WAVFileList);
 
                                     // Note: md5, ffp, shtool report and m3u playlists are not used for raw files
                                 }
@@ -289,6 +289,36 @@ namespace AATB
                 }
             } // end Verify Audio section
 
+            // = = = = = = = = Convert Audio to WAV files section = = = = = = = = 
+            // Convert other audio formats to WAV files
+            // RAW flag is used to specify a specific format to convert to WAV
+            // Command: -y|--convert-to-wav
+            else if (ConvertAudio)
+            {
+                if (Debug) Console.WriteLine("dbg: Convert Audio Section");
+
+                // loop through all audio formats in AudioConversionFormats list
+                for (index = 0; index <= AudioConversionFormats.Length - 1; index++)
+                {
+                    CompAudioFormat = AudioConversionFormats[index];
+
+                    // check RAW flag is set for this format = convert
+                    if (CheckFormatBitrate(CompAudioFormat, RAW))
+                    {
+                        // get list of compressed audio files
+                        CompAudioFileList = CurrentDir.GetFiles("*." + CompAudioFormat);
+                        if (CompAudioFileList != null)
+                        {
+                            // convert to WAV in current directory
+                            WAVDirName = Dir.Name;
+                            WAVDirPath = Dir.Path;
+                            Log.WriteLine("  Decompressing to directory: " + WAVDirName);
+                            ConvertToWAV(CompAudioFormat, WAVDirPath, CompAudioFileList);
+                        }
+                    }
+                }
+            } // end Convert Audio section
+
             // = = = = = = = = Decompress Audio section = = = = = = = =
             // Decompress FLAC lossless audio files to WAV format from raw audio and compressed audio
             // directories. Other lossless formats like ALAC are not supported for simplicity
@@ -344,36 +374,6 @@ namespace AATB
                 }
             } // end Decompress Audio section
 
-            // = = = = = = = = Convert Audio to WAV files section = = = = = = = = 
-            // Convert other audio formats to WAV files
-            // RAW flag is used to specify a specific format to convert to WAV
-            // Command: -y|--convert-to-wav
-            else if (ConvertAudio)
-            {
-                if (Debug) Console.WriteLine("dbg: Convert Audio Section");
-
-                // loop through all audio formats in AudioConversionFormats list
-                for (index = 0; index <= AudioConversionFormats.Length - 1; index++)
-                {
-                    CompAudioFormat = AudioConversionFormats[index];
-
-                    // check RAW flag is set for this format = convert
-                    if (CheckFormatBitrate(CompAudioFormat, RAW))
-                    {
-                        // get list of compressed audio files
-                        CompAudioFileList = CurrentDir.GetFiles("*." + CompAudioFormat);
-                        if (CompAudioFileList != null)
-                        {
-                            // convert to WAV in current directory
-                            WAVDirName = Dir.Name;
-                            WAVDirPath = Dir.Path;
-                            Log.WriteLine("  Decompressing to directory: " + WAVDirName);
-                            ConvertToWAV(CompAudioFormat, WAVDirPath, CompAudioFileList);
-                        }
-                    }
-                }
-            } // end Convert Audio section
-
             // = = = = = = = = Join WAV Files section = = = = = = = = 
             // Concatenate separate WAV files into one combined wav file
             // Note: WAV files must exist in WAVFileList
@@ -417,6 +417,46 @@ namespace AATB
                     RenameWAVFiles(Dir, WAVFileList);
                 }
             } // end Rename WAV Files section
+
+            // = = = = = = = = Convert Audio Bitrate section = = = = = = = = 
+            // Convert wav files from one bitrate to another
+            // Command: -z|--convert-bitrate=<bitrate to> --wav=<bitrate from>
+            else if (ConvertBitrate)
+            {
+                if (Debug) Console.WriteLine("dbg: Convert Bitrate Section");
+
+                // Only convert wav files in <bitrate> directory with WAV flag set
+                if (CheckFormatBitrate(WAV, Dir.Name)
+                    && Dir.Name == ConversionFromBitrate
+                    && WAVExists)
+                {
+                    // ConversionToBitrate is entered as the "Convert" command line argument
+                    // convert all wav files in list to the desired bitrate
+                    ConvertWAVBitrate(Dir, WAVFileList, ConversionFromBitrate, ConversionToBitrate);
+                }
+            } // end Convert Audio Bitrate section
+
+            // = = = = = = = = Create Cuesheet section = = = = = = = = 
+            // Create cuesheet from directory and wav track metadata
+            // Command: -s|--create-cuesheet --wav=<bitrate>
+            if (CreateCuesheet)
+            {
+                if (Debug) Console.WriteLine("dbg: Create Cuesheet Section");
+
+                if (CheckFormatBitrate(WAV, Dir.Name)
+                    && WAVExists)
+                {
+                    // populate directory metadata
+                    GetDirTextFiles(Dir, ParentInfotextList, ParentCuesheetList);
+                    GetDirMetadata(Dir);
+
+                    // populate track metadata
+                    GetTrackMetadata(Dir, WAVFileList);
+
+                    // create cuesheet
+                    CreateCuesheetFile(Dir);
+                }
+            } // end Create Cuesheet section
 
             // = = = = = = = = Delete Audio section = = = = = = = = 
             // (1) Delete unneeded wav files after compression from:
@@ -536,46 +576,6 @@ namespace AATB
                     }
                 }
             } // end Delete Audio section
-
-            // = = = = = = = = Convert Audio Bitrate section = = = = = = = = 
-            // Convert wav files from one bitrate to another
-            // Command: -z|--convert-bitrate=<bitrate to> --wav=<bitrate from>
-            else if (ConvertBitrate)
-            {
-                if (Debug) Console.WriteLine("dbg: Convert Bitrate Section");
-
-                // Only convert wav files in <bitrate> directory with WAV flag set
-                if (CheckFormatBitrate(WAV, Dir.Name)
-                    && Dir.Name == ConversionFromBitrate
-                    && WAVExists)
-                {
-                    // ConversionToBitrate is entered as the "Convert" command line argument
-                    // convert all wav files in list to the desired bitrate
-                    ConvertWAVBitrate(Dir, WAVFileList, ConversionFromBitrate, ConversionToBitrate);
-                }
-            } // end Convert Audio Bitrate section
-
-            // = = = = = = = = Create Cuesheet section = = = = = = = = 
-            // Create cuesheet from directory and wav track metadata
-            // Command: -s|--create-cuesheet --wav=<bitrate>
-            if (CreateCuesheet)
-            {
-                if (Debug) Console.WriteLine("dbg: Create Cuesheet Section");
-
-                if (CheckFormatBitrate(WAV, Dir.Name)
-                    && WAVExists)
-                {
-                    // populate directory metadata
-                    GetDirTextFiles(Dir, ParentInfotextList, ParentCuesheetList);
-                    GetDirMetadata(Dir);
-
-                    // populate track metadata
-                    GetTrackMetadata(Dir, WAVFileList);
-
-                    // create cuesheet
-                    CreateCuesheetFile(Dir);
-                }
-            } // end Create Cuesheet section
 
             // = = = = = = = = Recursion = = = = = = = = 
             // Find all subdirectories

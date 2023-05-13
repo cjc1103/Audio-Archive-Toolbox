@@ -202,14 +202,14 @@ namespace AATB
                             VerifyAudio = true;
                             break;
 
-                        case "-d":
-                        case "--decompress":
-                            DecompressAudio = true;
-                            break;
-
                         case "-y":
                         case "--convert-to-wav":
                             ConvertAudio = true;
+                            break;
+
+                        case "-d":
+                        case "--decompress":
+                            DecompressAudio = true;
                             break;
 
                         case "-j":
