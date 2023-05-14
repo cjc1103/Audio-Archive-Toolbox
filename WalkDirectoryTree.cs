@@ -484,11 +484,11 @@ namespace AATB
                         // Find corresponding FLAC directory and convert to DirectoryInfo format
                         FLACDirName = Dir.ParentBaseName + PERIOD + Dir.Bitrate + PERIOD + FLACF;
                         FLACDirPath = Dir.ParentPath + BACKSLASH + FLACDirName;
-                        DirectoryInfo FLAC_DirInfoPath = new DirectoryInfo(FLACDirPath);
+                        DirectoryInfo FLACDirInfoPath = new DirectoryInfo(FLACDirPath);
                         if (Directory.Exists(FLACDirPath))
                         {
                             // get all FLAC files in FLAC directory
-                            FLACFileList = FLAC_DirInfoPath.GetFiles(ALLFLAC);
+                            FLACFileList = FLACDirInfoPath.GetFiles(ALLFLAC);
                             if (FLACFileList == null)
                                 WAVFileBackupExists = false;
                             else

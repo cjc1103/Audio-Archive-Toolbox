@@ -11,7 +11,7 @@ namespace AATB
             *  Outputs: Log messages
             */
             int i;
-            bool FoundValidFormat = false;
+            bool FoundValidFormat;
 
             // sanity check for conflicts and errors in command line parameters
             // if any of these conditions is true, the program is terminated immediately  
@@ -122,7 +122,8 @@ namespace AATB
 
             if (DecompressAudio)
             {
-                for (i = 0; i == AudioDecompressionFormats.Length - 1; i++)
+                FoundValidFormat = false;
+                for (i = 0; i <= AudioDecompressionFormats.Length - 1; i++)
                 {
                     if (CheckFormatBitrate(AudioDecompressionFormats[i], ANYBITRATE))
                         FoundValidFormat = true;
@@ -138,14 +139,15 @@ namespace AATB
             
             if (ConvertAudio)
             {
-                for (i = 0; i == AudioConversionFormats.Length - 1; i++)
+                FoundValidFormat = false;
+                for (i = 0; i <= AudioConversionFormats.Length - 1; i++)
                 {
                     if (CheckFormatBitrate(AudioConversionFormats[i], ANYBITRATE))
                         FoundValidFormat = true;
                 }
                 if (!FoundValidFormat)
                 {
-                    Log.WriteLine("No valid decompression format specified");
+                    Log.WriteLine("No valid conversion format specified");
                     Environment.Exit(0);
                 }
                 Log.WriteLine("Convert audio files to WAV");
