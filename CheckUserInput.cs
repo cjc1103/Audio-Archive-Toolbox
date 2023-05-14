@@ -292,22 +292,24 @@ namespace AATB
             *  Inputs: None
             *  Outputs: Log messages
             */
-            string AudioCompFormat;
             int i, j;
+            string AudioFormat;
 
-            // loop through all compression formats
-            for (i = 0; i <= AudioCompressionFormats.Length - 1; i++)
+            // loop through all audio formats
+            for (i = 0; i <= AudioFormats.Length - 1; i++)
             {
-                AudioCompFormat = AudioCompressionFormats[i];
+                AudioFormat = AudioFormats[i];
                 // check for any valid bitrates for each format
-                if (CheckFormatBitrate(AudioCompFormat, ANYBITRATE)
-                    || CheckFormatBitrate(AudioCompFormat, RAW))
+                if (CheckFormatBitrate(AudioFormat, ANYBITRATE)
+                    || CheckFormatBitrate(AudioFormat, RAW))
                 {
-                    Log.Write("  " + AudioCompFormat.ToUpper());
-                    if (CheckFormatBitrate(AudioCompFormat, ALLBITRATES))
+                    // print audio format
+                    Log.Write("  " + AudioFormat.ToUpper());
+                    // print all bitrate(s)
+                    if (CheckFormatBitrate(AudioFormat, ALLBITRATES))
                         Log.Write(" (All bitrates)");
                     else
-                        // print all valid bitrates, RAW is last bitrate in array
+                        // print valid bitrates
                         for (j = 0; j <= AudioBitrates.Length - 1; j++)
                             if (AudioFormatBitrate[i, j])
                                 Log.Write(" (" + AudioBitrates[j] + ")");
@@ -321,16 +323,6 @@ namespace AATB
                     }
                     // flush print buffer
                     Log.WriteLine();
-                }
-            }
-            // loop through all conversion formats
-            for (i = 0; i <= AudioConversionFormats.Length - 1; i++)
-            {
-                AudioCompFormat = AudioConversionFormats[i];
-                j = AudioBitrates.Length - 1;  // index of RAW flag
-                if (AudioFormatBitrate[i, j])
-                {
-                    Log.WriteLine("  " + AudioCompFormat.ToUpper());
                 }
             }
         } // end PrintCompressionOptions
