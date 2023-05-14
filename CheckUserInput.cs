@@ -293,12 +293,12 @@ namespace AATB
             *  Outputs: Log messages
             */
             int i, j;
-            string AudioFormat;
+            string AudioFormat, AudioBitrate;
 
-            // loop through all audio formats
-            for (i = 0; i <= AudioFormats.Length - 1; i++)
+            // loop through all audio compression formats
+            for (i = 0; i <= AudioCompressionFormats.Length - 1; i++)
             {
-                AudioFormat = AudioFormats[i];
+                AudioFormat = AudioCompressionFormats[i];
                 // check for any valid bitrates for each format
                 if (CheckFormatBitrate(AudioFormat, ANYBITRATE)
                     || CheckFormatBitrate(AudioFormat, RAW))
@@ -311,9 +311,11 @@ namespace AATB
                     else
                         // print valid bitrates
                         for (j = 0; j <= AudioBitrates.Length - 1; j++)
-                            if (AudioFormatBitrate[i, j])
-                                Log.Write(" (" + AudioBitrates[j] + ")");
-
+                        {
+                            AudioBitrate = AudioBitrates[j];
+                            if (CheckFormatBitrate(AudioFormat, AudioBitrate))
+                                Log.Write(" (" + AudioBitrate + ")");
+                        }
                     // print q values in AudioCompressionQuality list for CompressAudio function
                     if (CompressAudio)
                     {
@@ -325,6 +327,16 @@ namespace AATB
                     Log.WriteLine();
                 }
             }
+
+            // loop through all audio conversion formats
+            for (i = 0; i <= AudioConversionFormats.Length - 1; i++)
+            {
+                AudioFormat = AudioConversionFormats[i];
+                // check only for raw flag
+                if (CheckFormatBitrate(AudioFormat, RAW))
+                    Log.WriteLine("  " + AudioFormat.ToUpper() + " (Any bitrate)");
+            }
+
         } // end PrintCompressionOptions
     }
 }
