@@ -153,12 +153,12 @@ namespace AATB
             return DataList;
         } // end SplitDataByLine
 
-        static string SearchList(string[] DataList, string SearchTerm)
+        static string SearchListForData(string[] DataList, string SearchTerm)
         {
             /* Returns line in data list containing the desired search term
              * Inputs:
              *   DataList   list containing data
-             *   Name       string search term, e.g: "Artist: "
+             *   Name       string containing Regex search term
              * Outputs:
              *   Data       string found by pattern match, null if not found
              */
@@ -183,30 +183,29 @@ namespace AATB
                 }
             }
             return Data;
-        } // end SearchList
+        } // end SearchListForData
 
-        static int SearchListForDate(string[] DataList)
+        static int SearchListForTerm(string[] DataList, int StartIndex, string SearchTerm)
         {
-            /* Returns the line number in data list containg a valid date yyyy-mm-dd 
+            /* Returns the line number in data list containg the input search term
              * Inputs:
              *   DataList   list containing data
-             * Outputs:
-             *   Data       string found by pattern match, null if not found
+             *              Note: date yyyy-mm-dd search term is "^[1-2]\d{3}-\d{2}-\d{2}"
+             * Returns integer linenumber found by pattern match, 0 if not found
              */
             int i;
             Match PatternMatch;
 
-            for (i = 0; i < DataList.Length; i++)
+            for (i = StartIndex; i < DataList.Length; i++)
             {
-                // search for date in string
-                PatternMatch = Regex.Match(DataList[i], @"^[1-2]\d{3}-\d{2}-\d{2}");
+                // search for pattern in string
+                PatternMatch = Regex.Match(DataList[i], @SearchTerm);
                 if (PatternMatch.Success)
                     return i;
             }
-            // valid date not found
-            return -1;
-        }
-
+            // search term not found
+            return 0;
+        } // end SearchListForTerm
 
         static void PrintFileList(string FileType, FileInfo[] FileList)
         {

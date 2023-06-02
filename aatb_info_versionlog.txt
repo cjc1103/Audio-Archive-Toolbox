@@ -299,35 +299,37 @@ Program history
       (2) log any line in StandardError stream that contains the word "error" in "Verbose" mode
       (3) log entire StandardError stream in "Debug" and "Verbose" modes
 
-5.6 2023-01-05
-    Removed redundant check for TRACKEDAUDIO dir type from create cuesheet section of Program method
-    Added SplitDataByLine method to split data stream into an array of lines separated by
-      dos|unix line delimiters <cr> <line feed> <return>
-    Added exception handling to PrintOutputStream method, changed print formatting
-    Added exception handling to decimal calculations in CreateM3UPlaylist method
-    Removed redundant TrackDuration calculation from CreateM3UPlayList method, and instead retrieved
-      it from the DirInfo structure. This value is populated in DirInfo when reading track metadata.
-    Added default case for switch statement in CompressFromWAV and DecompressToWav methods
-    Corrected search terms for building Album string in DirMetadataFromCuesheet
+5.6  2023-01-05
+     Removed redundant check for TRACKEDAUDIO dir type from create cuesheet section of Program method
+     Added SplitDataByLine method to split data stream into an array of lines separated by
+       dos|unix line delimiters <cr> <line feed> <return>
+     Added exception handling to PrintOutputStream method, changed print formatting
+     Added exception handling to decimal calculations in CreateM3UPlaylist method
+     Removed redundant TrackDuration calculation from CreateM3UPlayList method, and instead retrieved
+       it from the DirInfo structure. This value is populated in DirInfo when reading track metadata.
+     Added default case for switch statement in CompressFromWAV and DecompressToWav methods
+     Corrected search terms for building Album string in DirMetadataFromCuesheet
 
-5.7 2023-03-09
-    Added RenameInfoFiles flag to rename info.txt and .cue files
-    Added UseCurrentDirInfo flag for Verify mode to force program to read info files in current dir
-    Added two string variables to AATB_DirInfo class: DirMetadataSource and TrackMetadataSource,
-      to record the source of metadata for Albums and Tracks respectively
-    Added RenameWAV flag and RenameWAVFiles method to rename WAV files in <bitrate> directory to match
-      the accompanying setlist in infotext file
-	Streamlined generation of metadata terms from infotext and cuesheet files, and moved GetTrackDuration
-      to a new method PopulateTrackDurationList, and also enabled proper exception handling for file access.
-    Added SearchListForDate method to search for a valid concert date in an infotext file
+5.7  2023-03-09
+     Added RenameInfoFiles flag to rename info.txt and .cue files
+     Added UseCurrentDirInfo flag for Verify mode to force program to read info files in current dir
+     Added two string variables to AATB_DirInfo class: DirMetadataSource and TrackMetadataSource,
+       to record the source of metadata for Albums and Tracks respectively
+     Added RenameWAV flag and RenameWAVFiles method to rename WAV files in <bitrate> directory to match
+       the accompanying setlist in infotext file
+	 Streamlined generation of metadata terms from infotext and cuesheet files, and moved GetTrackDuration
+       to a new method PopulateTrackDurationList, and also enabled proper exception handling for file access.
+     Added SearchListForDate method to search for a valid concert date in an infotext file
 
-5.8 2023-05-14
-    Added new lists for valid compression and decompression formats
-    Changed "Decompress" option to handle both decompression and conversion to WAV
-    Renamed DecompressWAV method to ConvertToWAV, and added ALAC, SHN, AIF, and WMA formats
-    Renamed CompressWAV method to ConvertFromWAV
-    Rewrote Decompression section in WalkDirectoryTree to use decompression format list
-    Combined ConvertFromWAV and ConvertToWAV methods in ConvertAudioMethods file
-    Enabled use of either .aif or .aiff file extension for Audio Interchange File Format AIFF
-    Renamed previous SHN variable to SHNRPT to deconflict with the SHN compressed audio format
-    Updated PrintHelp and CheckUserInput methods
+5.8  2023-06-02
+     Added new lists for valid compression and decompression formats
+     Changed "Decompress" option to handle both decompression and conversion to WAV
+     Renamed DecompressWAV method to ConvertToWAV, and added ALAC, SHN, AIF, and WMA formats
+     Renamed CompressWAV method to ConvertFromWAV
+     Rewrote Decompression section in WalkDirectoryTree to use decompression format list
+     Combined ConvertFromWAV and ConvertToWAV methods in ConvertAudioMethods file
+     Enabled use of either .aif or .aiff file extension for Audio Interchange File Format AIFF
+     Renamed previous SHN variable to SHNRPT to deconflict with the SHN compressed audio format
+     Updated PrintHelp and CheckUserInput methods
+     Changed GetTrackDataFromInfoText method to find starting and ending numbers of set list
+     Changed SearchListForDate method to use a generic search term, and renamed it SearchListForTerm

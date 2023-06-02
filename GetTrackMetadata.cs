@@ -70,7 +70,8 @@ namespace AATB
             int
                 i,
                 TrackNumber,
-                DateLineNumber,
+                StartLineNumber,
+                EndLineNumber,
                 DataListCount,
                 FileListCount;
             string[]
@@ -99,10 +100,17 @@ namespace AATB
                 TrackNumber = 0;
                 // search for valid date yyyy-mm-dd
                 // if date not found, then method returns -1
-                DateLineNumber = SearchListForDate(DataList);
 
-                // read data from info file, skip lines up to date, if found
-                for (i = DateLineNumber + 1; i < DataListCount; i++)
+                // search for starting and ending lines, failure returns 0
+                StartLineNumber = SearchListForTerm(DataList, 0, "Set List");
+                EndLineNumber = SearchListForTerm(DataList, StartLineNumber, "Lyrics");
+                // if end line number not found, set it to eof
+                if (EndLineNumber == 0)
+                    EndLineNumber = DataListCount - 1;
+                if (Debug) Console.WriteLine("(dbg) Setlist line numbers start: {0:D2}  EndLineNumber: {1:D2}",
+                                            StartLineNumber, EndLineNumber);
+                // read data from info file
+                for (i = StartLineNumber; i < EndLineNumber; i++)
                 {
                     DataLine = DataList[i];
                     if (Debug) Console.WriteLine("dbg: Line: {0:D2} Data: {1}", i, DataLine);
