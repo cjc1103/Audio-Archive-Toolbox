@@ -191,7 +191,8 @@ namespace AATB
              * Inputs:
              *   DataList   list containing data
              *              Note: date yyyy-mm-dd search term is "^[1-2]\d{3}-\d{2}-\d{2}"
-             * Returns line number found by pattern match, 0 if not found
+             * Outputs:
+             *   line number of search term found by pattern match, 0 if not found
              */
             int i;
             Match PatternMatch;
