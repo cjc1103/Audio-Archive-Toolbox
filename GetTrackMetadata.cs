@@ -102,14 +102,14 @@ namespace AATB
                 // if date not found, then method returns -1
 
                 // search for starting and ending lines, failure returns 0
-                StartLineNumber = SearchListForTerm(DataList, 0, "Set List");
-                EndLineNumber = SearchListForTerm(DataList, StartLineNumber, "Lyrics");
+                StartLineNumber = GetLineNumberForTerm(DataList, 0, "Set List");
+                EndLineNumber = GetLineNumberForTerm(DataList, StartLineNumber, "Lyrics");
                 // if end line number not found, set it to eof
                 if (EndLineNumber == 0)
-                    EndLineNumber = DataListCount - 1;
+                    EndLineNumber = DataListCount;
                 if (Debug) Console.WriteLine("(dbg) Setlist line numbers start: {0:D2}  end: {1:D2}",
                                             StartLineNumber, EndLineNumber);
-                // read data from info file
+                // read data from info file - zero based index, stop before eof
                 for (i = StartLineNumber; i < EndLineNumber; i++)
                 {
                     DataLine = DataList[i];

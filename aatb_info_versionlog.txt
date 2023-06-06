@@ -332,4 +332,4 @@ Program history
      Renamed previous SHN variable to SHNRPT to deconflict with the SHN compressed audio format
      Updated PrintHelp and CheckUserInput methods
      Changed GetTrackDataFromInfoText method to find starting and ending numbers of set list
-     Changed SearchListForDate method to use a generic search term, and renamed it SearchListForTerm
+     Changed SearchListForDate method to use a generic search term, and renamed it GetLineNumberForTerm

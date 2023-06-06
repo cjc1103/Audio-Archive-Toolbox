@@ -153,14 +153,14 @@ namespace AATB
             return DataList;
         } // end SplitDataByLine
 
-        static string SearchListForData(string[] DataList, string SearchTerm)
+        static string GetDataAfterTerm(string[] DataList, string SearchTerm)
         {
-            /* Returns line in data list containing the desired search term
+            /* Returns data after the first instance of the search term in list
              * Inputs:
              *   DataList   list containing data
              *   Name       string containing Regex search term
              * Outputs:
-             *   Data       string found by pattern match, null if not found
+             *   Data       string after pattern match, null if not found
              */
             int i;
             string Data = null;
@@ -183,15 +183,15 @@ namespace AATB
                 }
             }
             return Data;
-        } // end SearchListForData
+        } // end GetDataAfterTerm
 
-        static int SearchListForTerm(string[] DataList, int StartIndex, string SearchTerm)
+        static int GetLineNumberForTerm(string[] DataList, int StartIndex, string SearchTerm)
         {
-            /* Returns the line number in data list containg the input search term
+            /* Returns the line number of the first instance of the search term in list
              * Inputs:
              *   DataList   list containing data
              *              Note: date yyyy-mm-dd search term is "^[1-2]\d{3}-\d{2}-\d{2}"
-             * Returns integer linenumber found by pattern match, 0 if not found
+             * Returns line number found by pattern match, 0 if not found
              */
             int i;
             Match PatternMatch;
@@ -205,7 +205,7 @@ namespace AATB
             }
             // search term not found
             return 0;
-        } // end SearchListForTerm
+        } // end GetLineNumberForTerm
 
         static void PrintFileList(string FileType, FileInfo[] FileList)
         {
