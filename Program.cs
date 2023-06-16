@@ -42,7 +42,7 @@ namespace AATB
             BR2448 = "24-48",
             BR2488 = "24-88",
             BR2496 = "24-96",
-            RAW = "Audio",  // subdirectory containing raw wav audio files
+            RAW = "Raw",  // subdirectory containing raw wav audio files
             ALLFORMATS = "All Formats",
             ALLBITRATES = "All Bitrates",
             ANYFORMAT = "Any Format",
@@ -131,7 +131,8 @@ namespace AATB
             // must correspond to AudioCompressionFormats list
             CompressedDirExtensions = { MP3F, M4AF, OGGF, OPUSF, ALACF, FLACF },
             // miscellaneous files to delete for cleanup
-            FilesToDelete = { ".npr", ".HDP", ".H2", ".sfk", ".bak*", ".BAK*", ".peak", ".reapeaks", ".tmp" },
+            FilesToDelete = { ".npr", ".HDP", ".H2", ".sfk", ".bak*", ".BAK*", ".peak",
+                              ".reapeaks", ".tmp", ".DS_Store" },
             // miscellaneous directories to delete for cleanup
             DirsToDelete = { "Images" };
         static readonly int[]

@@ -1,7 +1,4 @@
 ﻿using System;
-using Windows.Devices.AllJoyn;
-using static System.Collections.Specialized.BitVector32;
-using Windows.Storage.Compression;
 
 namespace AATB
 {
@@ -578,13 +575,13 @@ namespace AATB
             } // end Delete Audio section
 
             // = = = = = = = = Recursion = = = = = = = = 
-            // Find all subdirectories
+            // Find all subdirectories of the current directory
             SubDirs = CurrentDir.GetDirectories();
             foreach (DirectoryInfo dirname in SubDirs)
             {
                 // extract the subdirectory path
-                // log entire subdirectory path below root dir
                 SubDirPath = SplitDirPath(RootDir, dirname.FullName);
+                // log entire subdirectory path below root dir
                 Log.WriteLine("Directory: " + SubDirPath);
                 // Walk the directory tree for each subdirectory
                 WalkDirectoryTree(dirname);
