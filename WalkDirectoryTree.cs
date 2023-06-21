@@ -330,8 +330,7 @@ namespace AATB
                     CompAudioFormat = AudioDecompressionFormats[index];
 
                     // check appropriate flag is set for directory
-                    if (CheckFormatBitrate(CompAudioFormat, Dir.Bitrate)
-                        && Dir.AudioCompressionFormat == CompAudioFormat)
+                    if (CheckFormatBitrate(CompAudioFormat, Dir.Bitrate))
                     {
                         // get list of compressed audio files
                         CompAudioFileList = CurrentDir.GetFiles("*." + CompAudioFormat);
@@ -354,9 +353,8 @@ namespace AATB
                                     Log.WriteLine("*** WAV directory already exists, use overwrite option to replace\n"
                                                 + "    " + WAVDirPath);
                             }
-                            else if ((Dir.Type == RAWAUDIO)
-                                 || (Dir.Type == COMPRESSEDAUDIO
-                                    && OutputToCurrentDir))
+                            else if (Dir.Type == RAWAUDIO
+                                 || (Dir.Type == COMPRESSEDAUDIO && OutputToCurrentDir))
                             {
                                 // decompress to current directory
                                 WAVDirName = Dir.Name;

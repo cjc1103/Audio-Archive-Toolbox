@@ -35,7 +35,7 @@ namespace AATB
             else
                 Dir.Type = OTHER;
 
-            // get audio compression format from directory extension
+            // get audio compression format from directory name
             // ignore last entry in list = WAV
             if (Dir.Extension != null)
                 for (i = 0; i <= AudioFormats.Length - 2; i++)
@@ -56,8 +56,8 @@ namespace AATB
                         break;
                     }
                 }
-            if (Debug) Console.WriteLine("dbg: Dir type {0}  extension: {0}  bitrate: {1}",
-                                        Dir.Type, Dir.Extension, Dir.Bitrate);
+            if (Debug) Console.WriteLine("dbg: Dir type: {0}  Extension: {1}  Comp Format: {2}  Bitrate: {3}",
+                                        Dir.Type, Dir.Extension, Dir.AudioCompressionFormat, Dir.Bitrate);
 
         } // end GetDirInformation
 
