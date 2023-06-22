@@ -321,7 +321,7 @@ Program history
        to a new method PopulateTrackDurationList, and also enabled proper exception handling for file access.
      Added SearchListForDate method to search for a valid concert date in an infotext file
 
-5.8  2023-06-02
+5.8  2023-06-21
      Added new lists for valid compression and decompression formats
      Changed "Decompress" option to handle both decompression and conversion to WAV
      Renamed DecompressWAV method to ConvertToWAV, and added ALAC, SHN, AIF, and WMA formats
@@ -333,3 +333,4 @@ Program history
      Updated PrintHelp and CheckUserInput methods
      Changed GetTrackDataFromInfoText method to find starting and ending numbers of set list
      Changed SearchListForDate method to use a generic search term, and renamed it GetLineNumberForTerm
+	 Changed default raw folder name to "Raw"
