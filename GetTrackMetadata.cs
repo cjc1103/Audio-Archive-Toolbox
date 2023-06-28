@@ -106,7 +106,7 @@ namespace AATB
                 // if end line number not found, set it to eof
                 if (EndLineNumber == 0)
                     EndLineNumber = DataListCount;
-                if (Debug) Console.WriteLine("(dbg) Setlist line numbers start: {0:D2}  end: {1:D2}",
+                if (Debug) Console.WriteLine("dbg: Setlist line numbers start: {0:D2}  end: {1:D2}",
                                             StartLineNumber, EndLineNumber);
                 // read data from info file - zero based index, stop before eof
                 for (i = StartLineNumber; i < EndLineNumber; i++)

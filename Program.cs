@@ -115,7 +115,7 @@ namespace AATB
         static readonly string[]
             // line delimiters for dos and unix text files
             LineDelimeters = { "\r\n", "\r", "\n" },
-            // audio formats
+            // all audio formats
             // WAV must be the last entry in this list
             AudioFormats = { MP3, M4A, OGG, OPUS, SHN, AIF, WMA, ALAC, FLAC, WAV },
             // allowable compression formats (lossy and lossless)
@@ -124,14 +124,14 @@ namespace AATB
             AudioDecompressionFormats = { ALAC, FLAC },
             // allowable conversion formats (lossy and lossless)
             AudioConversionFormats = { SHN, AIF, WMA },
-            // audio bitrates
+            // all audio bitrates
             // RAW must be last entry in this list
             AudioBitrates = { BR1644, BR1648, BR2444, BR2448, BR2488, BR2496, RAW },
             // compressed audio directory extensions
             // must correspond to AudioCompressionFormats list
             CompressedDirExtensions = { MP3F, M4AF, OGGF, OPUSF, ALACF, FLACF },
             // miscellaneous files to delete for cleanup
-            FilesToDelete = { ".npr", ".HDP", ".H2", ".sfk", ".bak*", ".BAK*", ".peak",
+            FilesToDelete = { ".npr", ".HDP", ".H2", ".sfk", ".bak", ".BAK", ".peak",
                               ".reapeaks", ".tmp", ".DS_Store" },
             // miscellaneous directories to delete for cleanup
             DirsToDelete = { "Images" };

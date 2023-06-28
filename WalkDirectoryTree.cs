@@ -14,7 +14,7 @@ namespace AATB
              */
             DirectoryInfo[] SubDirs;
             int
-                index;
+                i;
             string
                 SubDirPath,
                 WAVDirName,
@@ -80,13 +80,13 @@ namespace AATB
                     && WAVExists)
                 {
                     // loop through all audio formats in CompressedAudioFormats list
-                    for (index = 0; index <= AudioCompressionFormats.Length - 1; index++)
+                    for (i = 0; i <= AudioCompressionFormats.Length - 1; i++)
                     {
-                        CompAudioFormat = AudioCompressionFormats[index];
-                        CompAudioDirExtension = CompressedDirExtensions[index];
+                        // these arrays are indentical except of the suffix "f" in CompressedDirExtensions
+                        CompAudioFormat = AudioCompressionFormats[i];
+                        CompAudioDirExtension = CompressedDirExtensions[i];
 
                         // check format and bitrate (directory name) flag is set
-                        // this will only be true for <bitrate> and <raw> directories
                         if (CheckFormatBitrate(CompAudioFormat, Dir.Name))
                         {
                             // populate directory metadata - once for each directory
@@ -207,9 +207,9 @@ namespace AATB
 
                     // loop through all audio formats in AudioFormats list
                     // ignore last entry in list = WAV
-                    for (index = 0; index <= AudioFormats.Length - 2; index++)
+                    for (i = 0; i <= AudioFormats.Length - 2; i++)
                     {
-                        CompAudioFormat = AudioFormats[index];
+                        CompAudioFormat = AudioFormats[i];
                         // check format and bitrate (directory name) flag is set
                         // and directory compression format matches
                         if (CheckFormatBitrate(CompAudioFormat, Dir.Bitrate)
@@ -295,12 +295,14 @@ namespace AATB
                 if (Debug) Console.WriteLine("dbg: Convert Audio Section");
 
                 // loop through all audio formats in AudioConversionFormats list
-                for (index = 0; index <= AudioConversionFormats.Length - 1; index++)
+                for (i = 0; i <= AudioConversionFormats.Length - 1; i++)
                 {
-                    CompAudioFormat = AudioConversionFormats[index];
+                    CompAudioFormat = AudioConversionFormats[i];
 
                     // check RAW flag is set for this format = convert
-                    if (CheckFormatBitrate(CompAudioFormat, RAW))
+                    // and current dir is tracked wav audio
+                    if (CheckFormatBitrate(CompAudioFormat, RAW)
+                        && Dir.Type == TRACKEDAUDIO)
                     {
                         // get list of compressed audio files
                         CompAudioFileList = CurrentDir.GetFiles("*." + CompAudioFormat);
@@ -325,13 +327,15 @@ namespace AATB
                 if (Debug) Console.WriteLine("dbg: Decompress Section");
                 
                 // loop through all audio formats in AudioDecompressionFormats list
-                for (index = 0; index <= AudioDecompressionFormats.Length - 1; index++)
+                for (i = 0; i <= AudioDecompressionFormats.Length - 1; i++)
                 {
-                    CompAudioFormat = AudioDecompressionFormats[index];
-
+                    CompAudioFormat = AudioDecompressionFormats[i];
                     // check appropriate flag is set for directory
-                    if (CheckFormatBitrate(CompAudioFormat, Dir.Bitrate))
+
+                    if (CheckFormatBitrate(CompAudioFormat, Dir.Bitrate)
+                        && Dir.AudioCompressionFormat == CompAudioFormat)
                     {
+                        if (Debug) Console.WriteLine("dbg: Decompress format: {0}  Bitrate: {1}", CompAudioFormat, Dir.Bitrate);
                         // get list of compressed audio files
                         CompAudioFileList = CurrentDir.GetFiles("*." + CompAudioFormat);
 
@@ -364,7 +368,7 @@ namespace AATB
                             }
                         }
                         else
-                            Log.WriteLine("*** No FLAC format files found");
+                            Log.WriteLine("*** No " + CompAudioFormat + "format files found");
                     }
                 }
             } // end Decompress Audio section
