@@ -332,8 +332,7 @@ namespace AATB
                     CompAudioFormat = AudioDecompressionFormats[i];
                     // check appropriate flag is set for directory
 
-                    if (CheckFormatBitrate(CompAudioFormat, Dir.Bitrate)
-                        && Dir.AudioCompressionFormat == CompAudioFormat)
+                    if (CheckFormatBitrate(CompAudioFormat, Dir.Bitrate))
                     {
                         if (Debug) Console.WriteLine("dbg: Decompress format: {0}  Bitrate: {1}", CompAudioFormat, Dir.Bitrate);
                         // get list of compressed audio files

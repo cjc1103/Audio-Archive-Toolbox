@@ -125,7 +125,8 @@ namespace AATB
                 FoundValidFormat = false;
                 for (i = 0; i <= AudioDecompressionFormats.Length - 1; i++)
                 {
-                    if (CheckFormatBitrate(AudioDecompressionFormats[i], ANYBITRATE))
+                    if (CheckFormatBitrate(AudioDecompressionFormats[i], ANYBITRATE)
+                        || CheckFormatBitrate(AudioDecompressionFormats[i], RAW))
                         FoundValidFormat = true;
                 }
                 if (!FoundValidFormat)

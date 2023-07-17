@@ -378,13 +378,9 @@ namespace AATB
                         case "--wav":
                             switch (opt)
                             {
-                                case null: // no options: all bitrates + raw
+                                case null: // no options: all bitrates
                                 case "all":
                                     SetFormatBitrate(WAV, ALLBITRATES);
-                                    SetFormatBitrate(WAV, RAW);
-                                    break;
-                                case "raw":
-                                    SetFormatBitrate(WAV, RAW);
                                     break;
                                 default: // all other options: set bitrate
                                     SetFormatBitrate(WAV, opt);
