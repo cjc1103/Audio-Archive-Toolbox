@@ -381,6 +381,10 @@ namespace AATB
                                 case null: // no options: all bitrates
                                 case "all":
                                     SetFormatBitrate(WAV, ALLBITRATES);
+                                    SetFormatBitrate (WAV, RAW);
+                                    break;
+                                case "raw":
+                                    SetFormatBitrate(WAV, RAW);
                                     break;
                                 default: // all other options: set bitrate
                                     SetFormatBitrate(WAV, opt);
