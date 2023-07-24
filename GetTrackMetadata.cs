@@ -97,13 +97,12 @@ namespace AATB
                 FileListCount = FileList.Length;
                 // initialize flags and counters
                 TrackNumber = 0;
-                // search for valid date yyyy-mm-dd
-                // if date not found, then method returns -1
-
-                // search for starting and ending lines, failure returns 0
-                StartLineNumber = GetLineNumberForTerm(DataList, 0, "Set List");
+                // get starting linenumber - search for the keyword "Set", if not found set to 5
+                StartLineNumber = GetLineNumberForTerm(DataList, 0, "Set");
+                if (StartLineNumber == 0)
+                    StartLineNumber = 6;
+                // get end linenumber - search for keyword "Lyrics", if not found set to max datalist length
                 EndLineNumber = GetLineNumberForTerm(DataList, StartLineNumber, "Lyrics");
-                // if end line number not found, set it to eof
                 if (EndLineNumber == 0)
                     EndLineNumber = DataListCount;
                 if (Debug) Console.WriteLine("dbg: Setlist line numbers start: {0:D2}  end: {1:D2}",
