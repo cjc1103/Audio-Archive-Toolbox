@@ -97,7 +97,7 @@ namespace AATB
                 FileListCount = FileList.Length;
                 // initialize flags and counters
                 TrackNumber = 0;
-                // get starting linenumber - search for the keyword "Set", if not found set to 5
+                // get starting linenumber - search for the keyword "Set", if not found set to 6
                 StartLineNumber = GetLineNumberForTerm(DataList, 0, "Set");
                 if (StartLineNumber == 0)
                     StartLineNumber = 6;
