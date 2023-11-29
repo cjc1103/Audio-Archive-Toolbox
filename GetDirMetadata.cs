@@ -358,7 +358,7 @@ namespace AATB
                     case OTHER:
                     {
                         if (Dir.Album == null)
-                            Log.WriteLine("*** Title missing from info file");
+                            Log.WriteLine("*** Album title missing from info file");
                         if (Dir.AlbumArtist != null && Dir.Album != null)
                             Dir.DirMetadataSource = INFOFILE;
                         break;
@@ -446,7 +446,7 @@ namespace AATB
                     case OTHER:
                     {
                         if (Dir.Album == null)
-                            Log.WriteLine("*** Title missing from cuesheet");
+                            Log.WriteLine("*** Album title missing from cuesheet");
                         if (Dir.AlbumArtist != null && Dir.Album != null)
                             Dir.DirMetadataSource = CUESHEET;
                         break;
