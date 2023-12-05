@@ -30,7 +30,7 @@ namespace AATB
             + "  --opus[=<bitrate>|all](all)\n"
             + "  --alac[=<bitrate>|all](all)\n"
             + "  --flac[=<bitrate>|all](all)\n"
-            + "  [--md5, --ffp, --shn]|[-a|--all-reports]\n"
+            + "  [--md5, --ffp, --shnrpt]|[-a|--all-reports]\n"
             + "  [-t|--tag]\n"
             + "[-y|--convert-to-wav]n"
             + "  --shn\n"

@@ -292,7 +292,7 @@ Program history
 	 Updated Log operations to print version info before checking user input, including printing help
 
 5.5  2022-09-06
-     Updated .NET SDK to 7.0, included .NET 7.0 Desktop Runtime in installation script
+     Updated .NET SDK to 7.0, included .NET 7.0 Runtime in installation script
      Added Verbose flag to enable logging StandardError stream
      Added PrintOutputStream method to
       (1) log StandardOutput stream in "Debug" mode
@@ -334,3 +334,6 @@ Program history
      Changed GetTrackDataFromInfoText method to find starting and ending numbers of set list
      Changed SearchListForDate method to use a generic search term, and renamed it GetLineNumberForTerm
 	 Changed default raw folder name to "Raw"
+
+5.9  Updated .NET SDK to 8.0, included .NET 7.0 Runtime in installation script
+     Changed method of creating album string from both info and cuesheet files for simplification

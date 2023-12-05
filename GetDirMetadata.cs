@@ -339,14 +339,14 @@ namespace AATB
                     {
                         if (Dir.Album == null)
                         {
-                            // build album string: event + venue + date + stage
-                            Dir.Album = Dir.Event;
-                            if (Dir.Venue != null)
-                                Dir.Album += (SPACE + Dir.Venue);
-                            if (Dir.ConcertDate != null)
-                                Dir.Album += (SPACE + Dir.ConcertDate);
-                            if (Dir.Stage != null)
-                                Dir.Album += (SPACE + Dir.Stage);
+                            // build album string: event + venue + location + date + stage
+                            Dir.Album += ( Dir.Event + SPACE
+                                         + Dir.Venue + SPACE
+                                         + Dir.Location + SPACE
+                                         + Dir.ConcertDate + SPACE
+                                         + Dir.Stage);
+                            // remove multiple spaces
+                            Dir.Album = Regex.Replace(Dir.Album, @"\s+", SPACE);
                         }
                         if (Dir.ConcertDate == null)
                             Log.WriteLine("*** Concert date missing from info file");
@@ -427,14 +427,14 @@ namespace AATB
                     {
                         if (Dir.Album == null)
                         {
-                            // build album string: event + venue + date + stage
-                            Dir.Album = Dir.Event;
-                            if (Dir.Venue != null)
-                                Dir.Album += (SPACE + Dir.Venue);
-                            if (Dir.ConcertDate != null)
-                                Dir.Album += (SPACE + Dir.ConcertDate);
-                            if (Dir.Stage != null)
-                                Dir.Album += (SPACE + Dir.Stage);
+                            // build album string: event + venue + location + date + stage
+                            Dir.Album += ( Dir.Event + SPACE
+                                         + Dir.Venue + SPACE
+                                         + Dir.Location + SPACE
+                                         + Dir.ConcertDate + SPACE
+                                         + Dir.Stage);
+                            // remove multiple spaces
+                            Dir.Album = Regex.Replace(Dir.Album, @"\s+", SPACE);
                         }
                         if (Dir.ConcertDate == null)
                             Log.WriteLine("*** Concert date missing from cuesheet");
