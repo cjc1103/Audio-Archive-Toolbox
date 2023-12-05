@@ -84,9 +84,9 @@ namespace AATB
              * If shntool report filename is incorrect, it is changed to the correct name
              * Inputs:
              *   SHNReportPath: Pathname of shntool report file
-             *      column / description
-             *      0              32-34 38-39 43-47        65
-             *      length exp32size cbs   WAV  problems fmt filename
+             *      column (zero based) / description
+             *      0                32-34 38-39 43-47           65
+             *      length exp32size cbs   WAV   prob  fmt ratio filename
              *      ("x" character may be reported if shntool can't recognize wav format
              *       e.g., 24bit wav files, but are not treated as errors in this program)
              *   SHNReportlist: List of all SHNRPT report files in input directory
@@ -125,7 +125,7 @@ namespace AATB
                     li = DataList[i];
                     // file name is from char 65 to end of string
                     fname = li.Substring(65);
-                    // cdr flags char 32-34
+                    // CD flags char 32-34
                     // only applicable if verifying files for CD burning and bitrate = 16-44
                     if (Bitrate == BR1644)
                     {
@@ -145,7 +145,7 @@ namespace AATB
                             Log.Write("\n    File is too short to be burned: " + fname);
                         }
                     }
-                    // WAV properties char 38-39
+                    // WAV file properties char 38-39
                     if (li.Substring(38, 1) == "h")
                     {
                         SHNErrors += 1;
@@ -156,7 +156,7 @@ namespace AATB
                         SHNErrors += 1;
                         Log.Write("\n    WAV file contains extra RIFF chunks: " + fname);
                     }
-                    // WAV problems char 43-47
+                    // WAV file problems char 43-47
                     // Note: "3" in char 43 signifies IDV32 header, ignore
                     if (li.Substring(44, 1) == "a")
                     {

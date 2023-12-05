@@ -337,3 +337,5 @@ Program history
 
 5.9  Updated .NET SDK to 8.0, included .NET 7.0 Runtime in installation script
      Changed method of creating album string from both info and cuesheet files for simplification
+     Updated Printhelp method to specifiy --shnrpt instead of --shn for verify function
+     Corrected indexes for errors in SHN report verification method

@@ -61,7 +61,7 @@ namespace AATB
             + "[--hh|--verbose]\n"
             + "Notes:\n"
             + "  o Valid compression formats are mp3, aac, ogg, opus, alac, and flac\n"
-            + "  o Valid decomprression/conversion formats are shn, aif, wma, alac, and flac\n"
+            + "  o Valid decompression and conversion formats are shn, aif, wma, alac, and flac\n"
             + "  o Bitrates are in the format <bitdepth-samplerate>\n"
             + "    Valid bitrates are 16-44, 16-48, 24-44, 24-48, 24-88, and 24-96\n"
             + "  o Tracked wav files are in <bitrate> subdirectory\n"
