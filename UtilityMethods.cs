@@ -174,7 +174,8 @@ namespace AATB
                     && (DataList[i].Length > SearchTerm.Length))
                 {
                     // get index of data following SearchName
-                    Data = DataList[i].Substring(PatternMatch.Index + SearchTerm.Length);
+                    // add 2 to index to allow for a following space
+                    Data = DataList[i].Substring(PatternMatch.Index + SearchTerm.Length + 2);
                     // remove extraneous characters
                     Data = CleanDataString(Data);
                     // exit loop, only first match in list will be used

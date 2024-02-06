@@ -129,7 +129,7 @@ namespace AATB
                         DataLine = Regex.Replace(DataLine, @"\(.*\)", "");
 
                         // search for artist name within square brackets 
-                        ArtistPatternMatch = Regex.Match(DataLine, @"\[.*\]$");
+                        ArtistPatternMatch = Regex.Match(DataLine, @"\[.*\]");
                         if (ArtistPatternMatch.Success)
                         {
                             // extract artist name from within brackets
@@ -148,10 +148,12 @@ namespace AATB
                         // add track artist to Dir ArtistList
                         Dir.ArtistList.Add(TrackArtist);
 
-                        // remove any special characters at the end of the  line
-                        DataLine = Regex.Replace(DataLine, @"[^a-zA-Z0-9]*$", "");
+                        // remove any sequence of characters at the end of the line other than
+                        // alphabetical, numerical, or single apostrophe, and trailing spaces
+                        // typically these are footnote annotation marks
+                        DataLine = Regex.Replace(DataLine, @"[[^a-zA-Z0-9']\s]+$", "");
 
-                        // remove any trailing spaces
+                        // remove any remaining trailing spaces
                         DataLine = Regex.Replace(DataLine, @"\s*$", "");
 
                         // TrackTitle is remainder of data line
