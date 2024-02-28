@@ -214,7 +214,7 @@ namespace AATB
                             break;
 
                         case "-j":
-                        case "--join":
+                        case "--join-wav-files":
                             JoinWAV = true;
                             break;
 
@@ -224,7 +224,7 @@ namespace AATB
                             break;
 
                         case "-z":
-                        case "--convert-to-bitrate":
+                        case "--convert-bitrate":
                             ConvertBitrate = true;
                             switch (opt)
                             {

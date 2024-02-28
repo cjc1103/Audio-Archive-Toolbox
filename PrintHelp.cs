@@ -39,7 +39,7 @@ namespace AATB
             + "[-d|--decompress]\n"
             + "  --alac[=<bitrate>|all](all)\n"
             + "  --flac[=<bitrate>|all](all)\n"
-            + "[-j|--join]\n"
+            + "[-j|--join-wav-files]\n"
             + "  --wav=<bitrate>\n"
             + "[-r|rename-wav-files]\n"
             + "  --wav=<bitrate>\n"

@@ -6,16 +6,15 @@ namespace AATB
     {
         static void CheckUserInput()
         {
-            /* Checks user input for validity, and terminates program for invalid inputs
+            /* Checks command line parameters for validity, and terminates program for invalid inputs
             *  Inputs: Flags and arguments are set from the command line
             *  Outputs: Log messages
             */
             int i;
             bool FoundValidFormat;
 
-            // sanity check for conflicts and errors in command line parameters
-            // if any of these conditions is true, the program is terminated immediately  
-            // check mutually exclusive flags, only one should be set
+            // Check for mutually exclusive and conflicting flags for primary modes
+            // if more than one of these conditions is true, the program is terminated immediately  
             if (Convert.ToInt32(CompressAudio )
               + Convert.ToInt32(VerifyAudio )
               + Convert.ToInt32(ConvertAudio)
@@ -43,27 +42,23 @@ namespace AATB
                 Environment.Exit(0);
             }
 
-            // primary modes
+            // Compress wav audio
             if (CompressAudio )
             {
                 Log.WriteLine("Compress WAV audio files");
-                if (CheckFormatBitrate(WAV, ANYBITRATE))
+                FoundValidFormat = false;
+                for (i = 0; i <= AudioCompressionFormats.Length - 1; i++)
                 {
-                    Log.WriteLine("Input error: WAV is not a valid audio compression format");
+                    if (CheckFormatBitrate(AudioCompressionFormats[i], ANYBITRATE)
+                        || CheckFormatBitrate(AudioCompressionFormats[i], RAW))
+                        FoundValidFormat = true;
+                }
+                if (!FoundValidFormat)
+                {
+                    Log.WriteLine("No valid compression format specified");
                     Environment.Exit(0);
                 }
-                else
-                {
-                    // verify at least one compression format selected, including raw
-                    if (!CheckFormatBitrate(ANYFORMAT, ANYBITRATE)
-                        && !CheckFormatBitrate(FLAC, RAW))
-                    {
-                        Log.WriteLine("Input error: Specify at least one compressed audio format and bitrate");
-                        Environment.Exit(0);
-                    }
-                }
                 PrintCompressionOptions();
-
                 // MD5 Checksum
                 if (CreateMD5) Log.WriteLine("Create MD5 checksum");
                 // FFP and shntool otions, excluding RAW 
@@ -81,13 +76,14 @@ namespace AATB
                     Log.WriteLine("Create M3U playlist");
             }
 
+            // Verify compressed audio
             if (VerifyAudio )
             {
                 Log.WriteLine("Verify compressed audio files");
                 if (CheckFormatBitrate(FLAC, RAW))
                 {
                     Log.WriteLine("Note: Verification of raw audio files is not supported");
-                    // continue with program, other modes are supported
+                    Environment.Exit(0);
                 }
                 // check at least one flag is set
                 if (!CreateMD5 && !CreateFFP && !CreateSHNRPT && !CreateTags & !CreateM3U)
@@ -96,8 +92,8 @@ namespace AATB
                     Environment.Exit(0);
                 }
                 // if no format or bitrate is set, then assume all formats and bitrates
-                if (!CheckFormatBitrate(ANYFORMAT, ANYBITRATE)
-                    && !CheckFormatBitrate(ANYFORMAT, RAW))
+                // ANYBITRATE, ALLBITRATES exclude RAW
+                if (!CheckFormatBitrate(ANYFORMAT, ANYBITRATE))
                     SetFormatBitrate(ALLFORMATS, ALLBITRATES);
                 PrintCompressionOptions();
                 // MD5 Checksum
@@ -120,8 +116,10 @@ namespace AATB
                     Log.WriteLine("Create/Update M3U playlist");
             }
 
+            // Decompress audio to wav
             if (DecompressAudio)
             {
+                Log.WriteLine("Decompress audio files to WAV");
                 FoundValidFormat = false;
                 for (i = 0; i <= AudioDecompressionFormats.Length - 1; i++)
                 {
@@ -134,27 +132,10 @@ namespace AATB
                     Log.WriteLine("No valid decompression format specified");
                     Environment.Exit(0);
                 }
-                Log.WriteLine("Decompress audio files to WAV");
-                PrintCompressionOptions();
-            }
-            
-            if (ConvertAudio)
-            {
-                FoundValidFormat = false;
-                for (i = 0; i <= AudioConversionFormats.Length - 1; i++)
-                {
-                    if (CheckFormatBitrate(AudioConversionFormats[i], ANYBITRATE))
-                        FoundValidFormat = true;
-                }
-                if (!FoundValidFormat)
-                {
-                    Log.WriteLine("No valid conversion format specified");
-                    Environment.Exit(0);
-                }
-                Log.WriteLine("Convert audio files to WAV");
                 PrintCompressionOptions();
             }
 
+            // Join multiple wav files together
             if (JoinWAV)
             {
                 Log.WriteLine("Join tracked WAV audio files");
@@ -172,6 +153,7 @@ namespace AATB
                 PrintCompressionOptions();
             }
 
+            // Rename wav files from infotext file
             if (RenameWAV)
             {
                 Log.WriteLine("Rename WAV audio files");
@@ -188,24 +170,28 @@ namespace AATB
                 PrintCompressionOptions();
             }
 
-            if (DeleteAudio )
+            // Convert audio to another format
+            if (ConvertAudio)
             {
-                Log.WriteLine("Delete redundant audio files");
-                if (!CheckFormatBitrate(WAV, ANYBITRATE))
+                Log.WriteLine("Convert audio files to WAV");
+                FoundValidFormat = false;
+                for (i = 0; i <= AudioConversionFormats.Length - 1; i++)
                 {
-                    Log.WriteLine("Input error: Select WAV bitrate '--wav=[<bitrate>|raw|all]'");
+                    if (CheckFormatBitrate(AudioConversionFormats[i], ANYBITRATE)
+                        || CheckFormatBitrate(AudioConversionFormats[i], RAW))
+                        FoundValidFormat = true;
+                }
+                if (!FoundValidFormat)
+                {
+                    Log.WriteLine("No valid conversion format specified");
                     Environment.Exit(0);
                 }
                 PrintCompressionOptions();
             }
 
+            // Conversion of WAV files to another bitrate
             if (ConvertBitrate)
             {
-                // Conversion of WAV files to another bitrate
-                // (1) --wav=<ConversionFromBitrate>
-                //     Multiple or raw bitrates are not allowed
-                // (2) -z|--convert-to-bitrate=<ConversionToBitrate>
-                //     Must be different from ConversionFromBitrate>
                 ConversionFromBitrate = FirstBitrateSet(WAV);
                 Log.WriteLine("Convert WAV audio files from "
                               + ConversionFromBitrate + " to " + ConversionToBitrate);
@@ -231,6 +217,7 @@ namespace AATB
                 }
             }
 
+            // Create cuesheet from wav file info
             if (CreateCuesheet)
             {
                 Log.WriteLine("  Create cuesheet from tracked WAV audio files");
@@ -242,7 +229,21 @@ namespace AATB
                 PrintCompressionOptions();
             }
 
-            // secondary options and other input checking
+            // Delete redundant audio files
+            if (DeleteAudio)
+            {
+                Log.WriteLine("Delete redundant audio files");
+                if (!CheckFormatBitrate(WAV, ANYBITRATE)
+                    && !CheckFormatBitrate(WAV, RAW))
+                {
+                    Log.WriteLine("Input error: Select WAV bitrate '--wav=[<bitrate>|raw|all]'");
+                    Environment.Exit(0);
+                }
+                PrintCompressionOptions();
+            }
+
+            // Additional input checking
+
             if ((CompressAudio  || VerifyAudio  || CreateCuesheet) && UseInfotext)
                 Log.WriteLine("Use metadata from information file (info.txt)");
 

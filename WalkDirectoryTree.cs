@@ -395,13 +395,14 @@ namespace AATB
             // = = = = = = = = Rename WAV files section = = = = = = = = 
             // Rename all wav files in curent directory using track metadata from infotext file
             // Note: WAV files must exist in WAVFileList
-            // Note: the directory name Dir.Name = bitrate
+            // Note: the directory name Dir.Name = bitrate, raw directory is not valid
             // Command: -r|--rename-wav-files --wav=<bitrate>
             if (RenameWAV)
             {
                 if (Debug) Console.WriteLine("dbg: Rename WAV Files Section");
 
                 if (CheckFormatBitrate(WAV, Dir.Name)
+                    && Dir.Name != RAW
                     && WAVExists)
                 {
                     // populate directory metadata

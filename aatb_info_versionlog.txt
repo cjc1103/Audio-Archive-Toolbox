@@ -338,8 +338,9 @@ Program history
 5.9  2024-02-03
      Updated .NET SDK to 8.0, included .NET 8.0 Runtime in installation script
      Changed method of creating album string from both info and cuesheet files for simplification
-     Updated Printhelp method to specifiy --shnrpt instead of --shn for verify function
+     Updated Printhelp method to specify --shnrpt instead of --shn for verify function
      Corrected indexes in SHN report verification method (off by one)
      Updated GetTrackMetadata to allow a single apostrophe at the end of a song name
      Corrected index in GetDataAfterTerm to allow for space at the end of the search term
      Corrected regex expressions for extracting artist and footnote remarks in GetTrackMetadataFromInfotext
+     Corrected and updated command line error checking in CheckuserInput method
