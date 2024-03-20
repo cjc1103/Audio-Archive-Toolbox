@@ -419,19 +419,19 @@ namespace AATB
 
             // = = = = = = = = Convert Audio Bitrate section = = = = = = = = 
             // Convert wav files from one bitrate to another
-            // Command: -z|--convert-bitrate=<bitrate to> --wav=<bitrate from>
+            // Command: -z|--convert-to-bitrate=<bitrate to> --wav=<bitrate from>
             else if (ConvertBitrate)
             {
                 if (Debug) Console.WriteLine("dbg: Convert Bitrate Section");
 
                 // Only convert wav files in <bitrate> directory with WAV flag set
                 if (CheckFormatBitrate(WAV, Dir.Name)
-                    && Dir.Name == ConversionFromBitrate
+                    && Dir.Name == ConvertFromBitrate
                     && WAVExists)
                 {
-                    // ConversionToBitrate is entered as the "Convert" command line argument
+                    // ConvertToBitrate is entered as the "Convert" command line argument
                     // convert all wav files in list to the desired bitrate
-                    ConvertWAVBitrate(Dir, WAVFileList, ConversionFromBitrate, ConversionToBitrate);
+                    ConvertWAVBitrate(Dir, WAVFileList, ConvertFromBitrate, ConvertToBitrate);
                 }
             } // end Convert Audio Bitrate section
 

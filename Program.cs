@@ -106,8 +106,8 @@ namespace AATB
         static string
             LogFilePath = null,
             RootDir = null,
-            ConversionFromBitrate = null,
-            ConversionToBitrate = null;
+            ConvertFromBitrate = null,
+            ConvertToBitrate = null;
         static bool[,]
             // combined audio format and bitrate flag array
             // size must be at least equal to [AudioFormats, AudioBitrates]
@@ -224,15 +224,15 @@ namespace AATB
                             break;
 
                         case "-z":
-                        case "--convert-bitrate":
+                        case "--convert-to-bitrate":
                             ConvertBitrate = true;
                             switch (opt)
                             {
                                 case null: // no options: set conversion bitrate to 16-44
-                                    ConversionToBitrate = BR1644;
+                                    ConvertToBitrate = BR1644;
                                     break;
                                 default: // all other options: set conversion bitrate
-                                    ConversionToBitrate = opt;
+                                    ConvertToBitrate = opt;
                                     break;
                             }
                             break;

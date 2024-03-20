@@ -262,7 +262,7 @@ namespace AATB
         } // end ConvertToWAV
 
         static void ConvertWAVBitrate(AATB_DirInfo Dir, FileInfo[] WAVFileList,
-                                   string ConversionFromBitrate, string ConversionToBitrate)
+                                   string ConvertFromBitrate, string ConvertToBitrate)
         {
             /* Converts FIles in input list from one bitrate to another
              * Inputs:
@@ -270,8 +270,8 @@ namespace AATB
              *     Dir.Path
              *     Dir.ParentPath
              *   WAVFileList  Array of WAV files (any bitrate)
-             *   ConversionFromBitrate <bitdepth-samplerate> i.e., 16-44
-             *   ConversionToBitrate  <bitdepth-samplerate> i.e., 16-44      
+             *   ConvertFromBitrate <bitdepth-samplerate> i.e., 16-44
+             *   ConvertToBitrate  <bitdepth-samplerate> i.e., 16-44      
              * Calls external program:
              *   sox (Sound Output eXchange utility)
              *     -b <bit depth for output files = 16|24>
@@ -299,18 +299,18 @@ namespace AATB
                 ExternalArguments;
 
             ExternalProgram = "sox.exe";
-            OutputDirPath = Dir.ParentPath + BACKSLASH + ConversionToBitrate;
+            OutputDirPath = Dir.ParentPath + BACKSLASH + ConvertToBitrate;
             // create output directory or overwrite existing directory
             if ((!Directory.Exists(OutputDirPath) && CreateDir(OutputDirPath))
                 || (Directory.Exists(OutputDirPath) && Overwrite))
             {
-                Log.WriteLine("  Converting from " + ConversionFromBitrate + " to " + ConversionToBitrate);
+                Log.WriteLine("  Converting from " + ConvertFromBitrate + " to " + ConvertToBitrate);
                 Log.WriteLine("  Input Dir:  " + Dir.Path);
                 Log.WriteLine("  Output Dir: " + OutputDirPath);
                 Log.Write("    Track: ");
-                // extract bitdepth and samplerate from ConversionToBitrate string
+                // extract bitdepth and samplerate from ConvertToBitrate string
                 // using hyphen as delimiter, e.g., "16-44" --> (16, 44)
-                (BitDepth, SampleRate) = SplitString(ConversionToBitrate, HYPHEN);
+                (BitDepth, SampleRate) = SplitString(ConvertToBitrate, HYPHEN);
                 switch (SampleRate)
                 {
                     case "44":
@@ -340,14 +340,14 @@ namespace AATB
                     SongBitrate = GetTrackBitrate(InputFilePath);
                     if (Debug) Console.WriteLine("dbg: Input File Bitrate: {0}", SongBitrate);
                     // Compare actual bitrate of each file with the "conversion from" bitrate
-                    ConversionBitrateComparison = String.Compare(SongBitrate, ConversionFromBitrate, comparisonType: StringComparison.OrdinalIgnoreCase);
+                    ConversionBitrateComparison = String.Compare(SongBitrate, ConvertFromBitrate, comparisonType: StringComparison.OrdinalIgnoreCase);
                     if (ConversionBitrateComparison != 0)
                     {
                         Log.WriteLine("\n*** Input file bitrate " + SongBitrate + " is not equal to 'conversion from' bitrate");
                         break;
                     }
                     // build output file pathname
-                    OutputFileName = Regex.Replace(InputFileName, @ConversionFromBitrate, ConversionToBitrate);
+                    OutputFileName = Regex.Replace(InputFileName, @ConvertFromBitrate, ConvertToBitrate);
                     OutputFilePath = OutputDirPath + BACKSLASH + OutputFileName;
                     if (Debug) Console.WriteLine("dbg: OutputFilePath: {0}", OutputFilePath);
                     // check output file does not exist, or overwrite existing file
