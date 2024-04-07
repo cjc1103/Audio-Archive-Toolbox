@@ -346,6 +346,7 @@ Program history
      Corrected and updated command line error checking in CheckuserInput method
 
 6.0  2024-04-07
+     Added ini-parser-dotnet NuGet package to parse ini files
      Added capability to store and read configuration options from "aatb_config.ini", located in program dir
      Added IniFileMethods.cs to hold ini configuration methods
      Modified Main method, and search for any macros defined in the configuration file and expand the command

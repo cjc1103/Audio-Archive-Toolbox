@@ -230,9 +230,19 @@
  *   -h|--help              display options list on console
  *   --hh|--verbose         write StandardError datastream to console
  *   --debug                switch to write debug files to console
+ * 
+ * Configuration file
+ *   An optional configuration file can be used for various configuration options
+ *   the file is called "aatb_config.ini" and is located in the program directory
+ *
+ *   Command line Macro substitution
+ *   [macros]
+ *   macro name = command line arguments
+ *   e.g.: -xyz = --verify --tag --all -p
  *
  * Dependencies and limitations
- * This program requires .NET 7.0 runtime or later, and is compiled as a x64 Windows binary
+ *   This program requires .NET 8.0 runtime or later, and is compiled as a x64 Windows binary
+ *   IniParser.dll library, created by Windows Visual Studio NuGet package ini-parser
  *
  * External Windows programs called from this script (must be in path). The installation script will
  * create a directory "c:\Program Files\Audio Tools" to install these programs.
@@ -257,7 +267,7 @@
  * Setup scripts were created by using InnoSetup
  * 
  * Installation script (Audio Archive Toolbox x.x.x Setup.exe):
- *   Copies program files and external tools (above) to Windows
+ *   Copies program files, dlls, and external tools (above) to Windows
  *   installs the following required programs which have separate installation scripts:
  *     Apple Application Support 64bit
  *     Microsoft .Net Framework 64bit
