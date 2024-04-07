@@ -14,7 +14,10 @@
  */
 
 using System;
+using System.IO;
 using System.Text.RegularExpressions;
+using IniParser;
+using IniParser.Model;
 
 namespace AATB
 {
@@ -156,6 +159,11 @@ namespace AATB
                 flacQuality };
         static List<string>
             DirsMarkedForDeletion = new List<string>();
+        // configuration ini file located in c:\Program Files\Audio Archive Toolbox
+        static string ProgramDir = "C:\\Program Files\\Audio Archive Toolbox\\";
+        static string ConfigurationFileName = "aatb_config.ini";
+        static string ConfigurationFilePath = ProgramDir + ConfigurationFileName;
+
 
         // = = = = = Main procedure = = = = = //
 
@@ -169,8 +177,9 @@ namespace AATB
              */
 
             string
-               arg, opt,
-               UserInput;
+               arg, opt, UserInput;
+            string[]
+                ExpandedCommandLineArgs;
 
             // get starting directory
             RootDir = Directory.GetCurrentDirectory();
@@ -179,19 +188,27 @@ namespace AATB
             LogFilePath = RootDir + BACKSLASH + LOGNAME;
             Log = new AATB_Log(LogFilePath);
 
+            // read configuration file
+            IniData configData = ReadConfiguration(ConfigurationFilePath);
+
+            // expand command line with macro definitions, if they exist
+            ExpandedCommandLineArgs = ExpandCommandLine(configData, argv);
+
             // check arguments exist
-            if (argv.Length > 0)
+            if (ExpandedCommandLineArgs != null)
             {
                 // initialize boolean array for selecting format and bitrate
                 InitFormatBitrate();
 
                 // parse arguments and options in command line argv
-                foreach (string s in argv)
+                foreach (string s in ExpandedCommandLineArgs)
                 {
                     // Split each substring s into arguments and options, delimited by '='
                     (arg, opt) = SplitString(s, EQUALS);
+
                     switch (arg)
                     {
+                     
                         // PRIMARY MODES
                         case "-c":
                         case "--compress":
@@ -492,19 +509,6 @@ namespace AATB
                         // additonal logging for debugging
                         case "--debug":
                             Debug = true;
-                            break;
-
-                        case "--cjc":
-                            // that's my initials.. :-)
-                            // --compress --aac|m4a=all --flac=all --all-reports --m3u-playlist
-                            CompressAudio = true;
-                            SetFormatBitrate(M4A, ALLBITRATES);
-                            SetFormatBitrate(FLAC, ALLBITRATES);
-                            SetFormatBitrate(FLAC, RAW);
-                            CreateMD5 = true;
-                            CreateFFP = true;
-                            CreateSHNRPT = true;
-                            CreateM3U = true;
                             break;
 
                         case "--ver":

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace AATB
 {
@@ -16,7 +17,7 @@ namespace AATB
             // writes header to console and log
             string LogEntry =
                 "Audio Archive Toolbox " +
-                typeof(AATB_Main).Assembly.GetName().Version;
+                Assembly.GetExecutingAssembly().GetName().Version;
             WriteLine(LogEntry);
         } // end constructor AATB_Log
 

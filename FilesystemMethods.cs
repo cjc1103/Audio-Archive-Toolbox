@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace AATB
 {
@@ -183,7 +184,7 @@ namespace AATB
              * Inputs:
              *   File path
              * Outputs:
-             *   Text embedded in file
+             *   Text embedded in file as a string array separated by <cr>
              */
             string[]
                 Data = null;
@@ -197,6 +198,27 @@ namespace AATB
             }
             return Data;
         } // end ReadTextFile
+
+        static string ReadTextAsString(String FilePath)
+        {
+            /* Opens a text file, if it exists, and reads the contents into a string array
+             * Inputs:
+             *   File path
+             * Outputs:
+             *   Text embedded in file as continuous string
+             */
+            string
+                Data = null;
+            try
+            {
+                Data = File.ReadAllText(FilePath);
+            }
+            catch (Exception)
+            {
+                Log.WriteLine("*** Unable to read file: " + FilePath);
+            }
+            return Data;
+        }
         
         static bool FilesAreEquivalent(string FilePath1, string FilePath2)
         {
