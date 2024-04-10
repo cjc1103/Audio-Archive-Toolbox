@@ -23,7 +23,7 @@ namespace AATB
             int i;
 
             // get directory basename and extension
-            (Dir.BaseName, Dir.Extension) = SplitString(Dir.Name, PERIOD);
+            (Dir.BaseName, Dir.Extension) = SplitString(PERIOD, Dir.Name);
 
             // determine type of directory
             if (Dir.Name == RAW)
@@ -297,7 +297,7 @@ namespace AATB
                 // read data from text file
                 DataList = ReadTextFile(Dir.InfotextPath);
                 // search for date; returns zero based line number for valid date, otherwise 0
-                DateLineNumber = GetLineNumberForTerm(DataList, 0, "^[1-2]\\d{3}-\\d{2}-\\d{2}");
+                DateLineNumber = GetLineNumberForTerm(0, "^[1-2]\\d{3}-\\d{2}-\\d{2}", DataList);
                 // valid date on line number 4
                 if (DateLineNumber == 3)
                 {
@@ -321,13 +321,13 @@ namespace AATB
                 // otherwise search for metadata labels, find first instance of each label
                 else
                 {
-                    Dir.AlbumArtist = GetDataAfterTerm(DataList, "PERFORMER");
-                    Dir.Album = GetDataAfterTerm(DataList, "TITLE");
-                    Dir.Event = GetDataAfterTerm(DataList, "EVENT");
-                    Dir.Venue = GetDataAfterTerm(DataList, "VENUE");
-                    Dir.Stage = GetDataAfterTerm(DataList, "STAGE");
-                    Dir.Location = GetDataAfterTerm(DataList, "LOCATION");
-                    Dir.ConcertDate = GetDataAfterTerm(DataList, "DATE");
+                    Dir.AlbumArtist = GetDataAfterTerm("PERFORMER", DataList);
+                    Dir.Album = GetDataAfterTerm("TITLE", DataList);
+                    Dir.Event = GetDataAfterTerm("EVENT", DataList);
+                    Dir.Venue = GetDataAfterTerm("VENUE", DataList);
+                    Dir.Stage = GetDataAfterTerm("STAGE", DataList);
+                    Dir.Location = GetDataAfterTerm("LOCATION", DataList);
+                    Dir.ConcertDate = GetDataAfterTerm("DATE", DataList);
                 }
 
                 // verify minimum metadata has been found
@@ -410,13 +410,13 @@ namespace AATB
                 DataList = ReadTextFile(Dir.CuesheetPath);
 
                 // search for standard metadata labels
-                Dir.AlbumArtist = GetDataAfterTerm(DataList, "PERFORMER");
-                Dir.Album = GetDataAfterTerm(DataList, "TITLE");
-                Dir.Event = GetDataAfterTerm(DataList, "EVENT");
-                Dir.Venue = GetDataAfterTerm(DataList, "VENUE");
-                Dir.Stage = GetDataAfterTerm(DataList, "STAGE");
-                Dir.Location = GetDataAfterTerm(DataList, "LOCATION");
-                Dir.ConcertDate = GetDataAfterTerm(DataList, "DATE");
+                Dir.AlbumArtist = GetDataAfterTerm("PERFORMER", DataList);
+                Dir.Album = GetDataAfterTerm("TITLE", DataList);
+                Dir.Event = GetDataAfterTerm("EVENT", DataList);
+                Dir.Venue = GetDataAfterTerm("VENUE", DataList);
+                Dir.Stage = GetDataAfterTerm("STAGE", DataList);
+                Dir.Location = GetDataAfterTerm("LOCATION", DataList);
+                Dir.ConcertDate = GetDataAfterTerm("DATE", DataList);
 
                 // verify minimum metadata has been found
                 if (Dir.AlbumArtist == null)

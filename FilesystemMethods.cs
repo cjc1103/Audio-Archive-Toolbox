@@ -280,7 +280,7 @@ namespace AATB
                     TrackNumberStr = TrackNumber.ToString("00");
                     // split file name in root, extension
                     (Path, FileName) = SplitFilePath(fi.FullName);
-                    (RootFileName, Extension) = SplitString(FileName, PERIOD);
+                    (RootFileName, Extension) = SplitString(PERIOD, FileName);
                     //build new file name, number prefic has to added back
                     NewFileName = TrackNumberStr + SPACE + Dir.TitleList[TrackNumber - 1] + PERIOD + Extension;
                     NewFilePath = Path + BACKSLASH + NewFileName;

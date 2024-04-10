@@ -49,7 +49,7 @@ namespace AATB
                 // build filenames
                 WAVFileName = fi.Name;
                 WAVFilePath = fi.FullName;
-                (BaseFileName, Extension) = SplitString(WAVFileName, PERIOD);
+                (BaseFileName, Extension) = SplitString(PERIOD, WAVFileName);
                 CompFileName = BaseFileName + PERIOD + CompType;
                 CompFilePath = CompDirPath + BACKSLASH + CompFileName;
                 // convert FileName to FileInfo type and build FLACFileList
@@ -204,7 +204,7 @@ namespace AATB
                 // build filenames
                 CompFileName = fi.Name;
                 CompFilePath = fi.FullName;
-                (BaseFileName, Extension) = SplitString(CompFileName, PERIOD);
+                (BaseFileName, Extension) = SplitString(PERIOD, CompFileName);
                 WAVFileName = BaseFileName + PERIOD + WAV;
                 WAVFilePath = WAVDirPath + BACKSLASH + WAVFileName;
                 // convert WAVFileName to FileInfo type and build WAVFileList
@@ -310,7 +310,7 @@ namespace AATB
                 Log.Write("    Track: ");
                 // extract bitdepth and samplerate from ConvertToBitrate string
                 // using hyphen as delimiter, e.g., "16-44" --> (16, 44)
-                (BitDepth, SampleRate) = SplitString(ConvertToBitrate, HYPHEN);
+                (BitDepth, SampleRate) = SplitString(HYPHEN, ConvertToBitrate);
                 switch (SampleRate)
                 {
                     case "44":

@@ -98,11 +98,11 @@ namespace AATB
                 // initialize flags and counters
                 TrackNumber = 0;
                 // get start linenumber - search for the keyword "Set", if not found set to 6
-                StartLineNumber = GetLineNumberForTerm(DataList, 0, "Set");
+                StartLineNumber = GetLineNumberForTerm(0, "Set", DataList);
                 if (StartLineNumber == 0)
                     StartLineNumber = 6;
                 // get end linenumber - search for keyword "Lyrics", if not found set to max datalist length
-                EndLineNumber = GetLineNumberForTerm(DataList, StartLineNumber, "Lyrics");
+                EndLineNumber = GetLineNumberForTerm(StartLineNumber, "Lyrics", DataList);
                 if (EndLineNumber == 0)
                     EndLineNumber = DataListCount;
                 if (Debug) Console.WriteLine("dbg: Setlist line numbers start: {0:D2}  end: {1:D2}",

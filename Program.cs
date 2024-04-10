@@ -189,10 +189,10 @@ namespace AATB
             Log = new AATB_Log(LogFilePath);
 
             // read configuration file
-            IniData configData = ReadConfiguration(ConfigurationFilePath);
+            IniData ConfigData = ReadConfiguration(ConfigurationFilePath);
 
             // expand command line with macro definitions, if they exist
-            ExpandedCommandLineArgs = ExpandCommandLine(configData, argv);
+            ExpandedCommandLineArgs = ExpandCommandLine(ConfigData, argv);
 
             // check arguments exist
             if (ExpandedCommandLineArgs != null)
@@ -201,10 +201,10 @@ namespace AATB
                 InitFormatBitrate();
 
                 // parse arguments and options in command line argv
-                foreach (string s in ExpandedCommandLineArgs)
+                foreach (string Command in ExpandedCommandLineArgs)
                 {
-                    // Split each substring s into arguments and options, delimited by '='
-                    (arg, opt) = SplitString(s, EQUALS);
+                    // Split each substring into arguments and options, delimited by '='
+                    (arg, opt) = SplitString(EQUALS, Command);
 
                     switch (arg)
                     {
@@ -519,7 +519,7 @@ namespace AATB
 
                         // argument not parsed
                         default:
-                            Log.WriteLine("Invalid argument: " + s);
+                            Log.WriteLine("Invalid argument: " + Command);
                             Environment.Exit(0);
                             break;
                     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AATB
 {
@@ -50,7 +51,7 @@ namespace AATB
 
                     // raw output includes entire path for filenames
                     // split external output into lines
-                    DataList = SplitDataByLine(ExternalOutput);
+                    DataList = ExternalOutput.Split(LineDelimeters, StringSplitOptions.RemoveEmptyEntries);
                     FirstDataLine = true;
                     // parse each line in the list to remove embedded path
                     foreach (string li in DataList)

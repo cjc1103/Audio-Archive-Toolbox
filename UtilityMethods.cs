@@ -64,7 +64,7 @@ namespace AATB
             return (Path, FileName);
         } // end SplitFilePath
 
-        static (string, string) SplitString(string InputName, string Delimiter)
+        static (string, string) SplitString(string Delimiter, string InputName)
         {
             /* Separates input name into two strings separated by the last occurrence
              *   of the input delimiter
@@ -134,25 +134,14 @@ namespace AATB
                 Extension2;
 
             // extract basename from each input string
-            (BaseName1, Extension1) = SplitString(Filename1, PERIOD);
-            (BaseName2, Extension2) = SplitString(Filename2, PERIOD);
+            (BaseName1, Extension1) = SplitString(PERIOD, Filename1);
+            (BaseName2, Extension2) = SplitString(PERIOD, Filename2);
 
             // compare both basenames and return true if they are equal
             return (BaseName1 == BaseName2);
         } // end BaseNamesAreEqual
 
-        static string[] SplitDataByLine(string Data)
-        {
-            /* splits a text string into lines separated by dos and unix delimeters
-             * Input: Input data string
-             * Constant: LineDelimeters is a static string array defined in Program.cs
-             * Output: string array, with one line to each element of array, empty lines removed
-             */
-            string[] DataList = Data.Split(LineDelimeters, StringSplitOptions.RemoveEmptyEntries);
-            return DataList;
-        } // end SplitDataByLine
-
-        static string GetDataAfterTerm(string[] DataList, string SearchTerm)
+        static string GetDataAfterTerm(string SearchTerm, string[] DataList)
         {
             /* Returns data after the first instance of the search term in list
              * Inputs:
@@ -185,7 +174,7 @@ namespace AATB
             return Data;
         } // end GetDataAfterTerm
 
-        static int GetLineNumberForTerm(string[] DataList, int StartIndex, string SearchTerm)
+        static int GetLineNumberForTerm(int StartIndex, string SearchTerm, string[] DataList)
         {
             /* Returns the line number of the first instance of the search term in list
              * Inputs:

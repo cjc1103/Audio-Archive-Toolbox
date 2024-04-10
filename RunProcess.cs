@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AATB
 {
@@ -86,7 +87,7 @@ namespace AATB
                 if (Verbose && ExternalError != null)
                 {
                     // split stream into lines, ignoring blank lines
-                    DataList = SplitDataByLine(ExternalError);
+                    DataList = ExternalError.Split(LineDelimeters, StringSplitOptions.RemoveEmptyEntries);
                     // parse each line in the list
                     foreach (string li in DataList)
                     {
