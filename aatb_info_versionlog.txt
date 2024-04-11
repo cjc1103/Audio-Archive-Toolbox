@@ -351,3 +351,4 @@ Program history
      Added IniFileMethods.cs to hold ini configuration methods
      Modified Main method, and search for any macros defined in the configuration file and expand the command
        line arguments for those macros by substituting the macro definition
+	 Changed parameter order for SplitString and GetLineNumberForTerm methods to match the String.Split method
