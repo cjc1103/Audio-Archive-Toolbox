@@ -99,7 +99,7 @@ namespace AATB
                 StartLineNumber = Math.Max(StartLineNumber, 6);
                 // get end linenumber - search for keyword "Lyrics", if not found set to datalist length
                 EndLineNumber = GetLineNumberForSearchTerm(StartLineNumber, "Lyrics", DataList);
-                EndLineNumber = Math.Min(DataList.Length, EndLineNumber);
+                if (EndLineNumber == 0) EndLineNumber = DataList.Length;
                 if (Debug) Console.WriteLine("dbg: Setlist line numbers start: {0:D2}  end: {1:D2}",
                                             StartLineNumber, EndLineNumber);
                 // read data from info file - zero based index, stop before eof
@@ -130,8 +130,10 @@ namespace AATB
                             // extract artist name from within brackets
                             ArtistFound = true;
                             TrackArtist = DataLine.Substring(ArtistPatternMatch.Index);
+                            // remove leading bracket
                             TrackArtist = Regex.Replace(TrackArtist, @"\[", "");
-                            TrackArtist = Regex.Replace(TrackArtist, @"\]\s*$", "");
+                            // remove trailing bracket and any following characters
+                            TrackArtist = Regex.Replace(TrackArtist, @"\].*$", "");
                             // remove artist name from data line
                             DataLine = Regex.Replace(DataLine, @"\[.*\]", "");
                         }
@@ -143,10 +145,9 @@ namespace AATB
                         // add track artist to Dir ArtistList
                         Dir.ArtistList.Add(TrackArtist);
 
-                        // remove any sequence of characters at the end of the line other than
-                        // alphabetical, numerical, or single apostrophe, and trailing spaces
-                        // typically these are footnote annotation marks
-                        DataLine = Regex.Replace(DataLine, @"[[^a-zA-Z0-9']\s]+$", "");
+                        // remove any trailing characters other than alphabetical, numerical,
+                        // and single apostrophe. typically these are footnote annotation marks
+                        DataLine = Regex.Replace(DataLine, @"[^a-zA-Z0-9\->']*$", "");
 
                         // remove any remaining trailing spaces
                         DataLine = Regex.Replace(DataLine, @"\s*$", "");
