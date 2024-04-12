@@ -174,7 +174,7 @@ namespace AATB
             return Data;
         } // end GetDataAfterSearchTerm
 
-        static int GetLineNumberForSearchTerm(int StartIndex, string SearchTerm, string[] DataList)
+        static int GetLineNumberOfSearchTerm(int StartIndex, string SearchTerm, string[] DataList)
         {
             /* Returns the line number of the first instance of the search term in list
              * Inputs:
@@ -195,7 +195,7 @@ namespace AATB
             }
             // search term not found
             return 0;
-        } // end GetLineNumberForSearchTerm
+        } // end GetLineNumberOfSearchTerm
 
         static void PrintFileList(string FileType, FileInfo[] FileList)
         {
