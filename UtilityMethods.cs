@@ -141,7 +141,7 @@ namespace AATB
             return (BaseName1 == BaseName2);
         } // end BaseNamesAreEqual
 
-        static string GetDataAfterTerm(string SearchTerm, string[] DataList)
+        static string GetDataAfterSearchTerm(string SearchTerm, string[] DataList)
         {
             /* Returns data after the first instance of the search term in list
              * Inputs:
@@ -172,9 +172,9 @@ namespace AATB
                 }
             }
             return Data;
-        } // end GetDataAfterTerm
+        } // end GetDataAfterSearchTerm
 
-        static int GetLineNumberForTerm(int StartIndex, string SearchTerm, string[] DataList)
+        static int GetLineNumberForSearchTerm(int StartIndex, string SearchTerm, string[] DataList)
         {
             /* Returns the line number of the first instance of the search term in list
              * Inputs:
@@ -188,14 +188,14 @@ namespace AATB
 
             for (i = StartIndex; i < DataList.Length; i++)
             {
-                // search for pattern in string
-                PatternMatch = Regex.Match(DataList[i], @SearchTerm);
+                // search for pattern in string, case insensitive
+                PatternMatch = Regex.Match(DataList[i], @SearchTerm, RegexOptions.IgnoreCase);
                 if (PatternMatch.Success)
                     return i;
             }
             // search term not found
             return 0;
-        } // end GetLineNumberForTerm
+        } // end GetLineNumberForSearchTerm
 
         static void PrintFileList(string FileType, FileInfo[] FileList)
         {

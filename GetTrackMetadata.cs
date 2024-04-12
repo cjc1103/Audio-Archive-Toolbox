@@ -55,7 +55,7 @@ namespace AATB
              * Outputs:
              *   Dir            Current directory class
              * Infotext file
-             *   Set track list must start with the keyword "Set"
+             *   Set track list should start with the keyword "Set"
              *   Track format is: "{dd}<.> title [Artist]", where dd is one or two digits 0-9
              *   Each track is assumed to be in sequence, information is added to next position in list
              *   Track numbers in info file can restart for multiple sets/discs, and tracks may not
@@ -95,10 +95,10 @@ namespace AATB
                 // initialize counters
                 TrackNumber = 0;
                 // get start linenumber - search for the first instance of keyword "Set", if not found set to 6
-                StartLineNumber = GetLineNumberForTerm(0, "Set", DataList);
+                StartLineNumber = GetLineNumberForSearchTerm(0, "Set", DataList);
                 StartLineNumber = Math.Max(StartLineNumber, 6);
                 // get end linenumber - search for keyword "Lyrics", if not found set to datalist length
-                EndLineNumber = GetLineNumberForTerm(StartLineNumber, "Lyrics", DataList);
+                EndLineNumber = GetLineNumberForSearchTerm(StartLineNumber, "Lyrics", DataList);
                 EndLineNumber = Math.Min(DataList.Length, EndLineNumber);
                 if (Debug) Console.WriteLine("dbg: Setlist line numbers start: {0:D2}  end: {1:D2}",
                                             StartLineNumber, EndLineNumber);

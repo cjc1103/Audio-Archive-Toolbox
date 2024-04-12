@@ -297,7 +297,7 @@ namespace AATB
                 // read data from text file
                 DataList = ReadTextFile(Dir.InfotextPath);
                 // search for date; returns zero based line number for valid date, otherwise 0
-                DateLineNumber = GetLineNumberForTerm(0, "^[1-2]\\d{3}-\\d{2}-\\d{2}", DataList);
+                DateLineNumber = GetLineNumberForSearchTerm(0, "^[1-2]\\d{3}-\\d{2}-\\d{2}", DataList);
                 // valid date on line number 4
                 if (DateLineNumber == 3)
                 {
@@ -321,13 +321,13 @@ namespace AATB
                 // otherwise search for metadata labels, find first instance of each label
                 else
                 {
-                    Dir.AlbumArtist = GetDataAfterTerm("PERFORMER", DataList);
-                    Dir.Album = GetDataAfterTerm("TITLE", DataList);
-                    Dir.Event = GetDataAfterTerm("EVENT", DataList);
-                    Dir.Venue = GetDataAfterTerm("VENUE", DataList);
-                    Dir.Stage = GetDataAfterTerm("STAGE", DataList);
-                    Dir.Location = GetDataAfterTerm("LOCATION", DataList);
-                    Dir.ConcertDate = GetDataAfterTerm("DATE", DataList);
+                    Dir.AlbumArtist = GetDataAfterSearchTerm("PERFORMER", DataList);
+                    Dir.Album = GetDataAfterSearchTerm("TITLE", DataList);
+                    Dir.Event = GetDataAfterSearchTerm("EVENT", DataList);
+                    Dir.Venue = GetDataAfterSearchTerm("VENUE", DataList);
+                    Dir.Stage = GetDataAfterSearchTerm("STAGE", DataList);
+                    Dir.Location = GetDataAfterSearchTerm("LOCATION", DataList);
+                    Dir.ConcertDate = GetDataAfterSearchTerm("DATE", DataList);
                 }
 
                 // verify minimum metadata has been found
@@ -410,13 +410,13 @@ namespace AATB
                 DataList = ReadTextFile(Dir.CuesheetPath);
 
                 // search for standard metadata labels
-                Dir.AlbumArtist = GetDataAfterTerm("PERFORMER", DataList);
-                Dir.Album = GetDataAfterTerm("TITLE", DataList);
-                Dir.Event = GetDataAfterTerm("EVENT", DataList);
-                Dir.Venue = GetDataAfterTerm("VENUE", DataList);
-                Dir.Stage = GetDataAfterTerm("STAGE", DataList);
-                Dir.Location = GetDataAfterTerm("LOCATION", DataList);
-                Dir.ConcertDate = GetDataAfterTerm("DATE", DataList);
+                Dir.AlbumArtist = GetDataAfterSearchTerm("PERFORMER", DataList);
+                Dir.Album = GetDataAfterSearchTerm("TITLE", DataList);
+                Dir.Event = GetDataAfterSearchTerm("EVENT", DataList);
+                Dir.Venue = GetDataAfterSearchTerm("VENUE", DataList);
+                Dir.Stage = GetDataAfterSearchTerm("STAGE", DataList);
+                Dir.Location = GetDataAfterSearchTerm("LOCATION", DataList);
+                Dir.ConcertDate = GetDataAfterSearchTerm("DATE", DataList);
 
                 // verify minimum metadata has been found
                 if (Dir.AlbumArtist == null)

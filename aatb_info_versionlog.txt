@@ -332,7 +332,7 @@ Program history
      Renamed previous SHN variable to SHNRPT to deconflict with the SHN compressed audio format
      Updated PrintHelp and CheckUserInput methods
      Changed GetTrackDataFromInfoText method to find starting and ending numbers of set list
-     Changed SearchListForDate method to use a generic search term, and renamed it GetLineNumberForTerm
+     Changed SearchListForDate method to use a generic search term, and renamed it GetLineNumberForSearchTerm
 	 Changed default raw folder name to "Raw"
 
 5.9  2024-02-03
@@ -341,7 +341,7 @@ Program history
      Updated Printhelp method to specify --shnrpt instead of --shn for verify function
      Corrected indexes in SHN report verification method (off by one)
      Updated GetTrackMetadata to allow a single apostrophe at the end of a song name
-     Corrected index in GetDataAfterTerm to allow for space at the end of the search term
+     Corrected index in GetDataAfterSearchTerm to allow for space at the end of the search term
      Corrected regex expressions for extracting artist and footnote remarks in GetTrackMetadataFromInfotext
      Corrected and updated command line error checking in CheckuserInput method
 
@@ -351,4 +351,4 @@ Program history
      Added IniFileMethods.cs to hold ini configuration methods
      Modified Main method, and search for any macros defined in the configuration file and expand the command
        line arguments for those macros by substituting the macro definition
-	 Changed parameter order for SplitString and GetLineNumberForTerm methods to match the String.Split method
+	 Changed parameter order for SplitString and GetLineNumberForSearchTerm methods to match the String.Split method
