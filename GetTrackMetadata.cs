@@ -55,6 +55,7 @@ namespace AATB
              * Outputs:
              *   Dir            Current directory class
              * Infotext file
+             *   Set track list must start with the keyword "Set"
              *   Track format is: "{dd}<.> title [Artist]", where dd is one or two digits 0-9
              *   Each track is assumed to be in sequence, information is added to next position in list
              *   Track numbers in info file can restart for multiple sets/discs, and tracks may not
@@ -70,9 +71,7 @@ namespace AATB
                 i,
                 TrackNumber,
                 StartLineNumber,
-                EndLineNumber,
-                DataListCount,
-                FileListCount;
+                EndLineNumber;
             string[]
                 DataList;
             string
@@ -93,18 +92,14 @@ namespace AATB
                 Log.WriteLine("  Reading track metadata from info file: " + InfotextFileName);
                 // read infotext file
                 DataList = ReadTextFile(Dir.InfotextPath);
-                DataListCount = DataList.Length;
-                FileListCount = FileList.Length;
-                // initialize flags and counters
+                // initialize counters
                 TrackNumber = 0;
-                // get start linenumber - search for the keyword "Set", if not found set to 6
+                // get start linenumber - search for the first instance of keyword "Set", if not found set to 6
                 StartLineNumber = GetLineNumberForTerm(0, "Set", DataList);
-                if (StartLineNumber == 0)
-                    StartLineNumber = 6;
-                // get end linenumber - search for keyword "Lyrics", if not found set to max datalist length
+                StartLineNumber = Math.Max(StartLineNumber, 6);
+                // get end linenumber - search for keyword "Lyrics", if not found set to datalist length
                 EndLineNumber = GetLineNumberForTerm(StartLineNumber, "Lyrics", DataList);
-                if (EndLineNumber == 0)
-                    EndLineNumber = DataListCount;
+                EndLineNumber = Math.Min(DataList.Length, EndLineNumber);
                 if (Debug) Console.WriteLine("dbg: Setlist line numbers start: {0:D2}  end: {1:D2}",
                                             StartLineNumber, EndLineNumber);
                 // read data from info file - zero based index, stop before eof
@@ -177,7 +172,7 @@ namespace AATB
                 }
                 // check ending track number in info file is correct
                 // (the track number will be one more than actual number)
-                if (TrackNumber == FileListCount)
+                if (TrackNumber == FileList.Length)
                 {
                     // reset track metadata source flag
                     Dir.TrackMetadataSource = INFOFILE;
@@ -185,7 +180,7 @@ namespace AATB
                 else
                 {
                     Log.WriteLine("*** Info file tracks: " + Convert.ToString(TrackNumber)
-                                    + "; Actual number of tracks: " + Convert.ToString(FileListCount));
+                                    + "; Actual number of tracks: " + Convert.ToString(FileList.Length));
                     // reset title list
                     // title list will be repopulated using directory names
                     Dir.TitleList = new List<string>();
