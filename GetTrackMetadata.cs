@@ -362,8 +362,6 @@ namespace AATB
                 // remove track number prefix
                 // (one or more digits, optional period, one or more spaces)
                 TrackTitle = Regex.Replace(TrackTitle, @"^\d+\.?\s+", "");
-                // remove 3 - 5 letter extension
-                TrackTitle = Regex.Replace(TrackTitle, @"\.[a-z0-9]{3,5}$", "");
                 // populate track metadata
                 Dir.TitleList.Add(TrackTitle);
                 TrackFilePath = fi.FullName;
