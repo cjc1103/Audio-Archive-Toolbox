@@ -325,7 +325,7 @@ namespace AATB
             else if (DecompressAudio)
             {
                 if (Debug) Console.WriteLine("dbg: Decompress Section");
-                
+
                 // loop through all audio formats in AudioDecompressionFormats list
                 for (i = 0; i <= AudioDecompressionFormats.Length - 1; i++)
                 {
@@ -492,7 +492,7 @@ namespace AATB
                                 WAVFileBackupExists = false;
                             else
                                 WAVFileBackupExists = true;
-                            
+
                             // match each wav file with corresponding flac file
                             foreach (FileInfo wav in WAVFileList)
                             {
@@ -577,6 +577,7 @@ namespace AATB
             } // end Delete Audio section
 
             // = = = = = = = = Recursion = = = = = = = = 
+
             // Find all subdirectories of the current directory
             SubDirs = CurrentDir.GetDirectories();
             foreach (DirectoryInfo dirname in SubDirs)
@@ -586,9 +587,16 @@ namespace AATB
                 // log entire subdirectory path below root dir
                 Log.WriteLine("Directory: " + SubDirPath);
                 // Walk the directory tree for each subdirectory
-                WalkDirectoryTree(dirname);
+                try
+                {
+                    WalkDirectoryTree(dirname);
+                }
+                catch (Exception)
+                {
+                    // Log error System.IO.DirectoryNetFoundException
+                    Log.WriteLine("*** Directory not found: " + dirname.Name);
+                }
             }
-
         } // end WalkDirectoryTree
     }
 }
