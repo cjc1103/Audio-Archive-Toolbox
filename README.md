@@ -21,9 +21,9 @@
  *     o Create FLAC fingerprint (FFP) files for all FLAC files
  *     o Create shntool track length report for 16-44 FLAC files only
  *     o Create M3U playlists for all compressed audio files
- *     o Copy information file (info.txt) to compressed audio subdirectories
- *     o Create tags for audio tracks using info.txt file, or directory name
- *     Note: Only the first parent directory info.txt file is used, others are ignored
+ *     o Copy information text file to compressed audio subdirectories
+ *     o Create tags for audio tracks using infotext file, or directory name
+ *     Note: Only the first parent directory infotext file is used, others are ignored
  *     Note: Only WAV files in the <bitrate> directories are processed, other files are ignored
  *     Note: If the appropriate subdirectory does not exist, then it is created
  *     Note: If the compressed subdirectory exists, then wav files are not converted to the
@@ -35,7 +35,7 @@
  *     o shntool track length reports for 16 bit FLAC directory only
  *     Note: When verifying a compressed directory, the overwrite option is required
  *       to replace existing files
- *     o Information (info.txt) file will be recopied to subdirs with overwrite option
+ *     o Information (infotext) file will be recopied to subdirs with overwrite option
  *     o rewrite tags for all compressed audio formats (except opus and alac)
  * (3) Decompress FLAC format audio files to WAV format
  *     o Wav files will be output to the appropriate <bitrate> directory
@@ -92,7 +92,7 @@
  *   Live recording [optional stage info]
  *   <D><dd> <artist> <date>[.<stage>]
  *   <D><dd> <artist>_<date>[.<stage>]
- *      <dirname>.info.txt (optional concert information file)
+ *      <dirname>.infotext (optional concert information file)
  *      <dirname>.info.cue (optional cue file for burning CDs)
  *      <D><bitdepth-samplerate>
  *        Contains the uncompressed wav audio files. The directbory name is
@@ -182,7 +182,7 @@
  * basic operations (mutually exclusive)
  *   -c|--compress          compress wav PCM format audio to a compressed audio format
  *       -p|--m3u           create m3u playlist file for all audio files in directory
- *       -i|--use-infotext  read metadata from an info.txt concert information file
+ *       -i|--use-infotext  read metadata from an infotext concert information file
  *       -s|--use-cuesheet  read metadata from cuesheet (.cue) for commercial recordings
  *   -v|--verify            verify flac files are correct by checking md5 and ffp checksum files
  *       --md5              creates/updates md5 checksum files
@@ -200,7 +200,7 @@
  *   -z|--convert-to-bitrate   convert wav files to bitrate
  *      --wav=<bitrate>     convert wav files from bitrate
  *   -e|--create-cuesheet   create cuesheet from wav files
- *        -i|--use-infotext  read metadata from an info.txt concert information file
+ *        -i|--use-infotext  read metadata from an infotext concert information file
  *
  * compression and verification arguments
  *   --mp3=<bitrate>        compress wav to mp3 format (.mp3) (16-44 is default)
@@ -224,7 +224,7 @@
  * additional options
  *   --lc|--lower-case      convert subdirectory names to lower case
  *   --uc|--title-case      convert subdirectory names to title case (capitalize first letter of each word)
- *   --ri|--rename-infofiles  rename info.txt and info.cue files
+ *   --ri|--rename-infofiles  rename infotext and info.cue files
  *   --cd|--use-currentdirinfo  use current directory for infotext file when verifying compressed files
  *   -o|--overwrite         overwrite existing files
  *   -h|--help              display options list on console
@@ -235,10 +235,13 @@
  *   An optional configuration file can be used for various configuration options
  *   the file is called "aatb_config.ini" and is located in the program directory
  *
- *   Command line Macro substitution
- *   [macros]
+ *   [Macros]
  *   macro name = command line arguments
  *   e.g.: -xyz = --verify --tag --all -p
+ *   [FilesToDelete]
+ *   <extension>
+ *   [DirsToDelete]
+ *   <directory> 
  *
  * Dependencies and limitations
  *   This program requires .NET 8.0 runtime or later, and is compiled as a x64 Windows binary

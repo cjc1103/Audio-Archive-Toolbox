@@ -8,13 +8,13 @@ namespace AATB
         static void GetTrackMetadata(AATB_DirInfo Dir, FileInfo[] FileList)
         {
             /* Extract track metadata
-             * Use info.txt information file if it exists (generally for live concerts)
+             * Use infotext information file if it exists (generally for live concerts)
              * Use cuesheet if it exists (generally for commercial CDs)
              * Otherwise get metadata from file names
              * Inputs:
              *   Dir            Directory as AATB_DirInfo class instance
              *   FileList       List of files in directory
-             *   InfoSheetPath  Path to info.txt file
+             *   InfoSheetPath  Path to infotext file
              *   CuesheetPath   Path to .cue file
              * Outputs:
              *   None - called methods will populate metadata
@@ -46,12 +46,12 @@ namespace AATB
 
         static void GetTrackMetadataFromInfotext(AATB_DirInfo Dir, FileInfo[] FileList)
         {
-            /* Get track metadata from "info.txt" information file if it exists
+            /* Get track metadata from "infotext" information file if it exists
              *   otherwise get metadata from file names
              * Inputs: 
              *   Dir            Current directory class
              *   FileList       List of files in directory
-             *   InfoSheetPath  Path to info.txt file
+             *   InfoSheetPath  Path to infotext file
              * Outputs:
              *   Dir            Current directory class
              * Infotext file

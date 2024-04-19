@@ -65,10 +65,9 @@ namespace AATB
             MD5 = "md5", ALLMD5 = "*.md5",
             FFP = "ffp", ALLFFP = "*.ffp",
             SHNRPT = "shntool.txt", ALLSHNRPT = "*.shntool.txt",
-            INFOTXT = "info.txt", ALLINFOTXT = "*.txt",
-            INFOCUE = "info.cue", ALLINFOCUE = "*.cue",
+            INFOTXTdefault = "info.txt",
+            INFOCUEdefault = "info.cue",
             NEW = "new",
-            LOGNAME = "aatb.log.txt",
             LIVE = "Live Recording",
             CD = "Commercial CD",
             OTHER = "Other",
@@ -78,8 +77,64 @@ namespace AATB
             RAWAUDIO = "Raw Audio",
             TRACKEDAUDIO = "Tracked Audio",
             COMPRESSEDAUDIO = "Compressed Audio";
+        static string
+            // other string values
+            RootDir = null,
+            ConvertFromBitrate = null,
+            ConvertToBitrate = null,
+            // may be modified through ini settings file
+            LOGNAME = "aatb.log",
+            LogFilePath = null,
+            INFOTXT = null, ALLINFOTXT = null,
+            INFOCUE = null, ALLINFOCUE = null,
+            // configuration ini file located in c:\Program Files\Audio Archive Toolbox
+            ProgramDir = "C:\\Program Files\\Audio Archive Toolbox\\",
+            ConfigurationFileName = "aatb_config.ini",
+            ConfigurationFilePath = ProgramDir + ConfigurationFileName;
+        static readonly string[]
+            // line delimiters for dos and unix text files
+            LineDelimeters = { "\r\n", "\r", "\n" },
+            // all audio formats
+            // WAV must be the last entry in this list
+            AudioFormats = { MP3, M4A, OGG, OPUS, SHN, AIF, WMA, ALAC, FLAC, WAV },
+            // allowable compression formats (lossy and lossless)
+            AudioCompressionFormats = { MP3, M4A, OGG, OPUS, ALAC, FLAC },
+            // allowable decompression formats (lossless)
+            AudioDecompressionFormats = { ALAC, FLAC },
+            // allowable conversion formats (lossy and lossless)
+            AudioConversionFormats = { SHN, AIF, WMA },
+            // all audio bitrates
+            // RAW must be last entry in this list
+            AudioBitrates = { BR1644, BR1648, BR2444, BR2448, BR2488, BR2496, RAW },
+            // compressed audio directory extensions
+            // must correspond to AudioCompressionFormats list
+            CompressedDirExtensions = { MP3F, M4AF, OGGF, OPUSF, ALACF, FLACF };
+        static List<string>
+            // miscellaneous files and directories to delete for cleanup
+            FilesToDelete = new List<string>(),
+            DirsToDelete = new List<string>(),
+            DirsMarkedForDeletion = new List<string>();
+        static readonly int[]
+            // quality parameter lists { lower, active, upper }
+            // must correspond to and be in same order as AudioCompressionFormats list
+            mp3Quality = { 0, 0, 4 }, // 0 is best
+            aacQuality = { 0, 127, 127 },
+            oggQuality = { 0, 8, 10 },
+            opusQuality = { 64, 256, 256 }, // placeholder only
+            alacQuality = { 0, 0, 0}, // placeholder only
+            flacQuality = { 1, 6, 10 };
+        static readonly int[][]
+            // Two dimensional list of all quality parameters
+            // must correspond to and be in same order as AudioCompressionFormats list
+            AudioCompressionQuality = new[]
+              { mp3Quality,
+                aacQuality,
+                oggQuality,
+                opusQuality,
+                alacQuality,
+                flacQuality };
         static bool
-            // set default value
+            // set default value for bool flags
             CompressAudio = false,
             VerifyAudio = false,
             DecompressAudio = false,
@@ -106,64 +161,10 @@ namespace AATB
             NoLogMessage = false,
             Verbose = false,
             Debug = false;
-        static string
-            LogFilePath = null,
-            RootDir = null,
-            ConvertFromBitrate = null,
-            ConvertToBitrate = null;
         static bool[,]
             // combined audio format and bitrate flag array
             // size must be at least equal to [AudioFormats, AudioBitrates]
             AudioFormatBitrate = new bool[10, 10];
-        static readonly string[]
-            // line delimiters for dos and unix text files
-            LineDelimeters = { "\r\n", "\r", "\n" },
-            // all audio formats
-            // WAV must be the last entry in this list
-            AudioFormats = { MP3, M4A, OGG, OPUS, SHN, AIF, WMA, ALAC, FLAC, WAV },
-            // allowable compression formats (lossy and lossless)
-            AudioCompressionFormats = { MP3, M4A, OGG, OPUS, ALAC, FLAC },
-            // allowable decompression formats (lossless)
-            AudioDecompressionFormats = { ALAC, FLAC },
-            // allowable conversion formats (lossy and lossless)
-            AudioConversionFormats = { SHN, AIF, WMA },
-            // all audio bitrates
-            // RAW must be last entry in this list
-            AudioBitrates = { BR1644, BR1648, BR2444, BR2448, BR2488, BR2496, RAW },
-            // compressed audio directory extensions
-            // must correspond to AudioCompressionFormats list
-            CompressedDirExtensions = { MP3F, M4AF, OGGF, OPUSF, ALACF, FLACF },
-            // miscellaneous files to delete for cleanup
-            FilesToDelete = { ".npr", ".HDP", ".H2", ".sfk", ".bak", ".BAK", ".peak",
-                              ".reapeaks", ".tmp", ".DS_Store" },
-            // miscellaneous directories to delete for cleanup
-            DirsToDelete = { "Images" };
-        static readonly int[]
-            // quality parameter lists { lower, active, upper }
-            // must correspond to and be in same order as AudioCompressionFormats list
-            mp3Quality = { 0, 0, 4 }, // 0 is best
-            aacQuality = { 0, 127, 127 },
-            oggQuality = { 0, 8, 10 },
-            opusQuality = { 64, 256, 256 }, // placeholder only
-            alacQuality = { 0, 0, 0}, // placeholder only
-            flacQuality = { 1, 6, 10 };
-        static readonly int[][]
-            // Two dimensional list of all quality parameters
-            // must correspond to and be in same order as AudioCompressionFormats list
-            AudioCompressionQuality = new[]
-              { mp3Quality,
-                aacQuality,
-                oggQuality,
-                opusQuality,
-                alacQuality,
-                flacQuality };
-        static List<string>
-            DirsMarkedForDeletion = new List<string>();
-        // configuration ini file located in c:\Program Files\Audio Archive Toolbox
-        static string ProgramDir = "C:\\Program Files\\Audio Archive Toolbox\\";
-        static string ConfigurationFileName = "aatb_config.ini";
-        static string ConfigurationFilePath = ProgramDir + ConfigurationFileName;
-
 
         // = = = = = Main procedure = = = = = //
 
@@ -188,11 +189,17 @@ namespace AATB
             LogFilePath = RootDir + BACKSLASH + LOGNAME;
             Log = new AATB_Log(LogFilePath);
 
-            // read configuration file
+            // check to see if command line contains debug flag
+            if (argv.Contains("--debug")) Debug = true;
+            
+            // read configuration file data
             IniData ConfigData = ReadConfiguration(ConfigurationFilePath);
 
-            // expand command line with macro definitions, if they exist
-            ExpandedCommandLineArgs = ExpandCommandLine(ConfigData, argv);
+            // get user defined variables from configuration file data, if present
+            GetIniData(ConfigData);
+
+            // expand command line with macro definitions from configuration file data, if present
+            ExpandedCommandLineArgs = ExpandCommandLineMacros(ConfigData, argv);
 
             // check arguments exist
             if (ExpandedCommandLineArgs != null)
@@ -508,7 +515,8 @@ namespace AATB
 
                         // additonal logging for debugging
                         case "--debug":
-                            Debug = true;
+                            // debug flag is previously set
+                            //Debug = true;
                             break;
 
                         case "--ver":

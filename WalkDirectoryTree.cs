@@ -549,31 +549,25 @@ namespace AATB
                                 Log.WriteLine("*** WAV file has no matching FLAC file, and has not been deleted: " + wav.Name);
                         }
                     }
-
-                    // other Dir.Type values not processed in this section
-
-                    // delete extraneous files created by sound editing process
-                    // "AllFilesList" contains all files in the current directory
-                    // "FilesToDelete" contain all file types (extensions) to be deleted
-                    foreach (FileInfo fi in AllFilesList)
-                    {
-                        if (FilesToDelete.Contains(fi.Extension))
-                        {
-                            Log.WriteLine("  Deleting file: " + fi.Name);
-                            DeleteFile(fi.FullName);
-                        }
-                    }
                 }
 
-                // mark miscellaneous directories in "DirsToDelete" list for deletion
-                // these directories will be deleted at the end of program execution
-                foreach (string dirtodelete in DirsToDelete)
+                // delete extraneous files created by sound editing process
+                // "AllFilesList" contains all files in the current directory
+                // "FilesToDelete" contain all file types (extensions) to be deleted
+                foreach (FileInfo fi in AllFilesList)
                 {
-                    if (dirtodelete == Dir.Name)
+                    if (FilesToDelete.Contains(fi.Extension))
                     {
-                        DirsMarkedForDeletion.Add(Dir.Path);
+                        Log.WriteLine("  Deleting file: " + fi.Name);
+                        DeleteFile(fi.FullName);
                     }
                 }
+
+                // add miscellaneous directories to "DirsToDelete" list for deletion
+                // these directories will be deleted at the end of program execution
+                if (DirsToDelete.Contains(Dir.Name))
+                    DirsMarkedForDeletion.Add(Dir.Path);
+
             } // end Delete Audio section
 
             // = = = = = = = = Recursion = = = = = = = = 

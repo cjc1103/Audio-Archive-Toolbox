@@ -1,5 +1,6 @@
 ﻿using IniParser;
 using IniParser.Model;
+using System.Globalization;
 
 namespace AATB
 {
@@ -22,14 +23,21 @@ namespace AATB
             // default comment string
             FileIniData.Parser.Configuration.CommentString = "#";
 
-            // Read data from ini file. If file does not exist, returns null
-            if (File.Exists(ConfigurationFilePath))
-                ConfigData = FileIniData.ReadFile(ConfigurationFilePath);
+            try
+            {
+                // Read data from ini file. If file does not exist, returns null
+                if (File.Exists(ConfigurationFilePath))
+                    ConfigData = FileIniData.ReadFile(ConfigurationFilePath);
+            }
+            catch (Exception)
+            {
+                Log.WriteLine("*** Cannot read configuration ini file: " + ConfigurationFilePath);
+            }
 
             return ConfigData;
         }
 
-        static string[] ExpandCommandLine(IniData ConfigData, string[] InputCommandLineList)
+        static string[] ExpandCommandLineMacros(IniData ConfigData, string[] InputCommandLineList)
         {
             /* expands the command line to include macros defined in the configuration file
              *
@@ -48,12 +56,10 @@ namespace AATB
             // method is only valid for non empty input command line
             if (InputCommandLineList.Length > 0)
             {
-
                 if (ConfigData != null)
                 {
-                    // Get the SectionData from the section "macros"
-                    // return the definition matching argument, if it exists
-                    KeyDataCollection MacroKeys = ConfigData["macros"];
+                    // Get the SectionData from the section "Macros"
+                    KeyDataCollection MacroKeys = ConfigData["Macros"];
 
                     // iterate through all keys in collection
                     // if arg equals key name then return key value
@@ -90,6 +96,93 @@ namespace AATB
                 ExpandedCommandLineList = ExpandedCommandLine.Split(SPACE, StringSplitOptions.RemoveEmptyEntries);
 
             return ExpandedCommandLineList;
+        }
+
+        static string GetKeyValueFromConfigData(IniData ConfigData, string InitialValue, string section, string name)
+        {
+            /* search previously read config file data (ConfigData)
+             * Inputs
+             *   ConfigData          parsed data from configuration ini file
+             *   Config file format
+             *      [key]
+             *      data=value
+             * Output
+             *   Key value matching input argument key
+             */
+            string KeyValueFound = null;
+
+            if (ConfigData != null)
+            {
+                // Get the SectionData
+                KeyDataCollection SectionData = ConfigData[section];
+
+                foreach (KeyData k in SectionData)
+                {
+                    // if key is found, expand command line with key value
+                    if (k.KeyName == name)
+                    {
+                        KeyValueFound = k.Value;
+                        break;
+                    }
+                }
+            }
+
+            // if key value not found, then return the initial value
+            if (KeyValueFound == null)
+                KeyValueFound = InitialValue;
+
+            return KeyValueFound;
+        }
+
+        static List<string> GetListFromConfigData(IniData ConfigData, string section)
+        {
+            /* Retrieve list fron ConifgData under section key
+             * Inputs:
+             *   ConfigData
+             *   key        section name
+             *   name       key name
+             * Ouputs:
+             *   List containing data
+             */ 
+            List<string> DataList = new List<string>();
+
+            if (ConfigData != null)
+            {
+                // Get the SectionData
+                KeyDataCollection SectionData = ConfigData[section];
+
+                // build list from all ley values in this section
+                foreach (KeyData k in SectionData)
+                    DataList.Add(k.Value);
+            }
+
+            return DataList;
+        }
+
+        static void GetIniData(IniData ConfigData)
+        {
+            /* Get data from configuration file
+             * Data was previously read into the ConfigData data structure
+             * Search for key data, if found update the item
+             * Initial values of these global variables are set in the Program method
+             */
+
+            // [Settings]
+            // InfoTextFileExtension = <extension>
+            // CuesheetFileExtension = <extension>
+            INFOTXT = GetKeyValueFromConfigData(ConfigData, INFOTXTdefault, "Settings", "InfotextFileExtension");
+            ALLINFOTXT = "*." + INFOTXT;
+            INFOCUE = GetKeyValueFromConfigData(ConfigData, INFOCUEdefault, "Settings", "CuesheetFileExtension");
+            ALLINFOCUE = "*." + INFOCUE;
+
+            // [FilesToDelete]
+            // xx = <extension>
+            FilesToDelete = GetListFromConfigData(ConfigData, "FilesToDelete");
+
+            // [DirsToDelete]
+            // xx = <directory>
+            DirsToDelete = GetListFromConfigData(ConfigData, "DirsToDelete");
+        
         }
     }
 }

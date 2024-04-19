@@ -69,7 +69,7 @@ namespace AATB
             + "  o FLAC is the only audio compression format supported for raw files\n"
             + "  o AAC compressed files are saved in MPEG-4 Audio (.m4a) container\n"
             + "  o If compression bitrates are not specified, all bitrates are assumed\n"
-            + "  o Metadata in info.txt and info.cue files can be used to tag compressed audio\n"
+            + "  o Metadata in infotext and info.cue files can be used to tag compressed audio\n"
             + "  o Command line macros can be defined in the aatb_config.ini configuration file\n"
             );
         } // end PrintHelp

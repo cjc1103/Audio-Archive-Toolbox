@@ -248,11 +248,11 @@ namespace AATB
 
             // Additional input checking
 
-            if ((CompressAudio  || VerifyAudio  || CreateCuesheet) && UseInfotext)
-                Log.WriteLine("Use metadata from information file (info.txt)");
+            if ((CompressAudio || VerifyAudio || CreateCuesheet) && UseInfotext)
+                Log.WriteLine("Use metadata from information file (" + INFOTXT + ")");
 
             if ((CompressAudio  || VerifyAudio ) && UseCuesheet)
-                Log.WriteLine("Use metadata from cuesheet");
+                Log.WriteLine("Use metadata from cuesheet (" + INFOCUE + ")");
 
             if (UseLowerCase && UseTitleCase)
             {

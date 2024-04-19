@@ -34,7 +34,7 @@ Program history
      Enabled "overwrite" flag to overwrite existing files
 
 2.2  2018-06-02
-     Copies info.txt file from root directory to compressed subdirectory being created,
+     Copies infotext file from root directory to compressed subdirectory being created,
      or being verified (with overwrite flag). Moved standalone playlist creation
      function under "Verify" option. Replaced obsolete faac codec with fdkaac codec
      Rewrote GetTrackDuration procedure to use mediainfo utility for all formats
@@ -70,7 +70,7 @@ Program history
        (MD5, FFP, SHNRPT) creation to main procedure
      Moved log time stamp to after the user accepts (enters "y") the command inputs
      Moved command line check code to separate procedure "CheckCommandLineInput"
-     Added procedure to parse info.txt file for metadata (artist, album, track names)
+     Added procedure to parse infotext file for metadata (artist, album, track names)
 
 2.6  2019-05-09
      Added 24 to 16 bit conversion option using the sox utility
@@ -96,10 +96,10 @@ Program history
      Added Date metadata tag for all compressed audio file utility arguments
 
 3.2  2019-12-11
-     Added GetMetaData method to parse *info.txt file (if it exists) for live recording metadata
+     Added GetMetaData method to parse *infotext file (if it exists) for live recording metadata
        (Artist, Album, Venue, Location, Date, track titles), and to use this metadata
        to tag compressed files. This is restricted to <bitrate> audio file directories, the 
-       info.txt file must be located in the parent directory.
+       infotext file must be located in the parent directory.
      Added method to join tracked wav files into a combined wav file, using the shntool app
      Removed nero aac compression codec, as it is not supported by developer any longer
      Rewrote compressed audio file quality parameter handling, CheckQBounds, PrintQBounds
@@ -127,7 +127,7 @@ Program history
      Separated metadata handling method into two parts
        GetDirMetadata to populate Dir variables (all directories traversed except for root directory)
        GetTrackMetadata to populate Track and TrackDuration lists for Compress and Verify sections
-     Metadata handling now allows import of metadata using an info.txt information file
+     Metadata handling now allows import of metadata using an infotext information file
      Moved some metadata initialation from the AATB_Dir constructor to the GetDirMetaData method
      Added TrackDurationList string list to AATB_Dir class
      Removed GetSongTitle method, as its function was incorporated into GetTrackMetaData
@@ -162,7 +162,7 @@ Program history
      Modified all audio compression methods to use the Dir.ArtistList list
      Various variable renaming and code cleanup. Rewrote SplitString method.
      Added command line options
-       --info-metadata (live format only) use info.txt file in root directory for album and track metadata
+       --info-metadata (live format only) use infotext file in root directory for album and track metadata
        --cue-metadata (CD format only) use cuesheet in wav file directory <bitrate> for track metadata
        these two options are mutually exclusive, can't use both at once
        --create-cue (subordinate to verify function) creates cue file in wav file directory <bitrate>
@@ -174,7 +174,7 @@ Program history
      Fixed bug in GetDirMetadata to account for parent directory name starting with a date yyyy-mm-dd
      Changed Dir class to add "Comment" string
      Changed GetDirInfoFromInfotext method to accept a comment in line 4, and date in line 5 (changed in 4.3)
-     Modified GetTrackMetadataFromInfotext to recognize various track numbering schemes in info.txt file:
+     Modified GetTrackMetadataFromInfotext to recognize various track numbering schemes in infotext file:
        d.  Title
        dd. Title
        dd Title
@@ -188,7 +188,7 @@ Program history
      Fixed GetMetadataFromInfotext method to ignore all characters in song title after a left parent "("
        Comments in parentheses are ignored even if other trailing characters are present
      Changed GetMetaData method to always use parent directory name for subdirectories even if using
-       info.txt or cuesheet files. Artist, Venue, Stage, Location from info files is used for metadata. 
+       infotext or cuesheet files. Artist, Venue, Stage, Location from info files is used for metadata. 
      Changed incrementing TrackNbr to start of loop in each method using this counter
      Streamlined and corrected bugs in ConvertWAVBitrate method, now uses Regex to build output filenames
      Changed command line input to accept any bitrate for mp3's, although the resultant files for bitrates
@@ -204,7 +204,7 @@ Program history
 4.4	 2021-06-10
      Changed GetDirMetadatafromInfotext and GetDirMetadataFromCuesheet methods to search for labels using a
        common method called SearchFile. Label names are hard coded into these methods.
-     Fixed CreateCuesheet method to use info.txt file for track metadata and output to info.cue file
+     Fixed CreateCuesheet method to use infotext file for track metadata and output to info.cue file
      Rewrote VerifyMD5Checksum and VerifyFFPChecksum methods to correct a problem where checksums would
        not be verified unless the -o|--overwrite flag was set.
      Cleaned up VerifyMD5Checksum, VerifyFFPChecksum, VerifySHNReport to assume FileList is non-zero and
@@ -311,7 +311,7 @@ Program history
      Corrected search terms for building Album string in DirMetadataFromCuesheet
 
 5.7  2023-03-09
-     Added RenameInfoFiles flag to rename info.txt and .cue files
+     Added RenameInfoFiles flag to rename infotext and .cue files
      Added UseCurrentDirInfo flag for Verify mode to force program to read info files in current dir
      Added two string variables to AATB_DirInfo class: DirMetadataSource and TrackMetadataSource,
        to record the source of metadata for Albums and Tracks respectively
@@ -345,7 +345,7 @@ Program history
      Corrected regex expressions for extracting artist and footnote remarks in GetTrackMetadataFromInfotext
      Corrected and updated command line error checking in CheckuserInput method
 
-6.0  2024-04-07
+6.0  2024-04-19
      Added ini-parser-dotnet NuGet package to parse ini files
      Added capability to store and read configuration options from "aatb_config.ini", located in program dir
      Added IniFileMethods.cs to hold ini configuration methods

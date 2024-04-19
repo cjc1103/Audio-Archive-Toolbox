@@ -134,7 +134,7 @@ namespace AATB
             /* Extract directory metadata
              * Inputs:
              *   Dir class
-             *   InfotextPath location of info.txt file with recording information
+             *   InfotextPath location of infotext file with recording information
              *   CuesheetPath location of cuesheet file
              * Outputs:
              *   Dir class
@@ -256,7 +256,7 @@ namespace AATB
              * Note: will overwrite existing metadata derived from directory name
              * Inputs:
              *   Dir class
-             *   InfotextPath   location of info.txt file with recording information
+             *   InfotextPath   location of infotext file with recording information
              *   Info header format with four lines:
              *     Performer (Artist)
              *     Venue
