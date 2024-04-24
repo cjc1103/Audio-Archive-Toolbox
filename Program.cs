@@ -144,6 +144,7 @@ namespace AATB
             ConvertBitrate = false,
             CreateCuesheet = false,
             DeleteAudio = false,
+            DeleteMiscFiles = false,
             Overwrite = false,
             CreateMD5 = false,
             CreateFFP = false,
@@ -494,6 +495,12 @@ namespace AATB
                             break;
 
                         // other options
+                        // misc files delete
+                        case "--misc":
+                        case "--misc-files-delete":
+                            DeleteMiscFiles = true;
+                            break;
+
                         // overwrite existing files
                         case "-o":
                         case "--overwrite":

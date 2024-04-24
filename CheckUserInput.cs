@@ -236,14 +236,13 @@ namespace AATB
             // Delete redundant audio files
             if (DeleteAudio)
             {
-                Log.WriteLine("Delete redundant audio files");
-                if (!CheckFormatBitrate(WAV, ANYBITRATE)
-                    && !CheckFormatBitrate(WAV, RAW))
+                if (!CheckFormatBitrate(WAV, ANYBITRATE))
                 {
-                    Log.WriteLine("Input error: Select WAV bitrate '--wav=[<bitrate>|raw|all]'");
-                    Environment.Exit(0);
+                    Log.WriteLine("Delete redundant wav audio files");
+                    PrintCompressionOptions();
                 }
-                PrintCompressionOptions();
+                if (DeleteMiscFiles)
+                    Log.WriteLine("Delete miscellaneous files and directories");
             }
 
             // Additional input checking

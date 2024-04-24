@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace AATB
 {
@@ -551,22 +552,29 @@ namespace AATB
                     }
                 }
 
-                // delete extraneous files created by sound editing process
-                // "AllFilesList" contains all files in the current directory
-                // "FilesToDelete" contain all file types (extensions) to be deleted
-                foreach (FileInfo fi in AllFilesList)
+                if (DeleteMiscFiles)
                 {
-                    if (FilesToDelete.Contains(fi.Extension))
+                    // delete miscellaneous files created by sound editing process
+                    // search through all files in directory and delete the files
+                    // matching the regex patterns in FilesToDelete list
+                    foreach (FileInfo fi in AllFilesList)
                     {
-                        Log.WriteLine("  Deleting file: " + fi.Name);
-                        DeleteFile(fi.FullName);
+                        foreach (string ftd_regex in FilesToDelete)
+                        {
+                            Match FileToDeletePatternMatch = Regex.Match(fi.Name, @ftd_regex);
+                            if (FileToDeletePatternMatch.Success)
+                            {
+                                Log.WriteLine("  Deleting file: " + fi.Name);
+                                DeleteFile(fi.FullName);
+                            }
+                        }
                     }
-                }
 
-                // add miscellaneous directories to "DirsToDelete" list for deletion
-                // these directories will be deleted at the end of program execution
-                if (DirsToDelete.Contains(Dir.Name))
-                    DirsMarkedForDeletion.Add(Dir.Path);
+                    // add miscellaneous directories to "DirsToDelete" list for deletion
+                    // these directories will be deleted at the end of program execution
+                    if (DirsToDelete.Contains(Dir.Name))
+                        DirsMarkedForDeletion.Add(Dir.Path);
+                }
 
             } // end Delete Audio section
 
