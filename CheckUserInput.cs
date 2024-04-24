@@ -236,7 +236,7 @@ namespace AATB
             // Delete redundant audio files
             if (DeleteAudio)
             {
-                if (!CheckFormatBitrate(WAV, ANYBITRATE))
+                if (CheckFormatBitrate(WAV, ANYBITRATE))
                 {
                     Log.WriteLine("Delete redundant wav audio files");
                     PrintCompressionOptions();
