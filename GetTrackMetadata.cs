@@ -100,7 +100,7 @@ namespace AATB
                 if (StartLineNumber == -1) StartLineNumber = 6;
                 // get end line number - search for keyword "Lyrics"
                 // if not found (-1) set end line number to length of list
-                EndLineNumber = GetLineNumberOfSearchTerm(StartLineNumber, "Lyrics", DataList);
+                EndLineNumber = GetLineNumberOfSearchTerm(StartLineNumber, "^Lyrics", DataList);
                 if (EndLineNumber == -1) EndLineNumber = DataList.Length;
                 if (Debug) Console.WriteLine("dbg: Setlist line numbers start: {0:D2}  end: {1:D2}",
                                             StartLineNumber, EndLineNumber);
@@ -131,7 +131,7 @@ namespace AATB
                         {
                             // extract artist name from within brackets
                             ArtistFound = true;
-                            TrackArtist = DataLine.Substring(ArtistPatternMatch.Index);
+                            TrackArtist = ArtistPatternMatch.Value;
                             // remove leading bracket
                             TrackArtist = Regex.Replace(TrackArtist, @"\[", "");
                             // remove trailing bracket and any following characters
