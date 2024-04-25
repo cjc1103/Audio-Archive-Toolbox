@@ -178,8 +178,10 @@ namespace AATB
         {
             /* Returns the line number of the first instance of the search term in list
              * Inputs:
-             *   DataList   list containing data
-             *              Note: date yyyy-mm-dd search term is "^[1-2]\d{3}-\d{2}-\d{2}"
+             *   StartIndex   Start index in datalist to search
+             *   SearchTerm   Regular expression
+             *   DataList     list containing data
+ 
              * Outputs:
              *   line number of search term found by pattern match, 0 if not found
              */

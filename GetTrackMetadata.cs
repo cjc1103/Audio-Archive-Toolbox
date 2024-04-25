@@ -94,9 +94,9 @@ namespace AATB
                 DataList = ReadTextFile(Dir.InfotextPath);
                 // initialize counters
                 TrackNumber = 0;
-                // get start line number - search for the first instance of keyword "Set"
+                // get start line number - search for the first instance of keyword
                 // if not found set start line number to 6 to skip header information
-                StartLineNumber = GetLineNumberOfSearchTerm(0, "Set", DataList);
+                StartLineNumber = GetLineNumberOfSearchTerm(0, "^[Set|Track|Disc]", DataList);
                 if (StartLineNumber == 0) StartLineNumber = 6;
                 // get end line number - search for keyword "Lyrics"
                 // if not found set end line number to length of list
