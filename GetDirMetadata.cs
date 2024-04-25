@@ -183,8 +183,6 @@ namespace AATB
                     Dir.BaseNameTemp3 = BaseName.Substring(Dir.PatternMatchDate.Index + 11);
                     // convert to title case/lower case if appropriate
                     Dir.BaseNameTemp3 = ConvertCase(Dir.BaseNameTemp3);
-                    // concatentate to album and parent base name
-                    // Dir.Album += (SPACE + Dir.Stage);
                     Dir.ParentBaseName += (PERIOD + Dir.BaseNameTemp3);
                 }
                 // remove any remaining embedded spaces in basename
@@ -297,7 +295,7 @@ namespace AATB
                 // read data from text file
                 DataList = ReadTextFile(Dir.InfotextPath);
                 // search for date; returns zero based line number for valid date, otherwise 0
-                DateLineNumber = GetLineNumberOfSearchTerm(0, "^[1-2]\\d{3}-\\d{2}-\\d{2}", DataList);
+                DateLineNumber = GetLineNumberOfSearchTerm(0, "^[19|20]\\d{2}-\\d{2}-\\d{2}", DataList);
                 // valid date on line number 4
                 if (DateLineNumber == 3)
                 {
