@@ -566,6 +566,7 @@ namespace AATB
                             {
                                 Log.WriteLine("  Deleting file: " + fi.Name);
                                 DeleteFile(fi.FullName);
+                                break; // exit loop and get next file
                             }
                         }
                     }
