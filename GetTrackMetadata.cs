@@ -96,7 +96,7 @@ namespace AATB
                 TrackNumber = 0;
                 // get start line number - search for the first instance of keyword
                 // if not found (-1) set start line number to 6 to skip header information
-                StartLineNumber = GetLineNumberOfSearchTerm(0, "^[Set|Track|Disc]", DataList);
+                StartLineNumber = GetLineNumberOfSearchTerm(0, "^(Set|Track|Disc)", DataList);
                 if (StartLineNumber == -1) StartLineNumber = 6;
                 // get end line number - search for keyword "Lyrics"
                 // if not found (-1) set end line number to length of list
