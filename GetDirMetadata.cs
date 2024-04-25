@@ -294,8 +294,10 @@ namespace AATB
                 Log.WriteLine("  Reading album metadata from info file: " + InfotextFileName);
                 // read data from text file
                 DataList = ReadTextFile(Dir.InfotextPath);
-                // search for date; returns zero based line number for valid date, otherwise 0
-                DateLineNumber = GetLineNumberOfSearchTerm(0, "^[19|20]\\d{2}-\\d{2}-\\d{2}", DataList);
+                // search for date format yyyy-mm-dd or mm-dd-yyyy, where year=19xx or 20xx 
+                // returns zero based line number for valid date, otherwise 0
+                DateLineNumber = GetLineNumberOfSearchTerm(0,
+                    "^[[19|20]\\d{2}-\\d{2}-\\d{2}|\\d{2}-\\d{2}-[19|20]\\d{2}]", DataList);
                 // valid date on line number 4
                 if (DateLineNumber == 3)
                 {

@@ -183,7 +183,7 @@ namespace AATB
              *   DataList     list containing data
  
              * Outputs:
-             *   line number of search term found by pattern match, 0 if not found
+             *   line number of search term found by pattern match, -1 if not found
              */
             int i;
             Match PatternMatch;
@@ -196,7 +196,7 @@ namespace AATB
                     return i;
             }
             // search term not found
-            return 0;
+            return -1;
         } // end GetLineNumberOfSearchTerm
 
         static void PrintFileList(string FileType, FileInfo[] FileList)
