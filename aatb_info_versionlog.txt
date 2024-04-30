@@ -349,9 +349,9 @@ Program history
      Added ini-parser-dotnet NuGet package to parse ini files
      Added capability to store and read configuration options from "aatb_config.ini", located in program dir
      Added IniFileMethods.cs to hold ini configuration methods
+     Configuration ini file contains macro definitions and file extensions for infotext adn cuesheet files
      Modified Main method, and search for any macros defined in the configuration file and expand the command
        line arguments for those macros by substituting the macro definition
 	 Changed parameter order for SplitString and GetLineNumberOfSearchTerm methods to match the String.Split method
-     Changed suffix for info and cue files to *.txt and *.cue respectively to align with current industry practice
      Added exception handling for System.IO.DirectoryNetFoundException in WalkDirectoryTree recursion code
      Changed CompressAudio method to only copy infotext file if it exists
