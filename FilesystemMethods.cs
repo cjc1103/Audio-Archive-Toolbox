@@ -172,10 +172,11 @@ namespace AATB
             SourceFileName = SplitFileName(SourceFilePath);
             TargetFilePath = TargetDirPath + BACKSLASH + SourceFileName;
             
-            // CopyFile method will catch errors
-            Log.WriteLine("    Copying information file: " + SourceFileName);
-            CopyFile(SourceFilePath, TargetFilePath);
-
+            if (File.Exists(SourceFilePath))
+            {
+                Log.WriteLine("    Copying information file: " + SourceFileName);
+                CopyFile(SourceFilePath, TargetFilePath);
+            }
         } // end CopyTextFile
 
         static string[] ReadTextFile(string FilePath)
