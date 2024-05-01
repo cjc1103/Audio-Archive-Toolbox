@@ -190,8 +190,8 @@ namespace AATB
             LogFilePath = RootDir + BACKSLASH + LOGNAME;
             Log = new AATB_Log(LogFilePath);
 
-            // check to see if command line contains debug flag
-            if (argv.Contains("--debug")) Debug = true;
+            // check to see if command line contains inidebug flag
+            //if (argv.Contains("--inidebug")) bool IniDebug = true;
             
             // read configuration file data
             IniData ConfigData = ReadConfiguration(ConfigurationFilePath);
@@ -522,8 +522,7 @@ namespace AATB
 
                         // additonal logging for debugging
                         case "--debug":
-                            // debug flag is previously set
-                            //Debug = true;
+                            Debug = true;
                             break;
 
                         case "--ver":
