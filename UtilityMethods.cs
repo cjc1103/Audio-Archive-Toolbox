@@ -224,7 +224,7 @@ namespace AATB
                 // no change
                 OutputName = InputName;
 
-            return (OutputName);
+            return OutputName;
         } // end ConvertCase
 
         static string CleanDataString(string Data)
