@@ -35,7 +35,7 @@ namespace AATB
             }
 
             return ConfigData;
-        }
+        } // end ReadConfiguration
 
         static string[] ExpandCommandLineMacros(IniData ConfigData, string[] InputCommandLineList)
         {
@@ -96,7 +96,7 @@ namespace AATB
                 ExpandedCommandLineList = ExpandedCommandLine.Split(SPACE, StringSplitOptions.RemoveEmptyEntries);
 
             return ExpandedCommandLineList;
-        }
+        } //end ExpandCommandLineMacros
 
         static string GetKeyValueFromConfigData(IniData ConfigData, string InitialValue, string section, string name)
         {
@@ -125,7 +125,7 @@ namespace AATB
                         break;
                     }
                 }
-            }
+            } //end GetKeyValueFromConfigData
 
             // if key value not found, then return the initial value
             if (KeyValueFound == null)
@@ -156,7 +156,7 @@ namespace AATB
             }
 
             return DataList;
-        }
+        } //end GetListFromConfigData
 
         static void GetIniData(IniData ConfigData)
         {
@@ -171,9 +171,11 @@ namespace AATB
 
             // [Settings]
             // InfoTextFileExtension = <extension>
-            // CuesheetFileExtension = <extension>
             INFOTXT = GetKeyValueFromConfigData(ConfigData, INFOTXTdefault, "Settings", "InfotextFileExtension");
             ALLINFOTXT = "*." + INFOTXT;
+
+            // [Settings]
+            // CuesheetFileExtension = <extension>
             INFOCUE = GetKeyValueFromConfigData(ConfigData, INFOCUEdefault, "Settings", "CuesheetFileExtension");
             ALLINFOCUE = "*." + INFOCUE;
 
@@ -185,6 +187,6 @@ namespace AATB
             // xx = <directory>
             DirsToDelete = GetListFromConfigData(ConfigData, "DirsToDelete");
         
-        }
+        } // end GetInidata
     }
 }
