@@ -136,14 +136,13 @@ namespace AATB
 
         static List<string> GetListFromConfigData(IniData ConfigData, string section)
         {
-            /* Retrieve list fron ConifgData under section key
+            /* Retrieve list from a specific section in configuration file
              * Inputs:
-             *   ConfigData
-             *   key        section name
-             *   name       key name
-             * Ouputs:
-             *   List containing data
-             */ 
+             *   ConfigData  data structure previously created with configuration file data
+             *   section     section name
+             * Outputs:
+             *   DataList    list containing data from the specified section in configuration file
+             */
             List<string> DataList = new List<string>();
 
             if (ConfigData != null)
@@ -151,7 +150,7 @@ namespace AATB
                 // Get the SectionData
                 KeyDataCollection SectionData = ConfigData[section];
 
-                // build list from all ley values in this section
+                // build list from all key values in this section
                 foreach (KeyData k in SectionData)
                     DataList.Add(k.Value);
             }
@@ -162,9 +161,12 @@ namespace AATB
         static void GetIniData(IniData ConfigData)
         {
             /* Get data from configuration file
-             * Data was previously read into the ConfigData data structure
-             * Search for key data, if found update the item
-             * Initial values of these global variables are set in the Program method
+             * Input:
+             *   ConfigData data structure previously created with ini file data
+             * Outputs:
+             *   INFOTXT and CUESHEET file extensions (global)
+             *   Default values of the infotext and cuesheet variables are set in the Program method
+             *   FilesToDelete and DirsToDelete are global lists defined in Program method
              */
 
             // [Settings]
