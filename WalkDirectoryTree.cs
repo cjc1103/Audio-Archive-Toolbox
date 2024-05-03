@@ -150,9 +150,11 @@ namespace AATB
                                         CreateM3UPlaylist(Dir, M3UFilePath, CompAudioFileList);
                                     }
 
-                                    // copy info file, if it exists, to destination directory
+                                    // copy info files to destination directory, as appropriate
                                     if (UseInfotext)
                                         CopyTextFile(Dir.InfotextPath, CompAudioDirPath);
+                                    if (UseCuesheet)
+                                        CopyTextFile(Dir.CuesheetPath, CompAudioDirPath);
                                 }
                                 else
                                     Log.WriteLine("*** " + CompAudioFormat.ToUpper()

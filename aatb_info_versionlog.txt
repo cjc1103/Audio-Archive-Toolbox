@@ -345,7 +345,7 @@ Program history
      Corrected regex expressions for extracting artist and footnote remarks in GetTrackMetadataFromInfotext
      Corrected and updated command line error checking in CheckuserInput method
 
-6.0  2024-04-19
+6.0  2024-05-03
      Added ini-parser-dotnet NuGet package to parse ini files
      Added capability to store and read configuration options from "aatb_config.ini", located in program dir
      Added IniFileMethods.cs to hold ini configuration methods
@@ -354,4 +354,6 @@ Program history
        line arguments for those macros by substituting the macro definition
 	 Changed parameter order for SplitString and GetLineNumberOfSearchTerm methods to match the String.Split method
      Added exception handling for System.IO.DirectoryNetFoundException in WalkDirectoryTree recursion code
-     Changed CompressAudio method to only copy infotext file if it exists
+     Changed CompressAudio method to copy infotext and cuesheet files if they exist
+     Replaced multiple concert date regex statements with static ConcertDateFormat string
+     Updated GetDirMetadata to streamline metadata collection and validate concert date

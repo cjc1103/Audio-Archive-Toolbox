@@ -160,7 +160,7 @@ namespace AATB
             BaseName = Regex.Replace(Dir.ParentName, @"^\d+\.?\s+", "");
 
             // check for live recording format: embedded date "yyyy-mm-dd stage"
-            Dir.PatternMatchDate = Regex.Match(BaseName, @"[1-2]\d{3}-\d{2}-\d{2}");
+            Dir.PatternMatchDate = Regex.Match(BaseName, @ConcertDateFormat);
             // check for commercial CD format: embedded " - "
             Dir.PatternMatchSHS = Regex.Match(BaseName, @SPACEHYPHENSPACE);
 
@@ -170,8 +170,8 @@ namespace AATB
                 Dir.RecordingType = LIVE;
                 // extract album artist
                 Dir.BaseNameTemp1 = BaseName.Substring(0, Dir.PatternMatchDate.Index);
-                // remove trailing non-word [A-Z][a-z][0-9] character including whitespace
-                Dir.BaseNameTemp1 = Regex.Replace(Dir.BaseNameTemp1, @"[^A-Za-z0-9]$", "");
+                // remove trailing non-word [^A-Za-z0-9_] character including whitespace
+                Dir.BaseNameTemp1 = Regex.Replace(Dir.BaseNameTemp1, @"\W+$", "");
                 // convert to title case/lower case if appropriate
                 Dir.BaseNameTemp1 = ConvertCase(Dir.BaseNameTemp1);
                 // extract concert date, 10 chars long (yyyy-mm-dd)
@@ -187,7 +187,7 @@ namespace AATB
                     Dir.ParentBaseName += (PERIOD + Dir.BaseNameTemp3);
                 }
                 // remove any remaining embedded spaces in basename
-                Dir.ParentBaseName = Regex.Replace(Dir.ParentBaseName, @"\s", "");
+                Dir.ParentBaseName = Regex.Replace(Dir.ParentBaseName, @"\s+", "");
             }
 
             // commercial recording format
@@ -295,61 +295,63 @@ namespace AATB
                 Log.WriteLine("  Reading album metadata from info file: " + InfotextFileName);
                 // read data from text file
                 DataList = ReadTextFile(Dir.InfotextPath);
-                // search for concert date in DataList
-                // returns line number of date, -1 if date not found
-                DateLineNumber = GetLineNumberOfSearchTerm(0, "^"+ConcertDateFormat, DataList);
-                // valid date on line number 4
-                if (DateLineNumber == 3)
-                {
-                    Dir.AlbumArtist = DataList[0];
-                    Dir.Event = null;
-                    Dir.Venue = DataList[1];
-                    Dir.Stage = null;
-                    Dir.Location = DataList[2];
-                    Dir.ConcertDate = DataList[3];
-                }
-                // valid date on line number 5
-                else if (DateLineNumber == 4)
-                {
-                    Dir.AlbumArtist = DataList[0];
-                    Dir.Event = DataList[1];
-                    Dir.Venue = null;
-                    Dir.Stage = DataList[2];
-                    Dir.Location = DataList[3];
-                    Dir.ConcertDate = DataList[4];
-                }
-                // otherwise search for metadata labels, find first instance of each label
-                else
-                {
-                    Dir.AlbumArtist = GetDataAfterSearchTerm("PERFORMER", DataList);
-                    Dir.Album = GetDataAfterSearchTerm("TITLE", DataList);
-                    Dir.Event = GetDataAfterSearchTerm("EVENT", DataList);
-                    Dir.Venue = GetDataAfterSearchTerm("VENUE", DataList);
-                    Dir.Stage = GetDataAfterSearchTerm("STAGE", DataList);
-                    Dir.Location = GetDataAfterSearchTerm("LOCATION", DataList);
-                    Dir.ConcertDate = GetDataAfterSearchTerm("DATE", DataList);
-                }
 
-                // verify minimum metadata has been found
                 switch (Dir.RecordingType)
                 {
                     case LIVE:
                     {
+                        // search for concert date in DataList
+                        // returns line number of date, -1 if date not found
+                        DateLineNumber = GetLineNumberOfSearchTerm(0, "^" + ConcertDateFormat, DataList);
+                        // valid date on line number 4
+                        if (DateLineNumber == 3)
+                        {
+                            Dir.AlbumArtist = DataList[0];
+                            Dir.Event = null;
+                            Dir.Venue = DataList[1];
+                            Dir.Stage = null;
+                            Dir.Location = DataList[2];
+                            Dir.ConcertDate = DataList[3];
+                            ValidConcertDate = true;
+                        }
+                        // valid date on line number 5
+                        else if (DateLineNumber == 4)
+                        {
+                            Dir.AlbumArtist = DataList[0];
+                            Dir.Event = DataList[1];
+                            Dir.Venue = null;
+                            Dir.Stage = DataList[2];
+                            Dir.Location = DataList[3];
+                            Dir.ConcertDate = DataList[4];
+                            ValidConcertDate = true;
+                        }
+                        // otherwise search for metadata labels, find first instance of each label
+                        else
+                        {
+                            Dir.AlbumArtist = GetDataAfterSearchTerm("PERFORMER", DataList);
+                            Dir.Album = GetDataAfterSearchTerm("TITLE", DataList);
+                            Dir.Event = GetDataAfterSearchTerm("EVENT", DataList);
+                            Dir.Venue = GetDataAfterSearchTerm("VENUE", DataList);
+                            Dir.Stage = GetDataAfterSearchTerm("STAGE", DataList);
+                            Dir.Location = GetDataAfterSearchTerm("LOCATION", DataList);
+                            Dir.ConcertDate = GetDataAfterSearchTerm("DATE", DataList);
+                            ValidConcertDate = ValidateConcertDate(Dir.ConcertDate);
+                        }
+                        // if album string was not found, build it
                         if (Dir.Album == null)
                         {
-                            // build album string: event + venue + location + date + stage
                             Dir.Album += ( Dir.Event + SPACE
                                          + Dir.Venue + SPACE
                                          + Dir.Location + SPACE
                                          + Dir.ConcertDate + SPACE
                                          + Dir.Stage);
-                            // remove multiple spaces
+                            // remove redundant multiple spaces
                             Dir.Album = Regex.Replace(Dir.Album, @"\s+", SPACE);
                         }
-                        // validate metadata in order to reset metadata source
-                        ValidConcertDate = ValidateConcertDate(Dir.ConcertDate);
+                        // concert date is required
                         if (!ValidConcertDate)
                             Log.WriteLine("*** Concert date is missing/incorrect format from info file");
+                        // reset metadata source
                         if (Dir.AlbumArtist != null && ValidConcertDate)
                             Dir.DirMetadataSource = INFOFILE;
                         break;
@@ -357,8 +359,13 @@ namespace AATB
                     case CD:
                     case OTHER:
                     {
+                        // search for metadata labels, find first instance of each label
+                        Dir.AlbumArtist = GetDataAfterSearchTerm("PERFORMER", DataList);
+                        Dir.Album = GetDataAfterSearchTerm("TITLE", DataList);
+                        // album string is required
                         if (Dir.Album == null)
                             Log.WriteLine("*** Album title missing from info file");
+                        // reset metadata source
                         if (Dir.AlbumArtist != null && Dir.Album != null)
                             Dir.DirMetadataSource = INFOFILE;
                         break;
@@ -405,41 +412,42 @@ namespace AATB
             if (File.Exists(Dir.CuesheetPath))
             {
                 Log.WriteLine("  Reading album metadata from cuesheet: " + CuesheetFileName);
-
                 // read data from text file
                 DataList = ReadTextFile(Dir.CuesheetPath);
 
-                // search for standard metadata labels
+                // search for common metadata
                 Dir.AlbumArtist = GetDataAfterSearchTerm("PERFORMER", DataList);
                 Dir.Album = GetDataAfterSearchTerm("TITLE", DataList);
-                Dir.Event = GetDataAfterSearchTerm("EVENT", DataList);
-                Dir.Venue = GetDataAfterSearchTerm("VENUE", DataList);
-                Dir.Stage = GetDataAfterSearchTerm("STAGE", DataList);
-                Dir.Location = GetDataAfterSearchTerm("LOCATION", DataList);
-                Dir.ConcertDate = GetDataAfterSearchTerm("DATE", DataList);
-
                 // verify minimum metadata has been found
                 if (Dir.AlbumArtist == null)
                     Log.WriteLine("*** Artist missing from cuesheet");
+
                 switch (Dir.RecordingType)
                 {
                     case LIVE:
                     {
+                        // search for live metadata
+                        Dir.Event = GetDataAfterSearchTerm("EVENT", DataList);
+                        Dir.Venue = GetDataAfterSearchTerm("VENUE", DataList);
+                        Dir.Stage = GetDataAfterSearchTerm("STAGE", DataList);
+                        Dir.Location = GetDataAfterSearchTerm("LOCATION", DataList);
+                        Dir.ConcertDate = GetDataAfterSearchTerm("DATE", DataList);
+                        ValidConcertDate = ValidateConcertDate(Dir.ConcertDate);
+                        // concert date is required
+                        if (!ValidConcertDate)
+                            Log.WriteLine("*** Concert date is missing/incorrect format from cuesheet");
+                        // if album string was not found, build it
                         if (Dir.Album == null)
                         {
-                            // build album string: event + venue + location + date + stage
                             Dir.Album += ( Dir.Event + SPACE
                                          + Dir.Venue + SPACE
                                          + Dir.Location + SPACE
                                          + Dir.ConcertDate + SPACE
                                          + Dir.Stage);
-                            // remove multiple spaces
+                            // remove redundant multiple spaces
                             Dir.Album = Regex.Replace(Dir.Album, @"\s+", SPACE);
                         }
-                        // validate metadata in order to reset metadata source
-                        ValidConcertDate = ValidateConcertDate(Dir.ConcertDate);
-                        if (!ValidConcertDate)
-                            Log.WriteLine("*** Concert date is missing/incorrect format from cuesheet");
+                        // reset metadata source
                         if (Dir.AlbumArtist != null && ValidConcertDate)
                             Dir.DirMetadataSource = CUESHEET;
                         break;
