@@ -311,7 +311,7 @@ Program history
      Corrected search terms for building Album string in DirMetadataFromCuesheet
 
 5.7  2023-03-09
-     Added RenameInfoFiles flag to rename infotext and .cue files
+     Added RenameInfoFiles flag to rename infotext and cuesheet files
      Added UseCurrentDirInfo flag for Verify mode to force program to read info files in current dir
      Added two string variables to AATB_DirInfo class: DirMetadataSource and TrackMetadataSource,
        to record the source of metadata for Albums and Tracks respectively

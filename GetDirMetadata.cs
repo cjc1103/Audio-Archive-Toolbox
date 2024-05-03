@@ -170,8 +170,8 @@ namespace AATB
                 Dir.RecordingType = LIVE;
                 // extract album artist
                 Dir.BaseNameTemp1 = BaseName.Substring(0, Dir.PatternMatchDate.Index);
-                // remove trailing non-word [^A-Za-z0-9_] character including whitespace
-                Dir.BaseNameTemp1 = Regex.Replace(Dir.BaseNameTemp1, @"\W+$", "");
+                // remove trailing spaces
+                Dir.BaseNameTemp1 = Regex.Replace(Dir.BaseNameTemp1, @"\s+$", "");
                 // convert to title case/lower case if appropriate
                 Dir.BaseNameTemp1 = ConvertCase(Dir.BaseNameTemp1);
                 // extract concert date, 10 chars long (yyyy-mm-dd)
@@ -219,15 +219,17 @@ namespace AATB
                 // metadata later, if the file is present and the information is correct
                 Dir.DirMetadataSource = DIRNAME;
 
-                // get metadata from infotext (live concerts only)
+                // get metadata from infotext
+                // if metadata is valid, the Dir metadata source is set to INFOTXT
                 if (UseInfotext)
                     GetDirMetadataFromInfotext(Dir);
 
                 // get metadata from cuesheet
+                // if metadata is valid, the Dir metadata source is set to CUESHEET
                 else if (UseCuesheet)
                     GetDirMetadataFromCuesheet(Dir);
 
-                // if infotext or cuesheet data is not valid, DirMetadataSource remains DIRNAME
+                // if infotext or cuesheet data is not valid, get metadata from directory name
                 if (Dir.DirMetadataSource == DIRNAME)
                     GetDirMetadataFromDirectoryName(Dir);
 
@@ -237,9 +239,7 @@ namespace AATB
                 // log metadata info
                 Log.WriteLine("    Artist: " + Dir.AlbumArtist);
                 Log.WriteLine("    Album: " + Dir.Album);
-                // the following metadata is extracted from info file or cuesheet
-                // not applicable to CD recording
-                if (Dir.RecordingType != CD)
+                if (Dir.RecordingType == LIVE)
                 {
                     if (Dir.Venue != null) Log.WriteLine("    Venue: " + Dir.Venue);
                     if (Dir.Stage != null) Log.WriteLine("    Stage: " + Dir.Stage);
