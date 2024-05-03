@@ -149,14 +149,11 @@ namespace AATB
 
                         // remove any trailing characters other than alphabetical, numerical,
                         // and single apostrophe. typically these are footnote annotation marks
-                        DataLine = Regex.Replace(DataLine, @"[^a-zA-Z0-9\->']*$", "");
-
-                        // remove any remaining trailing spaces
-                        DataLine = Regex.Replace(DataLine, @"\s*$", "");
-
+                        DataLine = Regex.Replace(DataLine, @"[^a-zA-Z0-9\-\'>]*$", "");
+                        if (Debug) Console.WriteLine("dbg: Data length: " + DataLine.Length
+                                                           + " " + DataLine + "<<");
                         // TrackTitle is remainder of data line
                         TrackTitle = DataLine;
-
                         // if TrackTitle is empty, change it to "Track dd"
                         if (TrackTitle == String.Empty)
                             TrackTitle = "Track " + TrackNumberStr;
