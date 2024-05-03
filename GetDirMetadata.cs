@@ -331,8 +331,6 @@ namespace AATB
                 }
 
                 // verify minimum metadata has been found
-                if (Dir.AlbumArtist == null)
-                    Log.WriteLine("*** Artist missing from info file");
                 switch (Dir.RecordingType)
                 {
                     case LIVE:
