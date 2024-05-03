@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using Windows.UI.ViewManagement;
 
 namespace AATB
 {
@@ -294,9 +295,9 @@ namespace AATB
                 Log.WriteLine("  Reading album metadata from info file: " + InfotextFileName);
                 // read data from text file
                 DataList = ReadTextFile(Dir.InfotextPath);
-                // search for date format yyyy-mm-dd, where year=19xx or 20xx 
-                // returns zero based line number for valid date, otherwise 0
-                DateLineNumber = GetLineNumberOfSearchTerm(0, "^((19|20)\\d{2}-\\d{2}-\\d{2})", DataList);
+                // search for concert date in DataList
+                // returns line number of date, -1 if date not found
+                DateLineNumber = GetLineNumberOfSearchTerm(0, "^"+ConcertDateFormat, DataList);
                 // valid date on line number 4
                 if (DateLineNumber == 3)
                 {
@@ -347,9 +348,11 @@ namespace AATB
                             // remove multiple spaces
                             Dir.Album = Regex.Replace(Dir.Album, @"\s+", SPACE);
                         }
-                        if (Dir.ConcertDate == null)
-                            Log.WriteLine("*** Concert date missing from info file");
-                        if (Dir.AlbumArtist != null && Dir.ConcertDate != null)
+                        // validate metadata in order to reset metadata source
+                        ValidConcertDate = ValidateConcertDate(Dir.ConcertDate);
+                        if (!ValidConcertDate)
+                            Log.WriteLine("*** Concert date is missing/incorrect format from info file");
+                        if (Dir.AlbumArtist != null && ValidConcertDate)
                             Dir.DirMetadataSource = INFOFILE;
                         break;
                     }
@@ -435,9 +438,11 @@ namespace AATB
                             // remove multiple spaces
                             Dir.Album = Regex.Replace(Dir.Album, @"\s+", SPACE);
                         }
-                        if (Dir.ConcertDate == null)
-                            Log.WriteLine("*** Concert date missing from cuesheet");
-                        if (Dir.AlbumArtist != null && Dir.ConcertDate != null)
+                        // validate metadata in order to reset metadata source
+                        ValidConcertDate = ValidateConcertDate(Dir.ConcertDate);
+                        if (!ValidConcertDate)
+                            Log.WriteLine("*** Concert date is missing/incorrect format from cuesheet");
+                        if (Dir.AlbumArtist != null && ValidConcertDate)
                             Dir.DirMetadataSource = CUESHEET;
                         break;
                     }

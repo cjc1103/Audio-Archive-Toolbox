@@ -90,7 +90,8 @@ namespace AATB
             // configuration ini file located in c:\Program Files\Audio Archive Toolbox
             ProgramDir = "C:\\Program Files\\Audio Archive Toolbox\\",
             ConfigurationFileName = "aatb_config.ini",
-            ConfigurationFilePath = ProgramDir + ConfigurationFileName;
+            ConfigurationFilePath = ProgramDir + ConfigurationFileName,
+            ConcertDateFormat = "((19|20)\\d{2}-\\d{2}-\\d{2})";
         static readonly string[]
             // line delimiters for dos and unix text files
             LineDelimeters = { "\r\n", "\r", "\n" },
@@ -135,6 +136,7 @@ namespace AATB
                 flacQuality };
         static bool
             // set default value for bool flags
+            ValidConcertDate = false,
             CompressAudio = false,
             VerifyAudio = false,
             DecompressAudio = false,

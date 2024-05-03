@@ -227,6 +227,14 @@ namespace AATB
             return OutputName;
         } // end ConvertCase
 
+        static bool ValidateConcertDate(string InputDate)
+        {
+            if (!string.IsNullOrEmpty(InputDate))
+                return Regex.Match(InputDate, @ConcertDateFormat).Success;
+            else
+                return false;
+        }
+
         static string CleanDataString(string Data)
         {
             // remove leading spaces
