@@ -69,7 +69,7 @@ namespace AATB
             INFOCUEdefault = "info.cue",
             NEW = "new",
             LIVE = "Live Recording",
-            CD = "Commercial CD",
+            COMMERCIAL = "Commercial Recording",
             OTHER = "Other",
             INFOFILE = "Infotext",
             CUESHEET = "Cuesheet",
@@ -82,7 +82,6 @@ namespace AATB
             RootDir = null,
             ConvertFromBitrate = null,
             ConvertToBitrate = null,
-            // may be modified through ini settings file
             LOGNAME = "aatb.log",
             LogFilePath = null,
             INFOTXT = null, ALLINFOTXT = null,
@@ -91,6 +90,7 @@ namespace AATB
             ProgramDir = "C:\\Program Files\\Audio Archive Toolbox\\",
             ConfigurationFileName = "aatb_config.ini",
             ConfigurationFilePath = ProgramDir + ConfigurationFileName,
+            // regular expression for date format yyyy-mm-dd
             ConcertDateFormat = "((19|20)\\d{2}-\\d{2}-\\d{2})";
         static readonly string[]
             // line delimiters for dos and unix text files
@@ -146,6 +146,7 @@ namespace AATB
             ConvertBitrate = false,
             CreateCuesheet = false,
             DeleteAudio = false,
+            DeleteWAVFiles = false,
             DeleteMiscFiles = false,
             Overwrite = false,
             CreateMD5 = false,

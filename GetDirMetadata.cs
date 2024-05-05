@@ -161,7 +161,7 @@ namespace AATB
 
             // check for live recording format: embedded date "yyyy-mm-dd stage"
             Dir.PatternMatchDate = Regex.Match(BaseName, @ConcertDateFormat);
-            // check for commercial CD format: embedded " - "
+            // check for commercial recording format: embedded " - "
             Dir.PatternMatchSHS = Regex.Match(BaseName, @SPACEHYPHENSPACE);
 
             // live recording format
@@ -193,7 +193,7 @@ namespace AATB
             // commercial recording format
             else if (Dir.PatternMatchSHS.Success)
             {
-                Dir.RecordingType = CD;
+                Dir.RecordingType = COMMERCIAL;
                 Dir.ParentBaseName = BaseName;
                 Dir.BaseNameTemp1 = BaseName.Substring(0, Dir.PatternMatchSHS.Index);
                 Dir.BaseNameTemp2 = BaseName.Substring(Dir.PatternMatchSHS.Index + 2);
@@ -204,9 +204,7 @@ namespace AATB
             {
                 Dir.RecordingType = OTHER;
                 Dir.ParentBaseName = BaseName;
-                // no further metadata or parent base name required
             }
-            if (Debug) Console.WriteLine("dbg: Recording Type: {0}", Dir.RecordingType);
             if (Debug) Console.WriteLine("dbg: ParentBasename: {0}", Dir.ParentBaseName);
 
             // for wav or compressed audio directories only
@@ -237,6 +235,7 @@ namespace AATB
                 Dir.Album = CleanDataString(Dir.Album);
 
                 // log metadata info
+                Log.WriteLine("  Recording type: " + Dir.RecordingType);
                 Log.WriteLine("    Artist: " + Dir.AlbumArtist);
                 Log.WriteLine("    Album: " + Dir.Album);
                 if (Dir.RecordingType == LIVE)
@@ -300,6 +299,7 @@ namespace AATB
                 {
                     case LIVE:
                     {
+                        ValidConcertDate = false;
                         // search for concert date in DataList
                         // returns line number of date, -1 if date not found
                         DateLineNumber = GetLineNumberOfSearchTerm(0, "^" + ConcertDateFormat, DataList);
@@ -351,12 +351,12 @@ namespace AATB
                         // concert date is required
                         if (!ValidConcertDate)
                             Log.WriteLine("*** Concert date is missing/incorrect format from info file");
-                        // reset metadata source
+                        // if metadata is valid, reset metadata source
                         if (Dir.AlbumArtist != null && ValidConcertDate)
                             Dir.DirMetadataSource = INFOFILE;
                         break;
                     }
-                    case CD:
+                    case COMMERCIAL:
                     case OTHER:
                     {
                         // search for metadata labels, find first instance of each label
@@ -365,7 +365,7 @@ namespace AATB
                         // album string is required
                         if (Dir.Album == null)
                             Log.WriteLine("*** Album title missing from info file");
-                        // reset metadata source
+                        // if metadata is valid, reset metadata source
                         if (Dir.AlbumArtist != null && Dir.Album != null)
                             Dir.DirMetadataSource = INFOFILE;
                         break;
@@ -426,6 +426,7 @@ namespace AATB
                 {
                     case LIVE:
                     {
+                        ValidConcertDate = false;
                         // search for live metadata
                         Dir.Event = GetDataAfterSearchTerm("EVENT", DataList);
                         Dir.Venue = GetDataAfterSearchTerm("VENUE", DataList);
@@ -447,16 +448,17 @@ namespace AATB
                             // remove redundant multiple spaces
                             Dir.Album = Regex.Replace(Dir.Album, @"\s+", SPACE);
                         }
-                        // reset metadata source
+                        // if metadata is valid, reset metadata source
                         if (Dir.AlbumArtist != null && ValidConcertDate)
                             Dir.DirMetadataSource = CUESHEET;
                         break;
                     }
-                    case CD:
+                    case COMMERCIAL:
                     case OTHER:
                     {
                         if (Dir.Album == null)
                             Log.WriteLine("*** Album title missing from cuesheet");
+                        // if metadata is valid, reset metadata source
                         if (Dir.AlbumArtist != null && Dir.Album != null)
                             Dir.DirMetadataSource = CUESHEET;
                         break;
@@ -491,18 +493,20 @@ namespace AATB
                 case LIVE:
                 {
                     Dir.AlbumArtist = Dir.BaseNameTemp1;
+                    // build album name
                     Dir.Album = Dir.AlbumArtist;
-                    // concatenate date to album if it exists
+                    // concatenate concert date if it exists
+                    // basenametemp2 has been validated as the correct date format
                     Dir.ConcertDate = Dir.BaseNameTemp2;
                     if (Dir.ConcertDate != String.Empty)
                         Dir.Album += SPACE + Dir.ConcertDate;
-                    // concatenate stage to album if it exists
+                    // concatenate stage if it exists
                     Dir.Stage = Dir.BaseNameTemp3;
                     if (Dir.BaseNameTemp3 != String.Empty)
                         Dir.Album += SPACE + Dir.Stage;
                     break;
                 }
-                case CD:
+                case COMMERCIAL:
                 {
                     Dir.AlbumArtist = Dir.BaseNameTemp1;
                     Dir.Album = Dir.BaseNameTemp2;
@@ -515,10 +519,6 @@ namespace AATB
                     break;
                 }
             }
-            // convert to title case/lower case if appropriate
-            Dir.AlbumArtist = ConvertCase(Dir.AlbumArtist);
-            Dir.Album = ConvertCase(Dir.Album);
-
         } // end GetDirMetadataFromDirectoryName
     }
 }

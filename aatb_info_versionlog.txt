@@ -356,4 +356,4 @@ Program history
      Added exception handling for System.IO.DirectoryNetFoundException in WalkDirectoryTree recursion code
      Changed CompressAudio method to copy infotext and cuesheet files if they exist
      Replaced multiple concert date regex statements with static ConcertDateFormat string
-     Updated GetDirMetadata to streamline metadata collection and validate concert date
+     Updated GetDirMetadata to streamline metadata collection and validate concert date for a live recording
