@@ -238,7 +238,7 @@ namespace AATB
             {
                 if (CheckFormatBitrate(WAV, ANYBITRATE))
                 {
-                    Log.WriteLine("Delete redundant wav audio files");
+                    Log.WriteLine("Delete redundant audio files");
                     DeleteWAVFiles = true;
                     PrintCompressionOptions();
                 }
@@ -347,6 +347,28 @@ namespace AATB
                 // check only for raw flag
                 if (CheckFormatBitrate(AudioFormat, RAW))
                     Log.WriteLine("  " + AudioFormat.ToUpper() + " (Any bitrate)");
+            }
+
+            // print wav format, raw is not valid
+            AudioFormat = WAV;
+            if (CheckFormatBitrate(AudioFormat, ANYBITRATE))
+            {
+                Log.Write("  " + AudioFormat.ToUpper());
+                // print all bitrate(s)
+                if (CheckFormatBitrate(AudioFormat, ALLBITRATES))
+                    Log.Write(" (All bitrates)");
+                else
+                {
+                    // print valid bitrates
+                    for (j = 0; j <= AudioBitrates.Length - 1; j++)
+                    {
+                        AudioBitrate = AudioBitrates[j];
+                        if (CheckFormatBitrate(AudioFormat, AudioBitrate))
+                            Log.Write(" (" + AudioBitrate + ")");
+                    }
+                }
+                // flush print buffer
+                Log.WriteLine();
             }
 
         } // end PrintCompressionOptions
