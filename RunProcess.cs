@@ -115,11 +115,9 @@ namespace AATB
             }
             catch (Exception e)
             {
-                // flush output buffer, write exception message and exit
+                // flush output buffer, write exception message
                 Log.WriteLine();
-                Log.WriteLine("*** Fatal program exception");
-                Log.WriteLine(e.Message);
-                Environment.Exit(0);
+                Log.WriteLine("*** " + e.Message);
             }
 
         } // end PrintOutputStream

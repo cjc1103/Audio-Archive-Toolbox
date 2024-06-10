@@ -144,6 +144,7 @@ namespace AATB
         static string GetDataAfterSearchTerm(string SearchTerm, string[] DataList)
         {
             /* Returns data after the first instance of the search term in list
+             * Search term is considered case insensitive
              * Inputs:
              *   DataList   list containing data
              *   Name       string containing Regex search term
@@ -157,7 +158,7 @@ namespace AATB
             for (i = 0; i < DataList.Length; i++)
             {
                 // search for pattern in string
-                PatternMatch = Regex.Match(DataList[i], @SearchTerm);
+                PatternMatch = Regex.Match(DataList[i], @SearchTerm, RegexOptions.IgnoreCase);
                 // check that there are characters in data string after search term
                 if (PatternMatch.Success
                     && (DataList[i].Length > SearchTerm.Length))
