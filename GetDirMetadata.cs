@@ -328,13 +328,13 @@ namespace AATB
                         // otherwise search for metadata labels, find first instance of each label
                         else
                         {
-                            Dir.AlbumArtist = GetDataAfterSearchTerm("PERFORMER", DataList);
-                            Dir.Album = GetDataAfterSearchTerm("TITLE", DataList);
-                            Dir.Event = GetDataAfterSearchTerm("EVENT", DataList);
-                            Dir.Venue = GetDataAfterSearchTerm("VENUE", DataList);
-                            Dir.Stage = GetDataAfterSearchTerm("STAGE", DataList);
-                            Dir.Location = GetDataAfterSearchTerm("LOCATION", DataList);
-                            Dir.ConcertDate = GetDataAfterSearchTerm("DATE", DataList);
+                            Dir.AlbumArtist = GetDataAfterSearchTerm("PERFORMER:", DataList);
+                            Dir.Album = GetDataAfterSearchTerm("TITLE:", DataList);
+                            Dir.Event = GetDataAfterSearchTerm("EVENT:", DataList);
+                            Dir.Venue = GetDataAfterSearchTerm("VENUE:", DataList);
+                            Dir.Stage = GetDataAfterSearchTerm("STAGE:", DataList);
+                            Dir.Location = GetDataAfterSearchTerm("LOCATION:", DataList);
+                            Dir.ConcertDate = GetDataAfterSearchTerm("DATE:", DataList);
                             ValidConcertDate = ValidateConcertDate(Dir.ConcertDate);
                         }
                         // if album string was not found, build it
@@ -360,11 +360,11 @@ namespace AATB
                     case OTHER:
                     {
                         // search for metadata labels, find first instance of each label
-                        Dir.AlbumArtist = GetDataAfterSearchTerm("PERFORMER", DataList);
-                        Dir.Album = GetDataAfterSearchTerm("TITLE", DataList);
+                        Dir.AlbumArtist = GetDataAfterSearchTerm("PERFORMER:", DataList);
+                        Dir.Album = GetDataAfterSearchTerm("TITLE:", DataList);
                         // album string is required
                         if (Dir.Album == null)
-                            Log.WriteLine("*** Album title missing from info file");
+                            Log.WriteLine("*** Album information missing from info file");
                         // if metadata is valid, reset metadata source
                         if (Dir.AlbumArtist != null && Dir.Album != null)
                             Dir.DirMetadataSource = INFOFILE;
@@ -416,8 +416,8 @@ namespace AATB
                 DataList = ReadTextFile(Dir.CuesheetPath);
 
                 // search for common metadata
-                Dir.AlbumArtist = GetDataAfterSearchTerm("PERFORMER", DataList);
-                Dir.Album = GetDataAfterSearchTerm("TITLE", DataList);
+                Dir.AlbumArtist = GetDataAfterSearchTerm("PERFORMER:", DataList);
+                Dir.Album = GetDataAfterSearchTerm("TITLE:", DataList);
                 // verify minimum metadata has been found
                 if (Dir.AlbumArtist == null)
                     Log.WriteLine("*** Artist missing from cuesheet");
@@ -428,11 +428,11 @@ namespace AATB
                     {
                         ValidConcertDate = false;
                         // search for live metadata
-                        Dir.Event = GetDataAfterSearchTerm("EVENT", DataList);
-                        Dir.Venue = GetDataAfterSearchTerm("VENUE", DataList);
-                        Dir.Stage = GetDataAfterSearchTerm("STAGE", DataList);
-                        Dir.Location = GetDataAfterSearchTerm("LOCATION", DataList);
-                        Dir.ConcertDate = GetDataAfterSearchTerm("DATE", DataList);
+                        Dir.Event = GetDataAfterSearchTerm("EVENT:", DataList);
+                        Dir.Venue = GetDataAfterSearchTerm("VENUE:", DataList);
+                        Dir.Stage = GetDataAfterSearchTerm("STAGE:", DataList);
+                        Dir.Location = GetDataAfterSearchTerm("LOCATION:", DataList);
+                        Dir.ConcertDate = GetDataAfterSearchTerm("DATE:", DataList);
                         ValidConcertDate = ValidateConcertDate(Dir.ConcertDate);
                         // if album string was not found, build it
                         if (Dir.Album == null)
@@ -457,7 +457,7 @@ namespace AATB
                     case OTHER:
                     {
                         if (Dir.Album == null)
-                            Log.WriteLine("*** Album title missing from cuesheet");
+                            Log.WriteLine("*** Album information missing from cuesheet");
                         // if metadata is valid, reset metadata source
                         if (Dir.AlbumArtist != null && Dir.Album != null)
                             Dir.DirMetadataSource = CUESHEET;
