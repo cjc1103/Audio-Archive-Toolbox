@@ -1,6 +1,5 @@
 ﻿using IniParser;
 using IniParser.Model;
-using System.Globalization;
 
 namespace AATB
 {
