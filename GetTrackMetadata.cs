@@ -341,8 +341,7 @@ namespace AATB
                 TrackNumber;
             string
                 TrackNumberStr,
-                TrackTitle,
-                TrackFilePath;
+                TrackTitle;
 
             Log.WriteLine("  Deriving track metadata from file names");
             // build title for each track from basename, ignore prefix, extension
@@ -354,16 +353,13 @@ namespace AATB
                 // increment track number and convert to two place string
                 TrackNumber++;
                 TrackNumberStr = TrackNumber.ToString("00");
-                // get filename
-                TrackTitle = fi.Name;
+                // get filename without extension
+                TrackTitle = Path.GetFileNameWithoutExtension(fi.FullName);
                 // remove track number prefix
                 // (one or more digits, optional period, one or more spaces)
                 TrackTitle = Regex.Replace(TrackTitle, @"^\d+\.?\s+", "");
-                // remove suffix
-                TrackTitle = Regex.Replace(TrackTitle, @"\..*$", "");
-                // populate track metadata
+                 // populate track metadata
                 Dir.TitleList.Add(TrackTitle);
-                TrackFilePath = fi.FullName;
                 Dir.ArtistList.Add(Dir.AlbumArtist);
                 Log.WriteLine("    " + TrackNumberStr + SPACE + TrackTitle);
             }
