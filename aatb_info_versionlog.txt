@@ -356,12 +356,10 @@ Program history
      Added exception handling for System.IO.DirectoryNetFoundException in WalkDirectoryTree recursion code
      Changed CompressAudio method to copy infotext and cuesheet files if they exist
 
-6.1  2024-06-12
+6.1  2024-08-23
      Replaced multiple concert date regex statements with static ConcertDateFormat string
      Updated GetDirMetadata to streamline metadata collection and validate concert date for a live recording
      Updated CheckUserInput method to print out delete audio options with wav bitrates
      Changed regex search term to be case insensitive in GetDataAfterSearchTerm method
-	 
-6.2	 2024-08-23
      Changed order of info file attributes to describe concert: Artist, Event, Venue, Location, Stage, Date
      Removed filename suffix from TitleTrack in GetTrackMetadataFromFileNames method
