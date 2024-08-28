@@ -133,16 +133,16 @@
  *   (info header format #2 - no labels):
  *   Artist
  *   Event
- *   Stage
  *   Location
+ *   Stage
  *   Date
  *   
  *   (alternate info header format, using labels as follows):
  *   PERFORMER <Artist name>
  *   TITLE <Event name>
  *   VENUE <Venue name>
- *   STAGE <Stage name>
  *   LOCATION <Location>
+ *   STAGE <Stage name>
  *   DATE <yyyy-mm-dd>
  *
  *   Artist member lineup info
@@ -181,26 +181,36 @@
  * Command line switches
  * basic operations (mutually exclusive)
  *   -c|--compress          compress wav PCM format audio to a compressed audio format
- *       -p|--m3u           create m3u playlist file for all audio files in directory
- *       -i|--use-infotext  read metadata from an infotext concert information file
- *       -s|--use-cuesheet  read metadata from cuesheet (.cue) for commercial recordings
+ *       [-i|--use-infotext] | [-e|--use-cuesheet]  
+ *                          read metadata from an infotext concert information file, or
+ *				            read metadata from cuesheet (.cue) for commercial recordings
+ *       -p|--m3u-playlist  create m3u playlist file for all audio files in directory
  *   -v|--verify            verify flac files are correct by checking md5 and ffp checksum files
+ *       [-i|--use-infotext] | [-e|--use-cuesheet]  
+ *                          read metadata from an infotext concert information file, or
+ *				            read metadata from cuesheet (.cue) for commercial recordings
  *       --md5              creates/updates md5 checksum files
  *       --ffp              creates/updates ffp checksum files
  *       --shn              creates/updates shntool report files
  *       -a|--all           combines --md5 --ffp --shn options
+ *       -t|--tag			update audio file metadata
+ *   -y|--convert-to-wav    convert to wav format
+ *       --aif				convert apple aif format to wav
+ *       --wma				convert windows media wma format to wav
  *   -d|--decompress        decompress lossless files to wav format
- *      --flac=<bitrate>|raw|all Freeware Lossless Audio Compresson
+ *      --alac=<bitrate>|all  Apple Lossless Audio Compression (except raw files)
+ *      --flac=<bitrate>|raw|all  Freeware Lossless Audio Compression
  *   -j|--join				joins tracked wav format files into one contiguous wav file
  *		--wav=<bitrate>		specifies bitrate of wav files to be joined
  *   -r|--rename-wav-files	renames wav files in <bitrate> directory
  *		--wav=<bitrate>		specifies bitrate of wav files to be renamed
+ *   -z|--convert-to-bitrate   convert wav files to bitrate
+ *      --wav=<bitrate>     convert wav files of bitrate
+ *   -s|--create-cuesheet   create cuesheet from wav files
+ *      -i|--use-infotext   read metadata from an infotext concert information file
+ *      --wav=<bitrate>     use wav files of bitrate
  *   -x|--delete            delete redundant files after compression is complete
  *      --wav=<bitrate>|raw|all  Delete all input wav directories for the specified bitrate
- *   -z|--convert-to-bitrate   convert wav files to bitrate
- *      --wav=<bitrate>     convert wav files from bitrate
- *   -e|--create-cuesheet   create cuesheet from wav files
- *        -i|--use-infotext  read metadata from an infotext concert information file
  *
  * compression and verification arguments
  *   --mp3=<bitrate>        compress wav to mp3 format (.mp3) (16-44 is default)
@@ -223,9 +233,9 @@
  *   
  * additional options
  *   --lc|--lower-case      convert subdirectory names to lower case
- *   --uc|--title-case      convert subdirectory names to title case (capitalize first letter of each word)
+ *   --tc|--title-case      convert subdirectory names to title case (capitalize first letter of each word)
  *   --ri|--rename-infofiles  rename infotext and info.cue files
- *   --cd|--use-currentdirinfo  use current directory for infotext file when verifying compressed files
+ *   --ocd|--output-to-currentdir  use current directory for infotext file when verifying compressed files
  *   -o|--overwrite         overwrite existing files
  *   -h|--help              display options list on console
  *   --hh|--verbose         write StandardError datastream to console
@@ -233,19 +243,28 @@
  * 
  * Configuration file
  *   An optional configuration file can be used for various configuration options
- *   the file is called "aatb_config.ini" and is located in the program directory
- *
+ * 	 The file is called "aatb_config.ini" and is located in the program directory
+ *   arguments do not need to be enclosed in quotes
+ *   # Comments
+ *   [Settings]
+ *   InfoFileExtension = <extension>
+ *   CuesheetFileExtension = <extension>
  *   [Macros]
- *   macro name = command line arguments
+ *   macroname = <command line arguments>
  *   e.g.: -xyz = --verify --tag --all -p
  *   [FilesToDelete]
- *   <extension>
+ *   # entries must have unique key, use consecutive numerals
+ *   01 = <extension>
+ *   02 = <extension>
  *   [DirsToDelete]
- *   <directory> 
+ *   # entries must have unique key, use consecutive numerals
+ *   01 = <directory> 
+ *   02 = <directory>
  *
  * Dependencies and limitations
  *   This program requires .NET 8.0 runtime or later, and is compiled as a x64 Windows binary
  *   IniParser.dll library, created by Windows Visual Studio NuGet package ini-parser
+ *   https://github.com/rickyah/ini-parser
  *
  * External Windows programs called from this script (must be in path). The installation script will
  * create a directory "c:\Program Files\Audio Tools" to install these programs.

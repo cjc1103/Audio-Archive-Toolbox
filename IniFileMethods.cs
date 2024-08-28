@@ -22,16 +22,21 @@ namespace AATB
             // default comment string
             FileIniData.Parser.Configuration.CommentString = "#";
 
-            try
+            if (File.Exists(ConfigurationFilePath))
             {
-                // Read data from ini file. If file does not exist, returns null
-                if (File.Exists(ConfigurationFilePath))
+                try
+                {
                     ConfigData = FileIniData.ReadFile(ConfigurationFilePath);
+                }
+                catch (Exception)
+                {
+                    Log.WriteLine("*** Error reading configuration file or incorrect format: \n"
+                        + "    " + ConfigurationFilePath);
+                }
             }
-            catch (Exception)
-            {
-                Log.WriteLine("*** Cannot read configuration ini file: " + ConfigurationFilePath);
-            }
+            else
+                Log.WriteLine("*** Configuration file does not exist: \n"
+                    + "    " + ConfigurationFilePath);
 
             return ConfigData;
         } // end ReadConfiguration

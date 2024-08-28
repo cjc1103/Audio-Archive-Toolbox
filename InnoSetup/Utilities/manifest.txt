@@ -1,0 +1,70 @@
+Audio Archive Toolbox Manifest
+Utilities required for archiving audio files
+Windows 10 (x64 version unless specified otherwise)
+Compiled by Chris Cantwell
+
+Program				Executable		Version		Date		Size
+Program Description
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+FDK AAC				fdkaac64.exe	0.6.3		6/8/2019	547 KB
+Freunhofer AAC Encoder
+
+Freeware Lossless Audio Encoder (FLAC)
+Encoder				flac.exe		1.3.2		5/31/2017	693 KB
+Metadata utility	metaflac.ese	1.3.2		5/31/2017	429 KB
+Note: later versions do not work correctly with aatb. Specifically the shntool len
+function does not work for 24 bit flac files. Workaround is to use 1.3.2.
+
+id3	Music Tagger	id3.exe			0.80		4/2/2020	89 KB
+
+LAME 				lame.exe		3.100.1		6/6/2021	1,691 KB
+LAME Ain't an MP3 Encoder. Freeware version of the MP3 encoder
+
+MD5Sums				md5sums.exe		1.2			9/12/2015	28 KB
+Creates MD5 checksums for any input file
+
+Media Info			MediaInfo.exe	21.03		6/11/2021	6,696 KB
+Command Line version to report various attributes of audio WAV files
+
+Nero AAC tools
+Encoder				neroAacEnc.exe	1.5.4		2/18/2010	848 KB
+Program to compress .wav audio files to the flac format
+Tagger				neroAacTag.exe	1.5.1		12/17/2009	254 KB
+Modifies AAC file metadata
+
+OGG lossy audio compression tools
+OGG Encoder			oggenc2.exe		2.88-1.3.7	8/17/2020	2,136 KB
+
+OPUS lossy compression tools 0.2
+OPUS Encoder		opusenc.exe		1.3.1		9/18/2018	633 KB
+
+qaac				qaac64.exe		2.82		6/6/2021	1,970 KB
+Freeware version of Apple Audio Codec (AAC) lossy audio encoder (x64)
+https://github.com/nu774/qaac/releases
+
+SHN Tool			shntool.exe		3.0.10		3/30/2009	209 KB
+This program has multiple modes for manipulating audio files in various formats,
+originally for the "shorten" compressed audio format, but also works on wav and flac files
+
+Shorten				shorten.exe		3.6.1		9/24/2021	54 KB
+Utility to compress audio files, now obsolete and replaced by flac.
+Included to decompress old audio archives and recompress with flac
+
+Vorbis Comment Tool	vorbiscomment.exe  1.2.0	3/18/2020	322 KB
+This program allows modification of metadata for OGG compressed audio files
+
+WMA to WAV utility	wma2wav.exe		unknown		9/08/2011
+This utility converts .wma compressed audio files to .wav format
+
+
+Required utilities
+
+Microsoft .NET Desktop Runtime  windowsdesktop-runtime-7.0.0-win-x64.msi  7.0.0
+.NET runtime libraries
+
+Apple Application Support  ApplicationApplicationSupport.msi  12.9.2.6
+Installs the dll libraries required for qaac
+
+Sound eXchange(SoX) sox.exe			14.4.2
+Command line utility that can convert various audio file formats to other formats,
+and also provide information on audio files.
