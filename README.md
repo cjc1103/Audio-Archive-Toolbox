@@ -192,9 +192,10 @@
  *       --md5              creates/updates md5 checksum files
  *       --ffp              creates/updates ffp checksum files
  *       --shn              creates/updates shntool report files
- *       -a|--all           combines --md5 --ffp --shn options
- *       -t|--tag			update audio file metadata
+ *       -a|--all-reports   combines --md5 --ffp --shn options
+ *       -t|--tag			update audio file tags (metadata)
  *   -y|--convert-to-wav    convert to wav format
+ *       --shn				convert to shn (obsolete)
  *       --aif				convert apple aif format to wav
  *       --wma				convert windows media wma format to wav
  *   -d|--decompress        decompress lossless files to wav format
@@ -215,8 +216,8 @@
  * compression and verification arguments
  *   --mp3=<bitrate>        compress wav to mp3 format (.mp3) (16-44 is default)
  *   --mp3-quality=<value>  mp3 compression parameter
- *   --[aac|m4a]=<bitrate>  compress wav to aac format, mp4 audio container (.m4a)
- *   --[aac-quality|m4a-quality]=<value>  aac compression parameter
+ *   [--aac|--m4a]=<bitrate>  compress wav to aac format, mp4 audio container (.m4a)
+ *   [--aac-quality|--m4a-quality]=<value>  aac compression parameter
  *   --ogg=<bitrate>        compress wav to vorbis format, ogg container (.ogg)
  *   --ogg-quality=<value>  ogg compression parameter
  *   --opus=<bitrate>       compress wav to opus format (.opus)
@@ -234,8 +235,9 @@
  * additional options
  *   --lc|--lower-case      convert subdirectory names to lower case
  *   --tc|--title-case      convert subdirectory names to title case (capitalize first letter of each word)
- *   --ri|--rename-infofiles  rename infotext and info.cue files
- *   --ocd|--output-to-currentdir  use current directory for infotext file when verifying compressed files
+ *   --ri|--rename-info-files  rename infotext and info.cue files
+ *   --icd|--get-info-from-current-dir  use current directory for infotext file when verifying compressed files
+ *   --ocd|--output-to-current-dir  redirect decompressed files to current directory
  *   -o|--overwrite         overwrite existing files
  *   -h|--help              display options list on console
  *   --hh|--verbose         write StandardError datastream to console
@@ -244,14 +246,15 @@
  * Configuration file
  *   An optional configuration file can be used for various configuration options
  * 	 The file is called "aatb_config.ini" and is located in the program directory
- *   arguments do not need to be enclosed in quotes
- *   # Comments
+ *   # Comments start with "#" character
+ *   # format: key = arguments
+ *   # arguments do not need to be enclosed in quotes
  *   [Settings]
  *   InfoFileExtension = <extension>
  *   CuesheetFileExtension = <extension>
  *   [Macros]
- *   macroname = <command line arguments>
- *   e.g.: -xyz = --verify --tag --all -p
+ *   # macroname = <command line arguments>
+ *   # e.g: -xyz = --verify --tag --all -p
  *   [FilesToDelete]
  *   # entries must have unique key, use consecutive numerals
  *   01 = <extension>

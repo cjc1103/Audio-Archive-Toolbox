@@ -481,7 +481,7 @@ namespace AATB
 
                         // rename info files
                         case "--ri":
-                        case "--rename-infofiles":
+                        case "--rename-info-files":
                             RenameInfoFiles = true;
                             break;
 
