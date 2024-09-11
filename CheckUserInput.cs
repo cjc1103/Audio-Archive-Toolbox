@@ -116,6 +116,20 @@ namespace AATB
                     Log.WriteLine("Create/Update M3U playlist");
             }
 
+            // Convert audio to another format
+            if (ConvertAudio)
+            {
+                Log.WriteLine("Convert audio files to WAV");
+                // valid conversion formats are defined in AudioConversionFormats array
+                // check for unique format set with RAW flag
+                if (!CheckUniqueFormat(AudioConversionFormats, RAW))
+                {
+                    Log.WriteLine("Input error: Select one valid conversion format");
+                    Environment.Exit(0);
+                }
+                PrintCompressionOptions();
+            }
+
             // Decompress audio to wav
             if (DecompressAudio)
             {
@@ -139,6 +153,7 @@ namespace AATB
             if (JoinWAV)
             {
                 Log.WriteLine("Join tracked WAV audio files");
+                // valid bitrates are defined in AudioBitrates array
                 // check for unique WAV bitrate
                 if (!CheckUniqueBitrate(AudioBitrates, WAV))
                 {
@@ -155,18 +170,6 @@ namespace AATB
                 if (!CheckUniqueBitrate(AudioBitrates, WAV))
                 {
                     Log.WriteLine("Input error: Select one valid WAV bitrate");
-                    Environment.Exit(0);
-                }
-                PrintCompressionOptions();
-            }
-
-            // Convert audio to another format
-            if (ConvertAudio)
-            {
-                Log.WriteLine("Convert audio files to WAV");
-                if (!CheckUniqueFormat(AudioConversionFormats, RAW))
-                {
-                    Log.WriteLine("Input error: Select one valid conversion format");
                     Environment.Exit(0);
                 }
                 PrintCompressionOptions();

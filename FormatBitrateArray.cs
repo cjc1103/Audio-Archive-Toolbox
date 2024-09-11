@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace AATB
 {
@@ -7,7 +8,7 @@ namespace AATB
         // methods in this section operate on the global AudioFormatBitrate array
         static void InitFormatBitrate()
         {
-            /* Initializes boolean AudioFormatBitrate array values to false
+            /* Initializes global boolean AudioFormatBitrate array values to false
              * Inputs:  None
              * Outputs: Array is initialized
             */
@@ -22,6 +23,7 @@ namespace AATB
             /* Sets boolean flag in AudioFormatBitrate array
              * Inputs:  Format - Audio format
              *          Bitrate - <bitdepth-samplerate>
+             *          AudioFormatBitrate - global boolean array of valid formats and bitrates
              * Outputs: Array flags are set as appropriate
              * Note:    ALLFORMATS includes WAV format (array length - 1)
              *          ALLBITRATES ignores RAW flag (array length - 2)
@@ -69,6 +71,7 @@ namespace AATB
             /* Lookup boolean value in AudioFormatBitrate array
              * Inputs:  Format - Audio format in AudioFormats array
              *          Bitrate - <bitdepth-samplerate> in AudioBitrates array
+             *          AudioFormatBitrate - global boolean array of valid formats and bitrates
              * Note:    ALLFORMATS includes WAV format (array length - 1)
              *          ANYFORMAT includes WAV format (array length - 1)
              *          ALLBITRATES ignores RAW flag (array length - 2)
@@ -152,21 +155,28 @@ namespace AATB
             return false;
         } // end CheckFormatBitrate
 
-        static bool CheckUniqueBitrate(string[] AudioBitrates, string Format)
+        static bool CheckUniqueBitrate(string[] InputAudioBitrates, string Format)
         {
-            /* Checks bitrate flags set for the input format
-             * Inputs:  Format - defined in global AudioFormats array
+            /* Checks exactly one bitrate flag is set for the input format
+             * Inputs:  InputAudioBitrates - input array of valid bitrates
+             *          Format - defined in global AudioFormats array
+             *          AudioFormatBitrate - global boolean array of valid formats and bitrates
              * Note:    ignores RAW flag (array length - 2)
-             * Returns: Boolean value
-             *          true if one bitrate is set, otherwise false
+             * Returns: true if one bitrate is set, otherwise false
              */
             int i, j, NumberOfBitratesSet = 0;
 
             i = Array.IndexOf(AudioFormats, Format);
-            for (j = 0; j <= AudioBitrates.Length - 2; j++)
+            if (Debug) Console.WriteLine("Format: {0}  Index: {0}", Format, i);
+            if (i >= 0)
             {
-                if (AudioFormatBitrate[i, j])
-                    NumberOfBitratesSet += 1;
+                for (j = 0; j <= InputAudioBitrates.Length - 2; j++)
+                {
+                    if (AudioFormatBitrate[i, j])
+                        NumberOfBitratesSet++;
+                    if (Debug) Console.WriteLine("dbg: ({00},{00})  {0}  Number of bitrates set: {0}",
+                        i, j, AudioFormatBitrate[i, j], NumberOfBitratesSet);
+                }
             }
             if (NumberOfBitratesSet == 1)
                 return true;
@@ -174,20 +184,27 @@ namespace AATB
                 return false;
         } // end CheckUniqueBitrate
 
-        static bool CheckUniqueFormat(string[] AudioFormats, string Bitrate)
+        static bool CheckUniqueFormat(string[] InputAudioFormats, string Bitrate)
         {
-            /* Checks format flags set for the input format
-             * Inputs:  Bitrate - defined in global AudioBitrates array
-             * Returns: Boolean value
-             *          true if one format is set, otherwise false
+            /* Checks exactly one format flag is set for the input bitrate
+             * Inputs:  InputAudioFormats - input array of valid formats
+             *          Bitrate - defined in global AudioBitrates array
+             *          AudioFormatBitrate - global boolean array of valid formats and bitrates
+             * Returns: true if one format is set, otherwise false
              */
             int i, j, NumberOfFormatsSet = 0;
 
             j = Array.IndexOf(AudioBitrates, Bitrate);
-            for (i = 0; i <= AudioFormats.Length - 1; i++)
+            if (Debug) Console.WriteLine("Bitrate: {0}  Index: {0}", Bitrate, j);
+            if (j >= 0)
             {
-                if (AudioFormatBitrate[i, j])
-                    NumberOfFormatsSet += 1;
+                for (i = 0; i <= InputAudioFormats.Length - 1; i++)
+                {
+                    if (AudioFormatBitrate[i, j])
+                        NumberOfFormatsSet++;
+                    if (Debug) Console.WriteLine("dbg: ({00},{00})  {0}  Number of formats set: {0}",
+                        i, j, AudioFormatBitrate[i, j], NumberOfFormatsSet);
+                }
             }
             if (NumberOfFormatsSet == 1)
                 return true;
@@ -199,23 +216,27 @@ namespace AATB
         {
             /* Returns the first bitrate set for the input format
              * Inputs:  Format - Audio format in AudioFormats array
+             *          AudioFormatBitrate - global boolean array of valid formats and bitrates
              * Note:    ignores RAW flag (array length - 2)
              * Returns: first bitrate found as string, otherwise null
              */
             int i, j;
 
             i = Array.IndexOf(AudioFormats, Format);
-            for (j = 0; j <= AudioBitrates.Length - 2; j++)
+            if (i >= 0)
             {
-                if (AudioFormatBitrate[i, j])
-                    return AudioBitrates[j];
+                for (j = 0; j <= AudioBitrates.Length - 2; j++)
+                {
+                    if (AudioFormatBitrate[i, j])
+                        return AudioBitrates[j];
+                }
             }
             return null;
         } // end FirstBitrateSet
 
         static void PrintFormatBitrate()
         {
-            /* Print out the AudioFormatBitrate boolean array
+            /* Print out the global AudioFormatBitrate boolean array
              * Note: This is only used for debugging
              */
             int i, j;

@@ -131,51 +131,51 @@ namespace AATB
                     {
                         if (li.Substring(32, 1) == "c")
                         {
-                            SHNErrors += 1;
+                            SHNErrors++;
                             Log.Write("\n    CD quality error: " + fname);
                         }
                         if (li.Substring(33, 1) == "b")
                         {
-                            SHNErrors += 1;
+                            SHNErrors++;
                             Log.Write("\n    CD sector boundary error: " + fname);
                         }
                         if (li.Substring(34, 1) == "s")
                         {
-                            SHNErrors += 1;
+                            SHNErrors++;
                             Log.Write("\n    File is too short to be burned: " + fname);
                         }
                     }
                     // WAV file properties char 38-39
                     if (li.Substring(38, 1) == "h")
                     {
-                        SHNErrors += 1;
+                        SHNErrors++;
                         Log.Write("\n    WAV file header is not canonical: " + fname);
                     }
                     if (li.Substring(39, 1) == "e")
                     {
-                        SHNErrors += 1;
+                        SHNErrors++;
                         Log.Write("\n    WAV file contains extra RIFF chunks: " + fname);
                     }
                     // WAV file problems char 43-47
                     // Note: "3" in char 43 signifies IDV32 header, ignore
                     if (li.Substring(44, 1) == "a")
                     {
-                        SHNErrors += 1;
+                        SHNErrors++;
                         Log.Write("\n    WAV audio data is not block aligned: " + fname);
                     }
                     if (li.Substring(45, 1) == "i")
                     {
-                        SHNErrors += 1;
+                        SHNErrors++;
                         Log.Write("\n    WAV header is inconsistent about data and/or file size: " + fname);
                     }
                     if (li.Substring(46, 1) == "t")
                     {
-                        SHNErrors += 1;
+                        SHNErrors++;
                         Log.Write("\n    WAV file seems to be truncated: " + fname);
                     }
                     if (li.Substring(47, 1) == "j")
                     {
-                        SHNErrors += 1;
+                        SHNErrors++;
                         Log.Write("\n    WAV file seems to have junk appended to it: " + fname);
                     }
                 }

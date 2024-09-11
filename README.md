@@ -195,7 +195,7 @@
  *       -a|--all-reports   combines --md5 --ffp --shn options
  *       -t|--tag			update audio file tags (metadata)
  *   -y|--convert-to-wav    convert to wav format
- *       --shn				convert to shn (obsolete)
+ *       --shn				convert shn lossless format to wav
  *       --aif				convert apple aif format to wav
  *       --wma				convert windows media wma format to wav
  *   -d|--decompress        decompress lossless files to wav format
