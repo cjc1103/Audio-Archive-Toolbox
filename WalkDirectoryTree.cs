@@ -293,7 +293,7 @@ namespace AATB
             // Convert other audio formats to WAV files
             // RAW flag is used to specify a specific format to convert to WAV
             // Input directory type = TRACKADAUDIO (i.e., dir name = <bitrate>)
-            // Command: -y|--convert-to-wav [valid convert to format]
+            // Command: -y|--convert-to-wav <valid conversion from format>
             else if (ConvertAudio)
             {
                 if (Debug) Console.WriteLine("dbg: Convert Audio Section");

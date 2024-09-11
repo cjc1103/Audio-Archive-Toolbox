@@ -184,7 +184,7 @@ namespace AATB
             int i, j, NumberOfFormatsSet = 0;
 
             j = Array.IndexOf(AudioBitrates, Bitrate);
-            for (i = 0; i <= AudioFormats.Length - 1; j++)
+            for (i = 0; i <= AudioFormats.Length - 1; i++)
             {
                 if (AudioFormatBitrate[i, j])
                     NumberOfFormatsSet += 1;

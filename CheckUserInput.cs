@@ -140,14 +140,9 @@ namespace AATB
             {
                 Log.WriteLine("Join tracked WAV audio files");
                 // check for unique WAV bitrate
-                if (!CheckFormatBitrate(WAV, ANYBITRATE))
-                {
-                    Log.WriteLine("Input error: A WAV bitrate was not specified");
-                    Environment.Exit(0);
-                }
                 if (!CheckUniqueBitrate(AudioBitrates, WAV))
                 {
-                    Log.WriteLine("Input error: Multiple or invalid WAV conversion bitrates selected");
+                    Log.WriteLine("Input error: Select one valid WAV bitrate");
                     Environment.Exit(0);
                 }
                 PrintCompressionOptions();
@@ -159,7 +154,7 @@ namespace AATB
                 Log.WriteLine("Rename WAV audio files");
                 if (!CheckUniqueBitrate(AudioBitrates, WAV))
                 {
-                    Log.WriteLine("Input error: Select one conversion bitrate");
+                    Log.WriteLine("Input error: Select one valid WAV bitrate");
                     Environment.Exit(0);
                 }
                 PrintCompressionOptions();
@@ -171,7 +166,7 @@ namespace AATB
                 Log.WriteLine("Convert audio files to WAV");
                 if (!CheckUniqueFormat(AudioConversionFormats, RAW))
                 {
-                    Log.WriteLine("Input error: Select one conversion format");
+                    Log.WriteLine("Input error: Select one valid conversion format");
                     Environment.Exit(0);
                 }
                 PrintCompressionOptions();

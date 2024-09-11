@@ -105,7 +105,7 @@ namespace AATB
             // allowable conversion formats (lossy and lossless)
             AudioConversionFormats = { SHN, AIF, WMA },
             // allowable audio bitrates
-            // RAW must be last entry in this list
+            // RAW must be the last entry in this list
             AudioBitrates = { BR1644, BR1648, BR2444, BR2448, BR2488, BR2496, RAW },
             // compressed audio directory extensions
             // must correspond to AudioCompressionFormats list
