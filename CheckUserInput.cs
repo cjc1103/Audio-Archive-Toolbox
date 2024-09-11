@@ -227,7 +227,6 @@ namespace AATB
                 {
                     Log.WriteLine("Delete redundant audio files");
                     DeleteWAVFiles = true;
-                    PrintCompressionOptions();
                 }
                 if (DeleteMiscFiles)
                     Log.WriteLine("Delete miscellaneous files and directories");
@@ -237,6 +236,7 @@ namespace AATB
                     Log.WriteLine("Input error: Specify wav bitrate or miscellaneous files to delete");
                     Environment.Exit(0);
                 }
+                PrintCompressionOptions();
             }
 
             // Additional input checking

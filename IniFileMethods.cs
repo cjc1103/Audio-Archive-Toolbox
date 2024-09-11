@@ -177,11 +177,13 @@ namespace AATB
             // InfoTextFileExtension = <extension>
             INFOTXT = GetKeyValueFromConfigData(ConfigData, INFOTXTdefault, "Settings", "InfotextFileExtension");
             ALLINFOTXT = "*." + INFOTXT;
+            if (Debug) Console.WriteLine("dbg: info file externsion: {0}", INFOTXT);
 
             // [Settings]
             // CuesheetFileExtension = <extension>
             INFOCUE = GetKeyValueFromConfigData(ConfigData, INFOCUEdefault, "Settings", "CuesheetFileExtension");
             ALLINFOCUE = "*." + INFOCUE;
+            if (Debug) Console.WriteLine("dbg: cuiesheet externsion: {0}", INFOCUE);
 
             // [FilesToDelete]
             // xx = <extension>
@@ -190,7 +192,7 @@ namespace AATB
             // [DirsToDelete]
             // xx = <directory>
             DirsToDelete = GetListFromConfigData(ConfigData, "DirsToDelete");
-        
+
         } // end GetInidata
     }
 }
