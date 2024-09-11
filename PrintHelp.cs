@@ -50,6 +50,7 @@ namespace AATB
             + "  --wav[=<bitrate>|all](all)\n"
             + "[-x|--delete]\n"
             + "  --wav[=<bitrate>|raw|all](all)\n"
+            + "  [--misc|--misc-files-delete]\n"
             + "Additional options\n"
             + "[--lc|--lower-case]\n"
             + "[--tc|--title-case]\n"

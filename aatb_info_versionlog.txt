@@ -363,4 +363,6 @@ Program history
      Changed regex search term to be case insensitive in GetDataAfterSearchTerm method
      Changed order of info file attributes to describe concert: Artist, Event, Venue, Location, Stage, Date
      Removed filename suffix from TitleTrack in GetTrackMetadataFromFileNames method
-     Corrected input checking for file conversion in CHeckUserInput method
+     Corrected input checking for file conversion in CheckUserInput method
+     Added CheckUniqueFormat and CheckUniqueBitrate methods when checking a specific format or bitrate
+     Corrected typo and added --misc-files-delete option to PrintHelp method
