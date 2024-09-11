@@ -152,10 +152,10 @@ namespace AATB
             return false;
         } // end CheckFormatBitrate
 
-        static bool CheckUniqueBitrate(string Format)
+        static bool CheckUniqueBitrate(string[] AudioBitrates, string Format)
         {
             /* Checks bitrate flags set for the input format
-             * Inputs:  Format - Audio format in AudioFormats array
+             * Inputs:  Format - defined in global AudioFormats array
              * Note:    ignores RAW flag (array length - 2)
              * Returns: Boolean value
              *          true if one bitrate is set, otherwise false
@@ -173,6 +173,27 @@ namespace AATB
             else
                 return false;
         } // end CheckUniqueBitrate
+
+        static bool CheckUniqueFormat(string[] AudioFormats, string Bitrate)
+        {
+            /* Checks format flags set for the input format
+             * Inputs:  Bitrate - defined in global AudioBitrates array
+             * Returns: Boolean value
+             *          true if one format is set, otherwise false
+             */
+            int i, j, NumberOfFormatsSet = 0;
+
+            j = Array.IndexOf(AudioBitrates, Bitrate);
+            for (i = 0; i <= AudioFormats.Length - 1; j++)
+            {
+                if (AudioFormatBitrate[i, j])
+                    NumberOfFormatsSet += 1;
+            }
+            if (NumberOfFormatsSet == 1)
+                return true;
+            else
+                return false;
+        } // end CheckUniqueFormat
 
         static string FirstBitrateSet(string Format)
         {

@@ -145,7 +145,7 @@ namespace AATB
                     Log.WriteLine("Input error: A WAV bitrate was not specified");
                     Environment.Exit(0);
                 }
-                if (!CheckUniqueBitrate(WAV))
+                if (!CheckUniqueBitrate(AudioBitrates, WAV))
                 {
                     Log.WriteLine("Input error: Multiple or invalid WAV conversion bitrates selected");
                     Environment.Exit(0);
@@ -157,14 +157,9 @@ namespace AATB
             if (RenameWAV)
             {
                 Log.WriteLine("Rename WAV audio files");
-                if (!CheckFormatBitrate(WAV, ANYBITRATE))
+                if (!CheckUniqueBitrate(AudioBitrates, WAV))
                 {
-                    Log.WriteLine("Input error: A WAV bitrate was not specified");
-                    Environment.Exit(0);
-                }
-                if (!CheckUniqueBitrate(WAV))
-                {
-                    Log.WriteLine("Input error: Multiple or invalid WAV conversion bitrates selected");
+                    Log.WriteLine("Input error: Select one conversion bitrate");
                     Environment.Exit(0);
                 }
                 PrintCompressionOptions();
@@ -174,16 +169,9 @@ namespace AATB
             if (ConvertAudio)
             {
                 Log.WriteLine("Convert audio files to WAV");
-                FoundValidFormat = false;
-                for (i = 0; i <= AudioConversionFormats.Length - 1; i++)
+                if (!CheckUniqueFormat(AudioConversionFormats, RAW))
                 {
-                    if (CheckFormatBitrate(AudioConversionFormats[i], ANYBITRATE)
-                        || CheckFormatBitrate(AudioConversionFormats[i], RAW))
-                        FoundValidFormat = true;
-                }
-                if (!FoundValidFormat)
-                {
-                    Log.WriteLine("No valid conversion format specified");
+                    Log.WriteLine("Input error: Select one conversion format");
                     Environment.Exit(0);
                 }
                 PrintCompressionOptions();
@@ -208,7 +196,7 @@ namespace AATB
                     Environment.Exit(0);
                 }
                 // check only one WAV bitrate is set
-                if (!CheckUniqueBitrate(WAV))
+                if (!CheckUniqueBitrate(AudioBitrates, WAV))
                 {
                     Log.WriteLine("Input error: Multiple or invalid WAV conversion bitrates selected");
                     Environment.Exit(0);
@@ -225,7 +213,8 @@ namespace AATB
             if (CreateCuesheet)
             {
                 Log.WriteLine("  Create cuesheet from tracked WAV audio files");
-                if (!CheckUniqueBitrate(WAV))
+                // check only one WAV bitrate is set
+                if (!CheckUniqueBitrate(AudioBitrates, WAV))
                 {
                     Log.WriteLine("Input error: Specify only one WAV bitrate");
                     Environment.Exit(0);

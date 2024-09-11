@@ -104,7 +104,7 @@ namespace AATB
             AudioDecompressionFormats = { ALAC, FLAC },
             // allowable conversion formats (lossy and lossless)
             AudioConversionFormats = { SHN, AIF, WMA },
-            // all audio bitrates
+            // allowable audio bitrates
             // RAW must be last entry in this list
             AudioBitrates = { BR1644, BR1648, BR2444, BR2448, BR2488, BR2496, RAW },
             // compressed audio directory extensions
@@ -127,7 +127,7 @@ namespace AATB
         static readonly int[][]
             // Two dimensional list of all quality parameters
             // must correspond to and be in same order as AudioCompressionFormats list
-            AudioCompressionQuality = new[]
+            AudioCompressionQuality = 
               { mp3Quality,
                 aacQuality,
                 oggQuality,
