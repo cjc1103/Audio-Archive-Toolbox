@@ -155,57 +155,73 @@ namespace AATB
             return false;
         } // end CheckFormatBitrate
 
-        static bool CheckUniqueBitrate(string[] InputAudioBitrates, string Format)
+        static bool CheckUniqueBitrate(string[] InputAudioBitrates, string InputFormat)
         {
             /* Checks exactly one bitrate flag is set for the input format
              * Inputs:  InputAudioBitrates - input array of valid bitrates
-             *          Format - defined in global AudioFormats array
+             *          InputFormat - input format (defined in global AudioFormats array)
+             *          AudioFormats - global string array of all valid formats
              *          AudioFormatBitrate - global boolean array of valid formats and bitrates
-             * Note:    ignores RAW flag (array length - 2)
+             * Note:    ignores RAW bitrate flag
              * Returns: true if one bitrate is set, otherwise false
              */
             int i, j, NumberOfBitratesSet = 0;
 
-            i = Array.IndexOf(AudioFormats, Format);
-            if (Debug) Console.WriteLine("Format: {0}  Index: {0}", Format, i);
+            // find input format in global AudioFormats array
+            i = Array.IndexOf(AudioFormats, InputFormat);
+            if (Debug) Console.WriteLine("Format: {0}  Index: {1}", InputFormat, i);
             if (i >= 0)
             {
-                for (j = 0; j <= InputAudioBitrates.Length - 2; j++)
+                // find each local bitrate in global AudioBitrates
+                foreach (string bitrate in InputAudioBitrates)
                 {
-                    if (AudioFormatBitrate[i, j])
-                        NumberOfBitratesSet++;
-                    if (Debug) Console.WriteLine("dbg: ({00},{00})  {0}  Number of bitrates set: {0}",
-                        i, j, AudioFormatBitrate[i, j], NumberOfBitratesSet);
+                    j = Array.IndexOf(AudioBitrates, bitrate);
+                    if (j >= 0 && bitrate != RAW)
+                    {
+                        if (AudioFormatBitrate[i, j])
+                            NumberOfBitratesSet++;
+                            if (Debug) Console.WriteLine("dbg: ({0},{1})  {2}  Number of bitrates set: {3}",
+                                i, j, AudioFormatBitrate[i, j], NumberOfBitratesSet);
+                    }
                 }
             }
+            // return true if bitrate is unique
             if (NumberOfBitratesSet == 1)
                 return true;
             else
                 return false;
         } // end CheckUniqueBitrate
 
-        static bool CheckUniqueFormat(string[] InputAudioFormats, string Bitrate)
+        static bool CheckUniqueFormat(string[] InputAudioFormats, string InputBitrate)
         {
             /* Checks exactly one format flag is set for the input bitrate
              * Inputs:  InputAudioFormats - input array of valid formats
-             *          Bitrate - defined in global AudioBitrates array
+             *          Bitrate - input bitrate (defined in global AudioBitrates array)
+             *          AudioBitrates - global array of all valid bitrates
              *          AudioFormatBitrate - global boolean array of valid formats and bitrates
              * Returns: true if one format is set, otherwise false
              */
             int i, j, NumberOfFormatsSet = 0;
 
-            j = Array.IndexOf(AudioBitrates, Bitrate);
-            if (Debug) Console.WriteLine("Bitrate: {0}  Index: {0}", Bitrate, j);
+            // find input bitrate in global AudioBitrates array
+            j = Array.IndexOf(AudioBitrates, InputBitrate);
+            if (Debug) Console.WriteLine("Bitrate: {0}  Index: {1}", InputBitrate, j);
             if (j >= 0)
             {
-                for (i = 0; i <= InputAudioFormats.Length - 1; i++)
+                // find each local format in InputAudioFormats
+                foreach (string format in InputAudioFormats)
                 {
-                    if (AudioFormatBitrate[i, j])
-                        NumberOfFormatsSet++;
-                    if (Debug) Console.WriteLine("dbg: ({00},{00})  {0}  Number of formats set: {0}",
-                        i, j, AudioFormatBitrate[i, j], NumberOfFormatsSet);
+                    i = Array.IndexOf(AudioFormats, format);
+                    if (i >= 0)
+                    {
+                        if (AudioFormatBitrate[i, j])
+                            NumberOfFormatsSet++;
+                        if (Debug) Console.WriteLine("dbg: ({0},{1})  {2}  Number of formats set: {3}",
+                            i, j, AudioFormatBitrate[i, j], NumberOfFormatsSet);
+                    }
                 }
             }
+            // return true if format is unique
             if (NumberOfFormatsSet == 1)
                 return true;
             else
