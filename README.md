@@ -212,6 +212,7 @@
  *      --wav=<bitrate>     use wav files of bitrate
  *   -x|--delete            delete redundant files after compression is complete
  *      --wav=<bitrate>|raw|all  Delete all input wav directories for the specified bitrate
+ *      [--misc|--misc-files-delete]  Delete misc files and directories specified in the config file
  *
  * compression and verification arguments
  *   --mp3=<bitrate>        compress wav to mp3 format (.mp3) (16-44 is default)
@@ -244,17 +245,16 @@
  *   --debug                switch to write debug files to console
  * 
  * Configuration file
- *   An optional configuration file can be used for various configuration options
+ *   A configuration file can be used for various configuration options
  * 	 The file is called "aatb_config.ini" and is located in the program directory
+ *   If the file does not exist or is unreadable, the program will exit.
+ * 
  *   # Comments start with "#" character
  *   # format: key = arguments
  *   # arguments do not need to be enclosed in quotes
  *   [Settings]
  *   InfoFileExtension = <extension>
  *   CuesheetFileExtension = <extension>
- *   [Macros]
- *   # macroname = <command line arguments>
- *   # e.g: -xyz = --verify --tag --all -p
  *   [FilesToDelete]
  *   # entries must have unique key, use consecutive numerals
  *   01 = <extension>
@@ -263,6 +263,9 @@
  *   # entries must have unique key, use consecutive numerals
  *   01 = <directory> 
  *   02 = <directory>
+ *   [Macros]
+ *   # macroname = <command line arguments>
+ *   # e.g: -xyz = --verify --tag --all -
  *
  * Dependencies and limitations
  *   This program requires .NET 8.0 runtime or later, and is compiled as a x64 Windows binary

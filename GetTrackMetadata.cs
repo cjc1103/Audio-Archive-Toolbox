@@ -98,9 +98,9 @@ namespace AATB
                 // if not found (-1) set start line number to 6 to skip header information
                 StartLineNumber = GetLineNumberOfSearchTerm(0, "^(Set|Track|Disc)", DataList);
                 if (StartLineNumber == -1) StartLineNumber = 6;
-                // get end line number - search for "=" character, as delimiter line contains "="
+                // get end line number - search for "End" at beginning of line
                 // if not found (-1) set end line number to length of list
-                EndLineNumber = GetLineNumberOfSearchTerm(StartLineNumber, "^=", DataList);
+                EndLineNumber = GetLineNumberOfSearchTerm(StartLineNumber, "^End", DataList);
                 if (EndLineNumber == -1) EndLineNumber = DataList.Length;
                 if (Debug) Console.WriteLine("dbg: Setlist line numbers start: {0:D2}  end: {1:D2}",
                                             StartLineNumber, EndLineNumber);
