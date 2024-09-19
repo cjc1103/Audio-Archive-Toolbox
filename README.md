@@ -194,10 +194,6 @@
  *       --shn              creates/updates shntool report files
  *       -a|--all-reports   combines --md5 --ffp --shn options
  *       -t|--tag			update audio file tags (metadata)
- *   -y|--convert-to-wav    convert to wav format
- *       --shn				convert shn lossless format to wav
- *       --aif				convert apple aif format to wav
- *       --wma				convert windows media wma format to wav
  *   -d|--decompress        decompress lossless files to wav format
  *      --alac=<bitrate>|all  Apple Lossless Audio Compression (except raw files)
  *      --flac=<bitrate>|raw|all  Freeware Lossless Audio Compression
@@ -205,6 +201,10 @@
  *		--wav=<bitrate>		specifies bitrate of wav files to be joined
  *   -r|--rename-wav-files	renames wav files in <bitrate> directory
  *		--wav=<bitrate>		specifies bitrate of wav files to be renamed
+ *   -y|--convert-to-wav    convert to wav format
+ *       --shn				convert shn lossless format to wav
+ *       --aif				convert apple aif format to wav
+ *       --wma				convert windows media wma format to wav
  *   -z|--convert-to-bitrate   convert wav files to bitrate
  *      --wav=<bitrate>     convert wav files of bitrate
  *   -s|--create-cuesheet   create cuesheet from wav files

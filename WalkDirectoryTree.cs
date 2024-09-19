@@ -289,39 +289,6 @@ namespace AATB
                 }
             } // end Verify Audio section
 
-            // = = = = = = = = Convert Audio to WAV files section = = = = = = = = 
-            // Convert other audio formats to WAV files
-            // RAW flag is used to specify a specific format to convert to WAV
-            // Input directory type = TRACKADAUDIO (i.e., dir name = <bitrate>)
-            // Command: -y|--convert-to-wav <valid conversion from format>
-            else if (ConvertAudio)
-            {
-                if (Debug) Console.WriteLine("dbg: Convert Audio Section");
-
-                // loop through all audio formats in AudioConversionFormats list
-                for (i = 0; i <= AudioConversionFormats.Length - 1; i++)
-                {
-                    CompAudioFormat = AudioConversionFormats[i];
-
-                    // check RAW flag is set for this format = convert
-                    // and current dir is tracked wav audio
-                    if (CheckFormatBitrate(CompAudioFormat, RAW)
-                        && Dir.Type == TRACKEDAUDIO)
-                    {
-                        // get list of compressed audio files
-                        CompAudioFileList = CurrentDir.GetFiles("*." + CompAudioFormat);
-                        if (CompAudioFileList != null)
-                        {
-                            // convert to WAV in current directory
-                            WAVDirName = Dir.Name;
-                            WAVDirPath = Dir.Path;
-                            Log.WriteLine("  Decompressing to directory: " + WAVDirName);
-                            ConvertToWAV(CompAudioFormat, WAVDirPath, CompAudioFileList);
-                        }
-                    }
-                }
-            } // end Convert Audio section
-
             // = = = = = = = = Decompress Audio section = = = = = = = =
             // Decompress FLAC lossless audio files to WAV format from raw audio and compressed audio
             // directories. Other lossless formats like ALAC are not supported for simplicity
@@ -421,10 +388,44 @@ namespace AATB
                 }
             } // end Rename WAV Files section
 
+            // = = = = = = = = Convert Audio Format section = = = = = = = = 
+            // Convert other audio formats to WAV files
+            // RAW flag is used to specify a specific format to convert to WAV
+            // Input directory type = TRACKADAUDIO (i.e., dir name = <bitrate>)
+            // Command: -y|--convert-to-wav <valid conversion from format>
+            else if (ConvertAudioFormat)
+            {
+                if (Debug) Console.WriteLine("dbg: Convert Audio Section");
+
+                // loop through all audio formats in AudioConversionFormats list
+                for (i = 0; i <= AudioConversionFormats.Length - 1; i++)
+                {
+                    CompAudioFormat = AudioConversionFormats[i];
+
+                    // check RAW flag is set for this format = convert
+                    // and current dir is tracked wav audio
+                    if (CheckFormatBitrate(CompAudioFormat, RAW)
+                        && Dir.Type == TRACKEDAUDIO)
+                    {
+                        // get list of compressed audio files
+                        CompAudioFileList = CurrentDir.GetFiles("*." + CompAudioFormat);
+                        if (CompAudioFileList != null)
+                        {
+                            // convert to WAV in current directory
+                            WAVDirName = Dir.Name;
+                            WAVDirPath = Dir.Path;
+                            Log.WriteLine("  Decompressing to directory: " + WAVDirName);
+                            ConvertToWAV(CompAudioFormat, WAVDirPath, CompAudioFileList);
+                        }
+                    }
+                }
+            } // end Convert Audio section
+
             // = = = = = = = = Convert Audio Bitrate section = = = = = = = = 
             // Convert wav files from one bitrate to another
+            // ConvertToBitrate and ConvertFromBitrate are set from command line
             // Command: -z|--convert-to-bitrate=<bitrate to> --wav=<bitrate from>
-            else if (ConvertBitrate)
+            else if (ConvertAudioBitrate)
             {
                 if (Debug) Console.WriteLine("dbg: Convert Bitrate Section");
 
@@ -433,8 +434,8 @@ namespace AATB
                     && Dir.Name == ConvertFromBitrate
                     && WAVExists)
                 {
-                    // ConvertToBitrate is entered as the "Convert" command line argument
-                    // convert all wav files in list to the desired bitrate
+                    // convert all wav files in <ConvertFromBitrate> directory to the desired bitrate
+                    // converted files are written to the <ConvertToBitrate> directory
                     ConvertWAVBitrate(Dir, WAVFileList, ConvertFromBitrate, ConvertToBitrate);
                 }
             } // end Convert Audio Bitrate section

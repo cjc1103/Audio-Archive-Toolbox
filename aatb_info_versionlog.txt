@@ -327,7 +327,7 @@ Program history
      Renamed DecompressWAV method to ConvertToWAV, and added ALAC, SHN, AIF, and WMA formats
      Renamed CompressWAV method to ConvertFromWAV
      Rewrote Decompression section in WalkDirectoryTree to use decompression format list
-     Combined ConvertFromWAV and ConvertToWAV methods in ConvertAudioMethods file
+     Combined ConvertFromWAV and ConvertToWAV methods in ConvertAudioFormatMethods file
      Enabled use of either .aif or .aiff file extension for Audio Interchange File Format AIFF
      Renamed previous SHN variable to SHNRPT to deconflict with the SHN compressed audio format
      Updated PrintHelp and CheckUserInput methods
@@ -356,7 +356,7 @@ Program history
      Added exception handling for System.IO.DirectoryNetFoundException in WalkDirectoryTree recursion code
      Changed CompressAudio method to copy infotext and cuesheet files if they exist
 
-6.1  2024-08-23
+6.1  2024-09-19
      Replaced multiple concert date regex statements with static ConcertDateFormat string
      Updated GetDirMetadata to streamline metadata collection and validate concert date for a live recording
      Updated CheckUserInput method to print out delete audio options with wav bitrates

@@ -140,10 +140,10 @@ namespace AATB
             CompressAudio = false,
             VerifyAudio = false,
             DecompressAudio = false,
-            ConvertAudio = false,
+            ConvertAudioFormat = false,
             JoinWAV = false,
             RenameWAV = false,
-            ConvertBitrate = false,
+            ConvertAudioBitrate = false,
             CreateCuesheet = false,
             DeleteAudio = false,
             DeleteWAVFiles = false,
@@ -231,11 +231,6 @@ namespace AATB
                             VerifyAudio = true;
                             break;
 
-                        case "-y":
-                        case "--convert-to-wav":
-                            ConvertAudio = true;
-                            break;
-
                         case "-d":
                         case "--decompress":
                             DecompressAudio = true;
@@ -251,9 +246,14 @@ namespace AATB
                             RenameWAV = true;
                             break;
 
+                        case "-y":
+                        case "--convert-to-wav":
+                            ConvertAudioFormat = true;
+                            break;
+
                         case "-z":
                         case "--convert-to-bitrate":
-                            ConvertBitrate = true;
+                            ConvertAudioBitrate = true;
                             switch (opt)
                             {
                                 case null: // no options: set conversion bitrate to 16-44

@@ -17,11 +17,11 @@ namespace AATB
             // if more than one of these conditions is true, the program is terminated immediately  
             if (Convert.ToInt32(CompressAudio )
               + Convert.ToInt32(VerifyAudio )
-              + Convert.ToInt32(ConvertAudio)
               + Convert.ToInt32(DecompressAudio)
               + Convert.ToInt32(JoinWAV)
               + Convert.ToInt32(RenameWAV)
-              + Convert.ToInt32(ConvertBitrate)
+              + Convert.ToInt32(ConvertAudioFormat)
+              + Convert.ToInt32(ConvertAudioBitrate)
               + Convert.ToInt32(CreateCuesheet)
               + Convert.ToInt32(DeleteAudio) != 1)
             {
@@ -117,7 +117,7 @@ namespace AATB
             }
 
             // Convert audio to another format
-            if (ConvertAudio)
+            if (ConvertAudioFormat)
             {
                 Log.WriteLine("Convert audio files to WAV");
                 // valid conversion formats are defined in AudioConversionFormats array
@@ -176,7 +176,7 @@ namespace AATB
             }
 
             // Conversion of WAV files to another bitrate
-            if (ConvertBitrate)
+            if (ConvertAudioBitrate)
             {
                 ConvertFromBitrate = FirstBitrateSet(WAV);
                 // ConvertToBitrate is set during command line parsing as [-z|--convert-to-bitrate]=<bitrate>
