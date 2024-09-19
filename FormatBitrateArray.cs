@@ -202,7 +202,6 @@ namespace AATB
 
             // find input bitrate in global AudioBitrates array
             j = Array.IndexOf(AudioBitrates, InputBitrate);
-            if (Debug) Console.WriteLine("Bitrate: {0}  Index: {1}", InputBitrate, j);
             if (j >= 0)
             {
                 // find each local format in InputAudioFormats
@@ -213,8 +212,6 @@ namespace AATB
                     {
                         if (AudioFormatBitrate[i, j])
                             NumberOfFormatsSet++;
-                        if (Debug) Console.WriteLine("dbg: ({0},{1})  {2}  Number of formats set: {3}",
-                            i, j, AudioFormatBitrate[i, j], NumberOfFormatsSet);
                     }
                 }
             }
