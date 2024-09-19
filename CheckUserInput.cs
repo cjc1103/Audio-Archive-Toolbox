@@ -178,10 +178,11 @@ namespace AATB
             // Conversion of WAV files to another bitrate
             if (ConvertBitrate)
             {
+                ConvertFromBitrate = FirstBitrateSet(WAV);
+                // ConvertToBitrate is set during command line parsing as [-z|--convert-to-bitrate]=<bitrate>
                 Log.WriteLine("Convert WAV audio files from "
                               + ConvertFromBitrate + " to " + ConvertToBitrate);
                 // assume first WAV bitrate set is the ConvertFromBitrate
-                ConvertFromBitrate = FirstBitrateSet(WAV);
                 if (!CheckFormatBitrate(WAV, ConvertFromBitrate))
                 {
                     Log.WriteLine("Input error: Conversion from bitrate not valid. Use --wav=<bitrate>");
