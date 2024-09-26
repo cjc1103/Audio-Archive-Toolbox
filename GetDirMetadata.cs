@@ -238,8 +238,8 @@ namespace AATB
                 Log.WriteLine("    Artist: " + Dir.AlbumArtist);
                 if (Dir.Event != null) Log.WriteLine("    Event: " + Dir.Event);
                 if (Dir.Venue != null) Log.WriteLine("    Venue: " + Dir.Venue);
-                if (Dir.Location != null) Log.WriteLine("    Location: " + Dir.Location);
                 if (Dir.Stage != null) Log.WriteLine("    Stage: " + Dir.Stage);
+                if (Dir.Location != null) Log.WriteLine("    Location: " + Dir.Location);
                 Log.WriteLine("    Album: " + Dir.Album);
             }
         }  // end GetDirMetadata
@@ -305,8 +305,8 @@ namespace AATB
                             Dir.AlbumArtist = DataList[0];
                             Dir.Event = null;
                             Dir.Venue = DataList[1];
-                            Dir.Location = DataList[2];
                             Dir.Stage = null;
+                            Dir.Location = DataList[2];
                             Dir.ConcertDate = DataList[3];
                             ValidConcertDate = true;
                             if (Debug) Console.WriteLine("dbg: Found concert date on info file line 4");
@@ -317,8 +317,8 @@ namespace AATB
                             Dir.AlbumArtist = DataList[0];
                             Dir.Event = DataList[1];
                             Dir.Venue = null;
-                            Dir.Location = DataList[2];
-                            Dir.Stage = DataList[3];
+                            Dir.Stage = DataList[2];
+                            Dir.Location = DataList[3];
                             Dir.ConcertDate = DataList[4];
                             ValidConcertDate = true;
                             if (Debug) Console.WriteLine("dbg: Found concert date on info file line 5");
@@ -330,8 +330,8 @@ namespace AATB
                             Dir.Album = GetDataAfterSearchTerm("TITLE:", DataList);
                             Dir.Event = GetDataAfterSearchTerm("EVENT:", DataList);
                             Dir.Venue = GetDataAfterSearchTerm("VENUE:", DataList);
-                            Dir.Location = GetDataAfterSearchTerm("LOCATION:", DataList);
                             Dir.Stage = GetDataAfterSearchTerm("STAGE:", DataList);
+                            Dir.Location = GetDataAfterSearchTerm("LOCATION:", DataList);
                             Dir.ConcertDate = GetDataAfterSearchTerm("DATE:", DataList);
                             ValidConcertDate = ValidateConcertDate(Dir.ConcertDate);
                         }
@@ -340,8 +340,8 @@ namespace AATB
                         {
                             Dir.Album += ( Dir.Event + SPACE
                                          + Dir.Venue + SPACE
-                                         + Dir.Location + SPACE
                                          + Dir.Stage + SPACE
+                                         + Dir.Location + SPACE
                                          + Dir.ConcertDate);
                             // remove redundant multiple spaces
                             Dir.Album = Regex.Replace(Dir.Album, @"\s+", SPACE);
@@ -428,8 +428,8 @@ namespace AATB
                         // search for live metadata
                         Dir.Event = GetDataAfterSearchTerm("EVENT:", DataList);
                         Dir.Venue = GetDataAfterSearchTerm("VENUE:", DataList);
-                        Dir.Location = GetDataAfterSearchTerm("LOCATION:", DataList);
                         Dir.Stage = GetDataAfterSearchTerm("STAGE:", DataList);
+                        Dir.Location = GetDataAfterSearchTerm("LOCATION:", DataList);
                         Dir.ConcertDate = GetDataAfterSearchTerm("DATE:", DataList);
                         ValidConcertDate = ValidateConcertDate(Dir.ConcertDate);
                         // if album string was not found, build it
@@ -437,8 +437,8 @@ namespace AATB
                         {
                             Dir.Album += (Dir.Event + SPACE
                                         + Dir.Venue + SPACE
-                                        + Dir.Location + SPACE
                                         + Dir.Stage + SPACE
+                                        + Dir.Location + SPACE
                                         + Dir.ConcertDate);
                             // remove redundant multiple spaces
                             Dir.Album = Regex.Replace(Dir.Album, @"\s+", SPACE);

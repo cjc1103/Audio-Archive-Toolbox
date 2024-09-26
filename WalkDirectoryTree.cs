@@ -419,7 +419,7 @@ namespace AATB
                         }
                     }
                 }
-            } // end Convert Audio section
+            } // end Convert Audio Format section
 
             // = = = = = = = = Convert Audio Bitrate section = = = = = = = = 
             // Convert wav files from one bitrate to another

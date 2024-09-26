@@ -133,16 +133,16 @@
  *   (info header format #2 - no labels):
  *   Artist
  *   Event
- *   Location
  *   Stage
+ *   Location
  *   Date
  *   
  *   (alternate info header format, using labels as follows):
  *   PERFORMER <Artist name>
  *   TITLE <Event name>
  *   VENUE <Venue name>
- *   LOCATION <Location>
  *   STAGE <Stage name>
+ *   LOCATION <Location>
  *   DATE <yyyy-mm-dd>
  *
  *   Artist member lineup info
