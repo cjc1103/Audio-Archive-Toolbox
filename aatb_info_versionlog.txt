@@ -356,7 +356,7 @@ Program history
      Added exception handling for System.IO.DirectoryNetFoundException in WalkDirectoryTree recursion code
      Changed CompressAudio method to copy infotext and cuesheet files if they exist
 
-6.1  2024-09-19
+6.1  2024-10-01
      Replaced multiple concert date regex statements with static ConcertDateFormat string
      Updated GetDirMetadata to streamline metadata collection and validate concert date for a live recording
      Updated CheckUserInput method to print out delete audio options with wav bitrates
@@ -366,3 +366,4 @@ Program history
      Corrected input checking for file conversion in CheckUserInput method
      Added CheckUniqueFormat and CheckUniqueBitrate methods when checking a specific format or bitrate
      Corrected typo and added --misc-files-delete option to PrintHelp method
+     Removed colon from metadata search terms from infotxt and cuesheet
