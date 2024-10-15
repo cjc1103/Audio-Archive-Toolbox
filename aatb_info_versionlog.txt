@@ -188,7 +188,7 @@ Program history
      Fixed GetMetadataFromInfotext method to ignore all characters in song title after a left parent "("
        Comments in parentheses are ignored even if other trailing characters are present
      Changed GetMetaData method to always use parent directory name for subdirectories even if using
-       infotext or cuesheet files. Artist, Venue, Stage, Location from info files is used for metadata. 
+       infotext or cuesheet files. Artist, Venue, Stage, Location from infotext file is used for metadata. 
      Changed incrementing TrackNbr to start of loop in each method using this counter
      Streamlined and corrected bugs in ConvertWAVBitrate method, now uses Regex to build output filenames
      Changed command line input to accept any bitrate for mp3's, although the resultant files for bitrates
@@ -312,7 +312,7 @@ Program history
 
 5.7  2023-03-09
      Added RenameInfoFiles flag to rename infotext and cuesheet files
-     Added UseCurrentDirInfo flag for Verify mode to force program to read info files in current dir
+     Added UseCurrentDirInfo flag for Verify mode to force program to read infotext file in current dir
      Added two string variables to AATB_DirInfo class: DirMetadataSource and TrackMetadataSource,
        to record the source of metadata for Albums and Tracks respectively
      Added RenameWAV flag and RenameWAVFiles method to rename WAV files in <bitrate> directory to match

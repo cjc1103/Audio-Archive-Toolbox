@@ -59,7 +59,7 @@ namespace AATB
              *   Set track list optionally starts after keyword "Set"
              *   Track format is: "{dd}<.> title [Artist]", where dd is one or two digits 0-9
              *   Each track is assumed to be in sequence, information is added to next position in list
-             *   Track numbers in info file can restart for multiple sets/discs, and tracks may not
+             *   Track numbers in infotext can restart for multiple sets/discs, and tracks may not
              *   be on contiguous lines, so "TrackNumber" variable counts tracks instead
              * Notes:
              *   (1) Max track number is 99
@@ -85,9 +85,9 @@ namespace AATB
                 TrackPatternMatch,
                 ArtistPatternMatch;
 
-            // get info file name
+            // get infotext filename
             InfotextFileName = SplitFileName(Dir.InfotextPath);
-            Log.WriteLine("  Reading track metadata from info file: " + InfotextFileName);
+            Log.WriteLine("  Reading track metadata from infotext: " + InfotextFileName);
             // read infotext file
             DataList = ReadTextFile(Dir.InfotextPath);
             // initialize counters
@@ -102,7 +102,7 @@ namespace AATB
             if (EndLineNumber == -1) EndLineNumber = DataList.Length;
             if (Debug) Console.WriteLine("dbg: Setlist line numbers start: {0:D2}  end: {1:D2}",
                                         StartLineNumber, EndLineNumber);
-            // read data from info file - zero based index, stop before eof
+            // read data from infotext - zero based index, stop before eof
             for (i = StartLineNumber; i < EndLineNumber; i++)
             {
                 DataLine = DataList[i];
@@ -168,7 +168,7 @@ namespace AATB
                     ArtistFound = false;
                 }
             }
-            // check ending track number in info file is correct
+            // check ending track number in infotext file is correct
             // (the track number will be one more than actual number)
             if (TrackNumber == FileList.Length)
             {
@@ -306,7 +306,7 @@ namespace AATB
                     Log.Write(" [" + TrackArtist + "]");
                 Log.WriteLine();
             }
-            // check ending track number in info file is correct
+            // check ending track number in infotext file is correct
             // before reading filelist data
             // (the track number will be one more than actual number)
             if (TrackNumber == FileListCount)

@@ -449,13 +449,13 @@ namespace AATB
                             CreateM3U = true;
                             break;
 
-                        // extract metadata from info text file 
+                        // extract metadata from infotext file 
                         case "-i":
                         case "--use-infotext":
                             UseInfotext = true;
                             break;
 
-                        // extract metadata from cuesheet 
+                        // extract metadata from cuesheet file
                         case "-e":
                         case "--use-cuesheet":
                             UseCuesheet = true;
@@ -479,13 +479,13 @@ namespace AATB
                             UseTitleCase = true;
                             break;
 
-                        // rename info files
+                        // rename infotext file
                         case "--ri":
                         case "--rename-info-files":
                             RenameInfoFiles = true;
                             break;
 
-                        // use info files in current directory
+                        // use infotext file in current directory
                         case "--icd":
                         case "--get-info-from-current-dir":
                             UseCurrentDirInfo = true;
