@@ -92,7 +92,7 @@ namespace AATB
                     else
                         TargetFilePath = Dir.ParentPath + BACKSLASH + Dir.ParentBaseName + PERIOD + INFOTXT;
 
-                    // rename info file if needed
+                    // rename infotext file if needed
                     if (RenameInfoFiles
                         && (Dir.InfotextPath != TargetFilePath))
                     {
@@ -117,7 +117,7 @@ namespace AATB
                     else
                         TargetFilePath = Dir.ParentPath + BACKSLASH + Dir.ParentBaseName + PERIOD + INFOCUE;
 
-                    // rename info file if needed
+                    // rename cuesheet file if needed
                     if (RenameInfoFiles
                         && (Dir.CuesheetPath != TargetFilePath))
                     {
@@ -287,7 +287,7 @@ namespace AATB
             InfotextFileName = SplitFileName(Dir.InfotextPath);
             if (File.Exists(Dir.InfotextPath))
             {
-                Log.WriteLine("  Reading album metadata from info file: " + InfotextFileName);
+                Log.WriteLine("  Reading album metadata from infotext file: " + InfotextFileName);
                 // read data from text file
                 DataList = ReadTextFile(Dir.InfotextPath);
 
@@ -309,7 +309,7 @@ namespace AATB
                             Dir.Location = DataList[2];
                             Dir.ConcertDate = DataList[3];
                             ValidConcertDate = true;
-                            if (Debug) Console.WriteLine("dbg: Found concert date on info file line 4");
+                            if (Debug) Console.WriteLine("dbg: Found concert date on infotext line 4");
                         }
                         // valid date on line number 5
                         else if (DateLineNumber == 4)
@@ -321,7 +321,7 @@ namespace AATB
                             Dir.Location = DataList[3];
                             Dir.ConcertDate = DataList[4];
                             ValidConcertDate = true;
-                            if (Debug) Console.WriteLine("dbg: Found concert date on info file line 5");
+                            if (Debug) Console.WriteLine("dbg: Found concert date on infotext line 5");
                         }
                         // otherwise search for metadata labels, find first instance of each label
                         else
@@ -348,7 +348,7 @@ namespace AATB
                         }
                         // concert date is required
                         if (!ValidConcertDate)
-                            Log.WriteLine("*** Concert date is missing/incorrect format from info file");
+                            Log.WriteLine("*** Concert date is missing/incorrect format from infotext");
                         // if metadata is valid, reset metadata source
                         if (Dir.AlbumArtist != null && ValidConcertDate)
                             Dir.DirMetadataSource = INFOFILE;
@@ -362,7 +362,7 @@ namespace AATB
                         Dir.Album = GetDataAfterSearchTerm("TITLE", DataList);
                         // album string is required
                         if (Dir.Album == null)
-                            Log.WriteLine("*** Album information missing from info file");
+                            Log.WriteLine("*** Album information missing from infotext");
                         // if metadata is valid, reset metadata source
                         if (Dir.AlbumArtist != null && Dir.Album != null)
                             Dir.DirMetadataSource = INFOFILE;
@@ -371,7 +371,7 @@ namespace AATB
                 }
             }
             else
-                Log.WriteLine("*** Infotext file not found:" + InfotextFileName);
+                Log.WriteLine("*** Infotext file not found");
 
         } // end GetDirMetadataFromInfotext
 
@@ -464,7 +464,7 @@ namespace AATB
                 }
             }
             else
-                Log.WriteLine("*** Cuesheet not found: " + CuesheetFileName);
+                Log.WriteLine("*** Cuesheet not found");
 
         } // end GetDirMetadataFromCuesheet
 

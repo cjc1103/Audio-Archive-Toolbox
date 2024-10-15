@@ -14,7 +14,7 @@
 ; script to modify Windows environment path
 #include "environment.iss"
 #define AATBName "Audio Archive Toolbox"
-#define AATBVer "6.1.5"
+#define AATBVer "6.1.6"
 #define AATBDistDir "e:\source\Audio Archive Toolbox\bin\x64\Release\net8.0-windows10.0.17763.0
 #define AATBSetupOutputDir "e:\source"
 #define DotNETDistFile = "dotnet-runtime-8.0.8-win-x64.exe"

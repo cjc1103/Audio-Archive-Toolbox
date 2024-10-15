@@ -143,7 +143,7 @@ Program history
        to use RunProcess method. RunProcess will redirect Standard Output and Error messages, which
        requires flac to suppress all output, as encoding 24 bit files results in an error message,
      GetDirMetadata and GetTrackData methods - changed to identify recordings as Live, Commercial or
-       Other, remove spaces from live recording directory names, correctly read data from info file
+       Other, remove spaces from live recording directory names, correctly read data from infotext
        and remove prefix/suffixes from Artist name, song titles. GetDirMetaData is called for every
        directory in tree. GetTrackmetaData is only called when needed by Compress and Verify sections
        to identify song metadata
@@ -168,7 +168,7 @@ Program history
        --create-cue (subordinate to verify function) creates cue file in wav file directory <bitrate>
 
 4.1  2020-06-06
-     Separated GetTrackMetadata into four separate methods: primary, info file, cuesheet, filename
+     Separated GetTrackMetadata into four separate methods: primary, infotext, cuesheet, filename
        the primary method will decide which sub methods to call. This enables info and cuesheet methods
        to call the default filename method in case of input error
      Fixed bug in GetDirMetadata to account for parent directory name starting with a date yyyy-mm-dd
@@ -195,8 +195,8 @@ Program history
        greater than 16-44 will be increased (e.g. 24-48 mp3's are about 4% bigger than 16-44 equivalents)
 
 4.3  2021-05-20
-     Fixed bugs in GetDirMetadata to work correctly with info file using Compress and Verify functions
-     Changed GetTrackMetadataFromInfotext to detect blank titles in info file, and change them to "Track dd"
+     Fixed bugs in GetDirMetadata to work correctly with infotext using Compress and Verify functions
+     Changed GetTrackMetadataFromInfotext to detect blank titles in infotext, and change them to "Track dd"
      Changed GetDirMetadata to remove index number (at least one decimal number followed by space) from
        the beginning of Artist Name
      Fixed bug in VerifySHNReport method, where program would read past EOF
@@ -211,7 +211,7 @@ Program history
        replace case statement with if-then-else
      Changed GetTrackDuration method to exit program if Mediainfo returns null. This probably means the
        user is using the Windows GUI version of the program, not the CLI version
-     Removed -i|--use-infotext option requirement for creating cuesheets. If an info file is not present
+     Removed -i|--use-infotext option requirement for creating cuesheets. If an infotext is not present
        track metadata will be derived from filenames
 
 4.5  2021-06-26	   
@@ -236,7 +236,7 @@ Program history
 	 Corrected inconsistencies in CheckUserInput
 	 Fixed external parameter errors in Compression, Decompression, and Tag Audio methods from 4.7 update
 	 Fixed status message inconsistencies throughout entire program
-	 Changed Verify Audio section to only copy info file to those folders that were actually verified
+	 Changed Verify Audio section to only copy infotext to those folders that were actually verified
 	 Changed InnoSetup code to only show checkboxes for installing optional programs initially selected
 	 
 4.9  2022-01-10
@@ -253,7 +253,7 @@ Program history
      Changed and consolidated algorithm logic for compress, verify, and decompress audio sections
      Replaced duplicative code with a loop to check all compression formats, and only operate on formats
      and bitrates that are selected through the command line for each mode.
-     Added additional info file header format for live recordings in GetDirMetadata method
+     Added additional infotext header format for live recordings in GetDirMetadata method
      Consolidated album metadata code in GetDirMetadata method from either directory name, infotext or cuesheet
 
 5.1  2022-03-10
@@ -361,9 +361,10 @@ Program history
      Updated GetDirMetadata to streamline metadata collection and validate concert date for a live recording
      Updated CheckUserInput method to print out delete audio options with wav bitrates
      Changed regex search term to be case insensitive in GetDataAfterSearchTerm method
-     Changed order of info file attributes to describe concert: Artist, Event, Venue, Location, Stage, Date
+     Changed order of infotext attributes to describe concert: Artist, Event, Venue, Location, Stage, Date
      Removed filename suffix from TitleTrack in GetTrackMetadataFromFileNames method
      Corrected input checking for file conversion in CheckUserInput method
      Added CheckUniqueFormat and CheckUniqueBitrate methods when checking a specific format or bitrate
      Corrected typo and added --misc-files-delete option to PrintHelp method
      Removed colon from metadata search terms from infotxt and cuesheet
+     Removed redundant error messages for infotext and cuesheet not found in GetDirMetadata and Get TrackMetadata

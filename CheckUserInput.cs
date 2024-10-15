@@ -261,10 +261,10 @@ namespace AATB
                 Log.WriteLine("Convert directory names to title case");
 
             if (RenameInfoFiles)
-                Log.WriteLine("Rename info files according to directory name convention");
+                Log.WriteLine("Rename infotext files according to directory name convention");
 
             if (UseCurrentDirInfo)
-                Log.WriteLine("Use current directory for info files");
+                Log.WriteLine("Use current directory for infotext files");
 
             if (OutputToCurrentDir)
                 Log.WriteLine("Output converted files to current directory");
