@@ -230,9 +230,9 @@ namespace nsAATB
 
         static bool ValidateDate(string InputDate)
         {
-            // ConcertDateFormat is a global match string
+            // DateFormat is a global match string
             if (!string.IsNullOrEmpty(InputDate))
-                return Regex.Match(InputDate, @ConcertDateFormat).Success;
+                return Regex.Match(InputDate, @DateFormat).Success;
             else
                 return false;
         }

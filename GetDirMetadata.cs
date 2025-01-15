@@ -159,7 +159,7 @@ namespace nsAATB
             BaseName = Regex.Replace(Dir.ParentName, @"^\d+\.?\s+", "");
 
             // check for live recording format: embedded date "yyyy-mm-dd stage"
-            Dir.PatternMatchDate = Regex.Match(BaseName, @ConcertDateFormat);
+            Dir.PatternMatchDate = Regex.Match(BaseName, @DateFormat);
             // check for commercial recording format: embedded " - "
             Dir.PatternMatchSHS = Regex.Match(BaseName, @SPACEHYPHENSPACE);
 
@@ -297,7 +297,7 @@ namespace nsAATB
                     {
                         // search DataList for concert date at beginning of line (col 0)
                         // returns line number of date, -1 if date not found
-                        DateLineNumber = GetLineNumberOfSearchTerm(0, "^" + ConcertDateFormat, DataList);
+                        DateLineNumber = GetLineNumberOfSearchTerm(0, "^" + DateFormat, DataList);
                         // valid date on line number 4
                         if (DateLineNumber == 3)
                         {

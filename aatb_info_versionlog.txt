@@ -357,7 +357,7 @@ Program history
      Changed CompressAudio method to copy infotext and cuesheet files if they exist
 
 6.1  2024-10-01
-     Replaced multiple concert date regex statements with static ConcertDateFormat string
+     Replaced multiple concert date regex statements with static DateFormat string
      Updated GetDirMetadata to streamline metadata collection and validate concert date for a live recording
      Updated CheckUserInput method to print out delete audio options with wav bitrates
      Changed regex search term to be case insensitive in GetDataAfterSearchTerm method
@@ -376,3 +376,4 @@ Program history
      Moved ValidateConcertDate flag from global to local scope, initialized to false,
        in GetMetadataFromInfotext and GetMetadataFromCuesheet methods
      Renamed ValidateConcertDate method to ValidateDate
+     Renamed ConcertDateFormat to DateFormat

@@ -8,16 +8,16 @@
 ;   Sound Exchange (sox)
 ; Other required components do not require installaion
 ;   and are in the "Executables" subdirectory
-; Ver. 2024-09-11
+; Ver. 2025-01-15
 ; Compiled by Chris Cantwell
 
 ; script to modify Windows environment path
 #include "environment.iss"
 #define AATBName "Audio Archive Toolbox"
-#define AATBVer "6.1.6"
+#define AATBVer "6.2.0"
 #define AATBDistDir "e:\source\Audio Archive Toolbox\bin\x64\Release\net8.0-windows10.0.17763.0
 #define AATBSetupOutputDir "e:\source"
-#define DotNETDistFile = "dotnet-runtime-8.0.8-win-x64.exe"
+#define DotNETDistFile = "dotnet-runtime-8.0.12-win-x64.exe"
 #define AppleSupportDistFile = "AppleApplicationSupport64.msi"
 #define SOXDistFile = "sox-14.4.2-win32.exe"
 #define SOXProgramDir = "sox-14-4-2"

@@ -91,7 +91,7 @@ namespace nsAATB
             ConfigurationFileName = "aatb_config.ini",
             ConfigurationFilePath = ProgramDir + ConfigurationFileName,
             // regular expression for date format yyyy-mm-dd
-            ConcertDateFormat = "((19|20)\\d{2}-\\d{2}-\\d{2})";
+            DateFormat = "((19|20)\\d{2}-\\d{2}-\\d{2})";
         static readonly string[]
             // all audio formats
             // WAV must be the last entry in this list
