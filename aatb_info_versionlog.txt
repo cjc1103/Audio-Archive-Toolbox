@@ -367,4 +367,12 @@ Program history
      Added CheckUniqueFormat and CheckUniqueBitrate methods when checking a specific format or bitrate
      Corrected typo and added --misc-files-delete option to PrintHelp method
      Removed colon from metadata search terms from infotxt and cuesheet
-     Removed redundant error messages for infotext and cuesheet not found in GetDirMetadata and Get TrackMetadata
+
+6.2  2025-01-15
+     Changed all namespace names to have "ns" prefix
+     Changed all class names to have "cl" prefix
+     Corrected error checking logic, removed redundant error messages, updated "Album" metadata construction
+       in GetMetadataFromInfotext and GetMetadataFromCuesheet methods 
+     Moved ValidateConcertDate flag from global to local scope, initialized to false,
+       in GetMetadataFromInfotext and GetMetadataFromCuesheet methods
+     Renamed ValidateConcertDate method to ValidateDate
