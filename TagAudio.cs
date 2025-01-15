@@ -1,15 +1,15 @@
 ﻿using System;
 
-namespace AATB
+namespace nsAATB
 {
-    public partial class AATB_Main
+    public partial class clMain
     {
-        static void TagCompressedAudio(string CompType, AATB_DirInfo Dir, FileInfo[] CompFileList)
+        static void TagCompressedAudio(string CompType, clDirInfo Dir, FileInfo[] CompFileList)
         {
             /* Creates metadata tags for the files in the input list
              * Inputs:
              *   CompType     String representing what audio compression codec is to be used
-             *   Dir          Input directory as AATB_DirInfo class
+             *   Dir          Input directory as clDirInfo class
              *   CompFileList List of all files to be modified
              * Calls external programs, defined in code
              * Outputs:

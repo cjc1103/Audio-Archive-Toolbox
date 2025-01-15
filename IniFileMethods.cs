@@ -1,9 +1,9 @@
 ﻿using IniParser;
 using IniParser.Model;
 
-namespace AATB
+namespace nsAATB
 {
-    public partial class AATB_Main
+    public partial class clMain
     {
         static IniData ReadConfiguration(string ConfigurationFilePath)
         {

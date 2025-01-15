@@ -2,9 +2,9 @@
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 
-namespace AATB
+namespace nsAATB
 {
-    public partial class AATB_Main
+    public partial class clMain
     {
         static string RunProcess(string ExternalProgram, string ExternalArguments)
         {

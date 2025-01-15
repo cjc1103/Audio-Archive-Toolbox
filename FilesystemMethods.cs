@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace AATB
+namespace nsAATB
 {
-    public partial class AATB_Main
+    public partial class clMain
     {
         static bool CreateDir(string DirPath)
         {
@@ -244,7 +244,7 @@ namespace AATB
             return (Data1.SequenceEqual(Data2));
         } // end FilesAreEquivalent
 
-        static void RenameWAVFiles(AATB_DirInfo Dir, FileInfo[] FileList)
+        static void RenameWAVFiles(clDirInfo Dir, FileInfo[] FileList)
         {
             /* renames all files in File list to the names embedded in the infotext file
              * if no infotext file exists then return error

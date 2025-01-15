@@ -1,15 +1,15 @@
 ﻿using System;
 
-namespace AATB
+namespace nsAATB
 {
-    public partial class AATB_Main
+    public partial class clMain
     {
-        static void CreateM3UPlaylist(AATB_DirInfo Dir, string M3UFilePath, FileInfo[] FileList)
+        static void CreateM3UPlaylist(clDirInfo Dir, string M3UFilePath, FileInfo[] FileList)
         {
             /* Build M3U playlist from track information in FileList
              * If M3U playlist exists, it will be overwritten
              * Inputs:
-             *   Dir          Directory as AATB_DirInfo class instance
+             *   Dir          Directory as clDirInfo class instance
              *     Dir.AlbumArtist
              *     Dir.TitleList
              *   M3UFilePath  M3U file path
@@ -73,13 +73,13 @@ namespace AATB
             }
         } // end CreateM3UPlaylist
 
-        static void CreateCuesheetFile(AATB_DirInfo Dir)
+        static void CreateCuesheetFile(clDirInfo Dir)
         {
             /* Creates the CD cuesheet from input directory data structure, which is
              * populated in GetTrackMetadata
              * If cuesheet exists, requires overwrite option to replace it
              * Inputs:
-             *   Dir  AATB_DirInfo class instance
+             *   Dir  clDirInfo class instance
              *     Dir.TitleList    List of track titles
              *     Dir.ArtistList   List of artists corresponding to each track
              *   CuesheetPath   Path to cuesheet
@@ -121,7 +121,7 @@ namespace AATB
             {
                 // check the number of Tracks > 0
                 TrackCount = Dir.TitleList.Count;
-                if (Debug) Console.WriteLine("Track Count: {0}", TrackCount);
+                if (Debug) Console.WriteLine("dbg: Track Count: {0}", TrackCount);
 
                 if (TrackCount > 0)
                 {

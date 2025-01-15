@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace AATB
+namespace nsAATB
 {
-    public partial class AATB_Main
+    public partial class clMain
     {
-        static void ConcatentateWAVFiles(AATB_DirInfo Dir, FileInfo[] WAVFileList, string OutputFileName)
+        static void ConcatentateWAVFiles(clDirInfo Dir, FileInfo[] WAVFileList, string OutputFileName)
         {
             /* Concatenates separate wav files in WAVFileList into one wav file
              * Input:

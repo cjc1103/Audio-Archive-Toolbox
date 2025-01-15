@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace AATB
+namespace nsAATB
 {
-    public partial class AATB_Main
+    public partial class clMain
     {
-        static void GetDirInformation(AATB_DirInfo Dir)
+        static void GetDirInformation(clDirInfo Dir)
         {
             /* Populate basic directory information
              * Inputs:
@@ -61,7 +61,7 @@ namespace AATB
 
         } // end GetDirInformation
 
-        static void GetDirTextFiles(AATB_DirInfo Dir, FileInfo[] InfotextList, FileInfo[] CuesheetList)
+        static void GetDirTextFiles(clDirInfo Dir, FileInfo[] InfotextList, FileInfo[] CuesheetList)
         {
             /* Reads infotext and cuesheet lists to get the first entry in the list
              * and rename it if appropriate. UseInfotext and UseCuesheet flags are mutually exclusive
@@ -129,7 +129,7 @@ namespace AATB
             }
         } //end GetDirTextFiles
 
-        static void GetDirMetadata(AATB_DirInfo Dir)
+        static void GetDirMetadata(clDirInfo Dir)
         {
             /* Extract directory metadata
              * Inputs:
@@ -212,17 +212,15 @@ namespace AATB
                 && Dir.Name != RAW)
             {
                 // initialize metadata source to directory name
-                // infotext or cuesheet information may be used later to overwrite this
-                // metadata later, if the file is present and the information is correct
                 Dir.DirMetadataSource = DIRNAME;
 
                 // get metadata from infotext
-                // if metadata is valid, the Dir metadata source is set to INFOTXT
+                // if metadata is valid, the Dir metadata source is reset to INFOTXT
                 if (UseInfotext)
                     GetDirMetadataFromInfotext(Dir);
 
                 // get metadata from cuesheet
-                // if metadata is valid, the Dir metadata source is set to CUESHEET
+                // if metadata is valid, the Dir metadata source is reset to CUESHEET
                 else if (UseCuesheet)
                     GetDirMetadataFromCuesheet(Dir);
 
@@ -244,7 +242,7 @@ namespace AATB
             }
         }  // end GetDirMetadata
 
-        static void GetDirMetadataFromInfotext(AATB_DirInfo Dir)
+        static void GetDirMetadataFromInfotext(clDirInfo Dir)
         {
             /* Extract directory metadata from infotext file
              * Note: will overwrite existing metadata derived from directory name
@@ -262,7 +260,7 @@ namespace AATB
              *     Location
              *     Stage
              *     Concert Date (yyyy-mm-dd)
-             *   Info alternate header using labels
+             *   Info alternate header using labels (case insensitive, optional colon)
              *     PERFORMER <artist>
              *     EVENT<event>
              *     VENUE <venue>
@@ -283,6 +281,8 @@ namespace AATB
                 InfotextFileName;
             string[]
                 DataList;
+            bool
+                ValidConcertDate = false;
 
             InfotextFileName = SplitFileName(Dir.InfotextPath);
             if (File.Exists(Dir.InfotextPath))
@@ -295,8 +295,7 @@ namespace AATB
                 {
                     case LIVE:
                     {
-                        ValidConcertDate = false;
-                        // search for concert date in DataList
+                        // search DataList for concert date at beginning of line (col 0)
                         // returns line number of date, -1 if date not found
                         DateLineNumber = GetLineNumberOfSearchTerm(0, "^" + ConcertDateFormat, DataList);
                         // valid date on line number 4
@@ -333,20 +332,22 @@ namespace AATB
                             Dir.Stage = GetDataAfterSearchTerm("STAGE", DataList);
                             Dir.Location = GetDataAfterSearchTerm("LOCATION", DataList);
                             Dir.ConcertDate = GetDataAfterSearchTerm("DATE", DataList);
-                            ValidConcertDate = ValidateConcertDate(Dir.ConcertDate);
+                            ValidConcertDate = ValidateDate(Dir.ConcertDate);
                         }
                         // if album string was not found, build it
                         if (Dir.Album == null)
                         {
-                            Dir.Album += ( Dir.Event + SPACE
-                                         + Dir.Venue + SPACE
-                                         + Dir.Stage + SPACE
-                                         + Dir.Location + SPACE
-                                         + Dir.ConcertDate);
+                            Dir.Album = ( Dir.Event + SPACE
+                                        + Dir.Venue + SPACE
+                                        + Dir.Stage + SPACE
+                                        + Dir.Location + SPACE
+                                        + Dir.ConcertDate);
                             // remove redundant multiple spaces
                             Dir.Album = Regex.Replace(Dir.Album, @"\s+", SPACE);
                         }
-                        // concert date is required
+                        // verify minimum metadata has been found
+                        if (Dir.AlbumArtist == null)
+                            Log.WriteLine("*** Artist missing from infotext");
                         if (!ValidConcertDate)
                             Log.WriteLine("*** Concert date is missing/incorrect format from infotext");
                         // if metadata is valid, reset metadata source
@@ -360,7 +361,9 @@ namespace AATB
                         // search for metadata labels, find first instance of each label
                         Dir.AlbumArtist = GetDataAfterSearchTerm("PERFORMER", DataList);
                         Dir.Album = GetDataAfterSearchTerm("TITLE", DataList);
-                        // album string is required
+                        // verify minimum metadata has been found
+                        if (Dir.AlbumArtist == null)
+                            Log.WriteLine("*** Artist missing from infotext");
                         if (Dir.Album == null)
                             Log.WriteLine("*** Album information missing from infotext");
                         // if metadata is valid, reset metadata source
@@ -375,7 +378,7 @@ namespace AATB
 
         } // end GetDirMetadataFromInfotext
 
-        static void GetDirMetadataFromCuesheet(AATB_DirInfo Dir)
+        static void GetDirMetadataFromCuesheet(clDirInfo Dir)
         {
             /* Extract directory metadata from cuesheet
              * Finds first instance of each label, others are ignored
@@ -404,6 +407,8 @@ namespace AATB
                 CuesheetFileName;
             string[]
                 DataList;
+            bool
+                ValidConcertDate = false;
 
             // get parent directory cuesheet filename
             CuesheetFileName = SplitFileName(Dir.CuesheetPath);
@@ -416,26 +421,22 @@ namespace AATB
                 // search for common metadata
                 Dir.AlbumArtist = GetDataAfterSearchTerm("PERFORMER", DataList);
                 Dir.Album = GetDataAfterSearchTerm("TITLE", DataList);
-                // verify minimum metadata has been found
-                if (Dir.AlbumArtist == null)
-                    Log.WriteLine("*** Artist missing from cuesheet");
 
                 switch (Dir.RecordingType)
                 {
                     case LIVE:
                     {
-                        ValidConcertDate = false;
                         // search for live metadata
                         Dir.Event = GetDataAfterSearchTerm("EVENT", DataList);
                         Dir.Venue = GetDataAfterSearchTerm("VENUE", DataList);
                         Dir.Stage = GetDataAfterSearchTerm("STAGE", DataList);
                         Dir.Location = GetDataAfterSearchTerm("LOCATION", DataList);
                         Dir.ConcertDate = GetDataAfterSearchTerm("DATE", DataList);
-                        ValidConcertDate = ValidateConcertDate(Dir.ConcertDate);
+                        ValidConcertDate = ValidateDate(Dir.ConcertDate);
                         // if album string was not found, build it
                         if (Dir.Album == null)
                         {
-                            Dir.Album += (Dir.Event + SPACE
+                            Dir.Album = ( Dir.Event + SPACE
                                         + Dir.Venue + SPACE
                                         + Dir.Stage + SPACE
                                         + Dir.Location + SPACE
@@ -443,7 +444,9 @@ namespace AATB
                             // remove redundant multiple spaces
                             Dir.Album = Regex.Replace(Dir.Album, @"\s+", SPACE);
                         }
-                        // concert date is required
+                        // verify minimum metadata has been found
+                        if (Dir.AlbumArtist == null)
+                            Log.WriteLine("*** Artist missing from cuesheet");
                         if (!ValidConcertDate)
                             Log.WriteLine("*** Concert date is missing/incorrect format from cuesheet");
                         // if metadata is valid, reset metadata source
@@ -454,6 +457,9 @@ namespace AATB
                     case COMMERCIAL:
                     case OTHER:
                     {
+                        // verify minimum metadata has been found
+                        if (Dir.AlbumArtist == null)
+                            Log.WriteLine("*** Artist missing from cuesheet");
                         if (Dir.Album == null)
                             Log.WriteLine("*** Album information missing from cuesheet");
                         // if metadata is valid, reset metadata source
@@ -468,17 +474,17 @@ namespace AATB
 
         } // end GetDirMetadataFromCuesheet
 
-        static void GetDirMetadataFromDirectoryName(AATB_DirInfo Dir)
+        static void GetDirMetadataFromDirectoryName(clDirInfo Dir)
         {
             /* Get directory metadata from directory name
              * Inputs:
-             *   Dir   Directory as AATB_DirInfo class instance
+             *   Dir   Directory as clDirInfo class instance
              *     Dir.BaseNameTemp1
              *     Dir.BaseNameTemp2
              *     Dir.BaseNameTemp3
              *     Dir.RecordingType
              * Outputs:
-             *   Dir   Directory as AATB_DirInfo class instance
+             *   Dir   Directory as clDirInfo class instance
              *     Dir.AlbumArtist
              *     Dir.Album
              *     Dir.ConcertDate (live recording)

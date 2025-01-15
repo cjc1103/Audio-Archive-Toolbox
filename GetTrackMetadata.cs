@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace AATB
+namespace nsAATB
 {
-    public partial class AATB_Main
+    public partial class clMain
     {
-        static void GetTrackMetadata(AATB_DirInfo Dir, FileInfo[] FileList)
+        static void GetTrackMetadata(clDirInfo Dir, FileInfo[] FileList)
         {
             /* Extract track metadata
              * Use infotext information file if it exists (generally for live concerts)
              * Use cuesheet if it exists (generally for commercial CDs)
              * Otherwise get metadata from file names
              * Inputs:
-             *   Dir            Directory as AATB_DirInfo class instance
+             *   Dir            Directory as clDirInfo class instance
              *   FileList       List of files in directory
              *   InfoSheetPath  Path to infotext file
              *   CuesheetPath   Path to .cue file
@@ -46,7 +46,7 @@ namespace AATB
 
         } // end GetTrackMetadata
 
-        static void GetTrackMetadataFromInfotext(AATB_DirInfo Dir, FileInfo[] FileList)
+        static void GetTrackMetadataFromInfotext(clDirInfo Dir, FileInfo[] FileList)
         {
             /* Get track metadata from infotext file
              * Inputs: 
@@ -185,7 +185,7 @@ namespace AATB
             }
         }  // end GetTrackMetadataFromInfotext
 
-        static void GetTrackMetadataFromCuesheet(AATB_DirInfo Dir, FileInfo[] FileList)
+        static void GetTrackMetadataFromCuesheet(clDirInfo Dir, FileInfo[] FileList)
         {
             /* Get track metadata from cuesheet file
              * Inputs: 
@@ -324,7 +324,7 @@ namespace AATB
             }
         }  // end GetTrackMetadataFromCuesheet
 
-        static void GetTrackMetadataFromFileNames(AATB_DirInfo Dir, FileInfo[] FileList)
+        static void GetTrackMetadataFromFileNames(clDirInfo Dir, FileInfo[] FileList)
         {
             /* Extract concert metadata from file names
              * Inputs: 
@@ -361,7 +361,7 @@ namespace AATB
             }
         }  // end GetTrackMetadataFromFileNames
 
-        static void PopulateTrackDurationList(AATB_DirInfo Dir, FileInfo[] FileList)
+        static void PopulateTrackDurationList(clDirInfo Dir, FileInfo[] FileList)
         {
             /* Reads track data from FileList, and populates TrackDurationList
              * Inputs:

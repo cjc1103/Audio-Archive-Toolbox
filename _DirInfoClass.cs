@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace AATB
+namespace nsAATB
 {
-    public class AATB_DirInfo
+    public class clDirInfo
     {
         public string
             Name,
@@ -40,9 +40,9 @@ namespace AATB
             ArtistList,
             TrackDurationList;
 
-        public AATB_DirInfo(DirectoryInfo Directory)
+        public clDirInfo(DirectoryInfo Directory)
         {
-            /* Constructor for AATB_DirInfo class
+            /* Constructor for clDirInfo class
              * Creates data structures and populates directory names
              * Other class variables are initially null
              */
@@ -53,7 +53,7 @@ namespace AATB
             TitleList = new List<string>();
             ArtistList = new List<string>();
             TrackDurationList = new List<string>();
-        } // end constructor AATB_DirInfo
+        } // end constructor clDirInfo
 
-    } // end class AATB_DirInfo
+    } // end class clDirInfo
 }

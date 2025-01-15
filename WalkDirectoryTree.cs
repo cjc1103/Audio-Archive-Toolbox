@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace AATB
+namespace nsAATB
 {
-    public partial class AATB_Main
+    public partial class clMain
     {
         static void WalkDirectoryTree(DirectoryInfo CurrentDir)
         {
@@ -54,9 +54,9 @@ namespace AATB
                 DirTrackInfoPopulated;
 
             // = = = = = = = = Initialization = = = = = = = =
-            // Instantiate AATB_DirInfo class for current directory
-            // AATB_DirInfo constructor will populate directory information
-            AATB_DirInfo Dir = new(CurrentDir);
+            // Instantiate clDirInfo class for current directory
+            // clDirInfo constructor will populate directory information
+            clDirInfo Dir = new(CurrentDir);
 
             // initialize dir metadata flags
             DirInfoPopulated = false;

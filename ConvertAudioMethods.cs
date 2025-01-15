@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace AATB
+namespace nsAATB
 {
-    public partial class AATB_Main
+    public partial class clMain
     {
-        static FileInfo[] ConvertFromWAV(String CompType, AATB_DirInfo Dir, string CompDirPath, FileInfo[] WAVFileList)
+        static FileInfo[] ConvertFromWAV(String CompType, clDirInfo Dir, string CompDirPath, FileInfo[] WAVFileList)
         {
             /* Converts all WAV files in input file list to Freeware Lossless Audio Codec format
              * Inputs:
              *   CompType     String representing what audio compression codec is to be used
-             *   Dir          Directory as AATB_DirInfo class instance
+             *   Dir          Directory as clDirInfo class instance
              *   CompDirPath  Output directory
              *   WAVFileList  List of all WAV files to be converted
              * Calls external programs, defined in code
@@ -163,7 +163,7 @@ namespace AATB
             /* Decompresses all lossless audio files in input file list to the original WAV format
              * Inputs:
              *   CompType     String representing what audio compression codec is to be used
-             *   Dir          Directory as AATB_DirInfo class instance
+             *   Dir          Directory as clDirInfo class instance
              *   WAVDirPath   Output directory
              *   CompFileList List of all FLAC files to be converted
              * Calls external programs, defined in code
@@ -261,12 +261,12 @@ namespace AATB
             return WAVFileList;
         } // end ConvertToWAV
 
-        static void ConvertWAVBitrate(AATB_DirInfo Dir, FileInfo[] WAVFileList,
+        static void ConvertWAVBitrate(clDirInfo Dir, FileInfo[] WAVFileList,
                                    string ConvertFromBitrate, string ConvertToBitrate)
         {
             /* Converts FIles in input list from one bitrate to another
              * Inputs:
-             *   Dir          Directory as AATB_DirInfo class instance
+             *   Dir          Directory as clDirInfo class instance
              *     Dir.Path
              *     Dir.ParentPath
              *   WAVFileList  Array of WAV files (any bitrate)

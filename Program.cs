@@ -10,7 +10,7 @@
  * decompression, tagging, bitrate conversion, and WAV file concatenation. It must be started from
  * the command line in the parent directory to the directory(s) containing the input wav files.
  * The program walks the directory tree under the starting directory to find and operate on
- * relevant audio files in various formats.
+ * relevant files and directories.
  */
 
 using System;
@@ -19,11 +19,11 @@ using System.Text.RegularExpressions;
 using IniParser;
 using IniParser.Model;
 
-namespace AATB
+namespace nsAATB
 {
-    public partial class AATB_Main
+    public partial class clMain
     {
-        static AATB_Log Log;
+        static clLog Log;
         const int
             // index values for quality parameter lists
             LOWER = 0,
@@ -70,7 +70,7 @@ namespace AATB
             NEW = "new",
             LIVE = "Live Recording",
             COMMERCIAL = "Commercial Recording",
-            OTHER = "Other",
+            OTHER = "Other Recording",
             INFOFILE = "Infotext",
             CUESHEET = "Cuesheet",
             DIRNAME = "Directory",
@@ -93,8 +93,6 @@ namespace AATB
             // regular expression for date format yyyy-mm-dd
             ConcertDateFormat = "((19|20)\\d{2}-\\d{2}-\\d{2})";
         static readonly string[]
-            // line delimiters for dos and unix text files
-            LineDelimeters = { "\r\n", "\r", "\n" },
             // all audio formats
             // WAV must be the last entry in this list
             AudioFormats = { MP3, M4A, OGG, OPUS, SHN, AIF, WMA, ALAC, FLAC, WAV },
@@ -109,7 +107,9 @@ namespace AATB
             AudioBitrates = { BR1644, BR1648, BR2444, BR2448, BR2488, BR2496, RAW },
             // compressed audio directory extensions
             // must correspond to AudioCompressionFormats list
-            CompressedDirExtensions = { MP3F, M4AF, OGGF, OPUSF, ALACF, FLACF };
+            CompressedDirExtensions = { MP3F, M4AF, OGGF, OPUSF, ALACF, FLACF },
+            // line delimiters for dos and unix text files
+            LineDelimeters = { "\r\n", "\r", "\n" };
         static List<string>
             // miscellaneous files and directories to delete for cleanup
             FilesToDelete = new List<string>(),
@@ -136,35 +136,34 @@ namespace AATB
                 flacQuality };
         static bool
             // set default value for bool flags
-            ValidConcertDate = false,
-            CompressAudio = false,
-            VerifyAudio = false,
-            DecompressAudio = false,
-            ConvertAudioFormat = false,
-            JoinWAV = false,
-            RenameWAV = false,
-            ConvertAudioBitrate = false,
-            CreateCuesheet = false,
-            DeleteAudio = false,
-            DeleteWAVFiles = false,
-            DeleteMiscFiles = false,
-            Overwrite = false,
             CreateMD5 = false,
             CreateFFP = false,
             CreateSHNRPT = false,
             CreateM3U = false,
             CreateTags = false,
+            CompressAudio = false,
+            ConvertAudioBitrate = false,
+            ConvertAudioFormat = false,
+            CreateCuesheet = false,
+            Debug = false,
+            DecompressAudio = false,
+            DeleteAudio = false,
+            DeleteWAVFiles = false,
+            DeleteMiscFiles = false,
+            JoinWAV = false,
+            NoLogMessage = false,
+            OutputToCurrentDir = false,
+            Overwrite = false,
+            RenameWAV = false,
+            RenameInfoFiles = false,
             UseInfotext = false,
             UseCuesheet = false,
             UseLowerCase = false,
             UseTitleCase = false,
-            RenameInfoFiles = false,
             UseCurrentDirInfo = false,
-            OutputToCurrentDir = false,
-            WriteLogMessage = true,
-            NoLogMessage = false,
             Verbose = false,
-            Debug = false;
+            VerifyAudio = false,
+            WriteLogMessage = true;
         static bool[,]
             // combined audio format and bitrate flag array
             // size must be at least equal to [AudioFormats, AudioBitrates]
@@ -191,7 +190,7 @@ namespace AATB
 
             // initialize and write header to log
             LogFilePath = RootDir + BACKSLASH + LOGNAME;
-            Log = new AATB_Log(LogFilePath);
+            Log = new clLog(LogFilePath);
 
             // check to see if command line contains inidebug flag
             //if (argv.Contains("--inidebug")) bool IniDebug = true;
@@ -561,10 +560,10 @@ namespace AATB
                     // cleanup - delete directories marked for deletion
                     if (DeleteAudio && DirsMarkedForDeletion != null)
                     {
-                        foreach (string dirtodelete in DirsMarkedForDeletion)
+                        foreach (string dname in DirsMarkedForDeletion)
                         {
-                            Log.WriteLine("Deleting directory " + dirtodelete);
-                            DeleteDir(dirtodelete);
+                            Log.WriteLine("Deleting directory " + dname);
+                            DeleteDir(dname);
                         }
                     }
 

@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace AATB
+namespace nsAATB
 {
-    public partial class AATB_Main
+    public partial class clMain
     {
         static void CreateMD5ChecksumFile(string MD5FilePath, FileInfo[] FileList, bool WriteLogMessage)
         {

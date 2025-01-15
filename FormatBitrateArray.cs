@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace AATB
+namespace nsAATB
 {
-    public partial class AATB_Main
+    public partial class clMain
     {
         // methods in this section operate on the global AudioFormatBitrate array
         static void InitFormatBitrate()

@@ -2,9 +2,9 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace AATB
+namespace nsAATB
 {
-    public partial class AATB_Main
+    public partial class clMain
     {
         static string SplitFileName(string InputPath)
         {
@@ -228,8 +228,9 @@ namespace AATB
             return OutputName;
         } // end ConvertCase
 
-        static bool ValidateConcertDate(string InputDate)
+        static bool ValidateDate(string InputDate)
         {
+            // ConcertDateFormat is a global match string
             if (!string.IsNullOrEmpty(InputDate))
                 return Regex.Match(InputDate, @ConcertDateFormat).Success;
             else

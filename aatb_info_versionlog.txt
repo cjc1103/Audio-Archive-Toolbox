@@ -40,8 +40,8 @@ Program history
      Rewrote GetTrackDuration procedure to use mediainfo utility for all formats
 
 2.3  2018-06-07
-     Created AATB_DirInfo class to consolidate all directory metadata in one location
-     AATB_DirInfo is instantiated every time WalkDirectoryTree procedure is executed,
+     Created clDirInfo class to consolidate all directory metadata in one location
+     clDirInfo is instantiated every time WalkDirectoryTree procedure is executed,
      and a constructor initializes the metadata for each directory traversed
 
 2.4  2018-06-17
@@ -74,7 +74,7 @@ Program history
 
 2.6  2019-05-09
      Added 24 to 16 bit conversion option using the sox utility
-     Changed AATB_DirInfo constructor to search for a date string 1xxx-xx-xx or 2xxx-xx-xx
+     Changed clDirInfo constructor to search for a date string 1xxx-xx-xx or 2xxx-xx-xx
        when calculating directory metadata
      Remove prefix numeric chars and spaces from audio compression subdirectory names
      Metadata still uses spaces from parent directory names, if they are present
@@ -128,8 +128,8 @@ Program history
        GetDirMetadata to populate Dir variables (all directories traversed except for root directory)
        GetTrackMetadata to populate Track and TrackDuration lists for Compress and Verify sections
      Metadata handling now allows import of metadata using an infotext information file
-     Moved some metadata initialation from the AATB_Dir constructor to the GetDirMetaData method
-     Added TrackDurationList string list to AATB_Dir class
+     Moved some metadata initialation from the clDir constructor to the GetDirMetaData method
+     Added TrackDurationList string list to clDir class
      Removed GetSongTitle method, as its function was incorporated into GetTrackMetaData
      Removed fdkaac and faac AAC codecs, and qaac is the only supported AAC codec
      Removed --aacCompType flag to select differnt aac codecs
@@ -313,7 +313,7 @@ Program history
 5.7  2023-03-09
      Added RenameInfoFiles flag to rename infotext and cuesheet files
      Added UseCurrentDirInfo flag for Verify mode to force program to read infotext file in current dir
-     Added two string variables to AATB_DirInfo class: DirMetadataSource and TrackMetadataSource,
+     Added two string variables to clDirInfo class: DirMetadataSource and TrackMetadataSource,
        to record the source of metadata for Albums and Tracks respectively
      Added RenameWAV flag and RenameWAVFiles method to rename WAV files in <bitrate> directory to match
        the accompanying setlist in infotext file

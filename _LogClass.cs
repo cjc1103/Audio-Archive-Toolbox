@@ -1,25 +1,25 @@
 ﻿using System;
 using System.Reflection;
 
-namespace AATB
+namespace nsAATB
 {
-    public class AATB_Log
+    public class clLog
     {
         /* Contains data structures and methods to implement logging function
          * Log messages are written simultaneously to the log file and to the console
          */
         private readonly string LogFileName;
 
-        public AATB_Log(string FileName)
+        public clLog(string FileName)
         {
-            // Constructor for AATB_Log class
+            // Constructor for clLog class
             LogFileName = FileName;
             // writes header to console and log
             string LogEntry =
                 "Audio Archive Toolbox " +
                 Assembly.GetExecutingAssembly().GetName().Version;
             WriteLine(LogEntry);
-        } // end constructor AATB_Log
+        } // end constructor clLog
 
         public void Start()
         {
@@ -85,5 +85,5 @@ namespace AATB
             WriteLine(LogFooter);
         } // end End
 
-    } // end class AATB_Log
+    } // end class clLog
 }
