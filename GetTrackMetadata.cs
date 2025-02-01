@@ -106,7 +106,7 @@ namespace nsAATB
             for (i = StartLineNumber; i < EndLineNumber; i++)
             {
                 DataLine = DataList[i];
-                if (Debug) Console.WriteLine("dbg: Line: {0:D2} Data: {1}", i, DataLine+1);
+                if (Debug) Console.WriteLine("dbg: Line: {0:D2} Data: {1}", i+1, DataLine);
 
                 // check for track number prefix
                 // match one or two digits at beginning of line, optional period and space
@@ -239,7 +239,7 @@ namespace nsAATB
             for (i = 0; i < DataListCount; i++)
             {
                 DataLine = DataList[i];
-                if (Debug) Console.WriteLine("dbg: Line: {0:D2} Data: {1}", i, DataLine);
+                if (Debug) Console.WriteLine("dbg: Line: {0:D2} Data: {1}", i+1, DataLine);
 
                 // remove leading spaces
                 DataLine = Regex.Replace(DataLine, @"^\s*", "");

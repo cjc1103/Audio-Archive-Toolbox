@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using Windows.ApplicationModel.Appointments.AppointmentsProvider;
 
 namespace nsAATB
 {
@@ -146,9 +147,11 @@ namespace nsAATB
              *     Dir.Stage
              *   
              * Directory name formats
-             *   Live recording: <artist> <date>, <artist>-<date>, <artist>_<date>, <artist><date>
-             *     datestring is in format: yyyy-mm-dd
+             *   Live recording: <artist> <date> <optional set or stage qualifier>
+             *     Note: date is in format: yyyy-mm-dd (global string constant DateFormat)
+             *     Note: BaseNameTemp1 = artist, BaseNameTemp2 = <optional set or stage>
              *   Commercial recording: <artist> - <album>
+             *     Note: BaseNameTemp1 = artist, BaseNameTemp2 = <album>
              *   Other: all other formats
              */
             string BaseName;
@@ -169,12 +172,15 @@ namespace nsAATB
                 Dir.RecordingType = LIVE;
                 // extract album artist
                 Dir.BaseNameTemp1 = BaseName.Substring(0, Dir.PatternMatchDate.Index);
-                // remove trailing spaces
-                Dir.BaseNameTemp1 = Regex.Replace(Dir.BaseNameTemp1, @"\s+$", "");
+                // remove trailing non-word characters including spaces
+                Dir.BaseNameTemp1 = Regex.Replace(Dir.BaseNameTemp1, @"[^A-Za-z0-9]+$", "");
                 // convert to title case/lower case if appropriate
                 Dir.BaseNameTemp1 = ConvertCase(Dir.BaseNameTemp1);
                 // extract concert date, 10 chars long (yyyy-mm-dd)
                 Dir.BaseNameTemp2 = BaseName.Substring(Dir.PatternMatchDate.Index, 10);
+                // remove leading and trailing non-word characters
+                Dir.BaseNameTemp2 = Regex.Replace(Dir.BaseNameTemp2, @"^[^A-Za-z0-9]", "");
+                Dir.BaseNameTemp2 = Regex.Replace(Dir.BaseNameTemp2, @"[^A-Za-z0-9]+$", "");
                 // build parent basename = <artist>_<date>.<stage>
                 Dir.ParentBaseName = Dir.BaseNameTemp1 + UNDERSCORE + Dir.BaseNameTemp2;
                 // extract stage name if it exists (skip char 11 delimiter between date and stage name)
