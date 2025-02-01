@@ -101,7 +101,7 @@ namespace nsAATB
             EndLineNumber = GetLineNumberOfSearchTerm(StartLineNumber, "^End", DataList);
             if (EndLineNumber == -1) EndLineNumber = DataList.Length;
             if (Debug) Console.WriteLine("dbg: Setlist line numbers start: {0:D2}  end: {1:D2}",
-                                        StartLineNumber, EndLineNumber);
+                                        StartLineNumber+1, EndLineNumber+1);
             // read data from infotext - zero based index, stop before eof
             for (i = StartLineNumber; i < EndLineNumber; i++)
             {
