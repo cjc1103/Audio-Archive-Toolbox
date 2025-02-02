@@ -178,7 +178,7 @@ namespace nsAATB
                 Dir.BaseNameTemp1 = ConvertCase(Dir.BaseNameTemp1);
                 // extract concert date, 10 chars long (yyyy-mm-dd)
                 Dir.BaseNameTemp2 = BaseName.Substring(Dir.PatternMatchDate.Index, 10);
-                // remove leading and trailing non-word characters
+                // remove leading and trailing non-word characters including spaces
                 Dir.BaseNameTemp2 = Regex.Replace(Dir.BaseNameTemp2, @"^[^A-Za-z0-9]", "");
                 Dir.BaseNameTemp2 = Regex.Replace(Dir.BaseNameTemp2, @"[^A-Za-z0-9]+$", "");
                 // build parent basename = <artist>_<date>.<stage>

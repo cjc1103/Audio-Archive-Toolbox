@@ -368,7 +368,7 @@ Program history
      Corrected typo and added --misc-files-delete option to PrintHelp method
      Removed colon from metadata search terms from infotxt and cuesheet
 
-6.2  2025-01-15
+6.2  2025-02-01
      Changed all namespace names to have "ns" prefix
      Changed all class names to have "cl" prefix
      Corrected error checking logic, removed redundant error messages, updated "Album" metadata construction
@@ -377,3 +377,5 @@ Program history
        in GetMetadataFromInfotext and GetMetadataFromCuesheet methods
      Renamed ValidateConcertDate method to ValidateDate
      Renamed ConcertDateFormat to DateFormat
+     Changed parsing of folder name to remove non-word characters before and after BaseNameTemp 
+       search terms in GetDirMetadata method
