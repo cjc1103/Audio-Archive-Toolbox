@@ -368,7 +368,7 @@ Program history
      Corrected typo and added --misc-files-delete option to PrintHelp method
      Removed colon from metadata search terms from infotxt and cuesheet
 
-6.2  2025-02-01
+6.2  2025-10-28
      Changed all namespace names to have "ns" prefix
      Changed all class names to have "cl" prefix
      Corrected error checking logic, removed redundant error messages, updated "Album" metadata construction
@@ -379,3 +379,9 @@ Program history
      Renamed ConcertDateFormat to DateFormat
      Changed parsing of folder name to remove non-word characters before and after BaseNameTemp 
        search terms in GetDirMetadata method
+     Changed search term for track lists in info file to add trailing blank "Set " "Track " "Disc "
+     Changed GetDataAfterSearchTerm method to include a flag for search term case sensitivity
+     Updated .NET SDK to 10.0, included .NET 10.0 Runtime in installation script
+	 Changed IniFileMethods method to copy aatb_config_example.ini to aatb_config.ini if the
+	   config_ini file is not found (default after installation)
+	 Changed InnoSetup to overwrite "tools" files when reinstalling using flag ignoreversion

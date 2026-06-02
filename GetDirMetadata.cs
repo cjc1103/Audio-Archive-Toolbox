@@ -263,23 +263,23 @@ namespace nsAATB
              *   Info header format with five lines:
              *     Performer (Artist)
              *     Event
-             *     Location
              *     Stage
+             *     Location
              *     Concert Date (yyyy-mm-dd)
              *   Info alternate header using labels (case insensitive, optional colon)
              *     PERFORMER <artist>
              *     EVENT<event>
              *     VENUE <venue>
-             *     LOCATION <location>
              *     STAGE <stage>
+             *     LOCATION <location>
              *     DATE <yyyy-mm-dd>
              * Outputs:
              *   Dir class
              *     Dir.AlbumArtist
              *     Dir.Event
              *     Dir.Venue 
-             *     Dir.Location
              *     Dir.Stage
+             *     Dir.Location
              *     Dir.ConcertDate
              */
             int DateLineNumber;
@@ -331,13 +331,13 @@ namespace nsAATB
                         // otherwise search for metadata labels, find first instance of each label
                         else
                         {
-                            Dir.AlbumArtist = GetDataAfterSearchTerm("PERFORMER", DataList);
-                            Dir.Album = GetDataAfterSearchTerm("TITLE", DataList);
-                            Dir.Event = GetDataAfterSearchTerm("EVENT", DataList);
-                            Dir.Venue = GetDataAfterSearchTerm("VENUE", DataList);
-                            Dir.Stage = GetDataAfterSearchTerm("STAGE", DataList);
-                            Dir.Location = GetDataAfterSearchTerm("LOCATION", DataList);
-                            Dir.ConcertDate = GetDataAfterSearchTerm("DATE", DataList);
+                            Dir.AlbumArtist = GetDataAfterSearchTerm("PERFORMER", DataList, CaseSensitive);
+                            Dir.Album = GetDataAfterSearchTerm("TITLE", DataList, CaseSensitive);
+                            Dir.Event = GetDataAfterSearchTerm("EVENT", DataList, CaseSensitive);
+                            Dir.Venue = GetDataAfterSearchTerm("VENUE", DataList, CaseSensitive);
+                            Dir.Stage = GetDataAfterSearchTerm("STAGE", DataList, CaseSensitive);
+                            Dir.Location = GetDataAfterSearchTerm("LOCATION", DataList, CaseSensitive);
+                            Dir.ConcertDate = GetDataAfterSearchTerm("DATE", DataList, CaseSensitive);
                             ValidConcertDate = ValidateDate(Dir.ConcertDate);
                         }
                         // if album string was not found, build it
@@ -365,8 +365,8 @@ namespace nsAATB
                     case OTHER:
                     {
                         // search for metadata labels, find first instance of each label
-                        Dir.AlbumArtist = GetDataAfterSearchTerm("PERFORMER", DataList);
-                        Dir.Album = GetDataAfterSearchTerm("TITLE", DataList);
+                        Dir.AlbumArtist = GetDataAfterSearchTerm("PERFORMER", DataList, CaseSensitive);
+                        Dir.Album = GetDataAfterSearchTerm("TITLE", DataList, CaseSensitive);
                         // verify minimum metadata has been found
                         if (Dir.AlbumArtist == null)
                             Log.WriteLine("*** Artist missing from infotext");
@@ -425,19 +425,19 @@ namespace nsAATB
                 DataList = ReadTextFile(Dir.CuesheetPath);
 
                 // search for common metadata
-                Dir.AlbumArtist = GetDataAfterSearchTerm("PERFORMER", DataList);
-                Dir.Album = GetDataAfterSearchTerm("TITLE", DataList);
+                Dir.AlbumArtist = GetDataAfterSearchTerm("PERFORMER", DataList, CaseSensitive);
+                Dir.Album = GetDataAfterSearchTerm("TITLE", DataList, CaseSensitive);
 
                 switch (Dir.RecordingType)
                 {
                     case LIVE:
                     {
                         // search for live metadata
-                        Dir.Event = GetDataAfterSearchTerm("EVENT", DataList);
-                        Dir.Venue = GetDataAfterSearchTerm("VENUE", DataList);
-                        Dir.Stage = GetDataAfterSearchTerm("STAGE", DataList);
-                        Dir.Location = GetDataAfterSearchTerm("LOCATION", DataList);
-                        Dir.ConcertDate = GetDataAfterSearchTerm("DATE", DataList);
+                        Dir.Event = GetDataAfterSearchTerm("EVENT", DataList, CaseSensitive);
+                        Dir.Venue = GetDataAfterSearchTerm("VENUE", DataList, CaseSensitive);
+                        Dir.Stage = GetDataAfterSearchTerm("STAGE", DataList, CaseSensitive);
+                        Dir.Location = GetDataAfterSearchTerm("LOCATION", DataList, CaseSensitive);
+                        Dir.ConcertDate = GetDataAfterSearchTerm("DATE", DataList, CaseSensitive);
                         ValidConcertDate = ValidateDate(Dir.ConcertDate);
                         // if album string was not found, build it
                         if (Dir.Album == null)

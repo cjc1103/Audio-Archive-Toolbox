@@ -3,14 +3,14 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0-windows10.0.22000.0</TargetFramework>
-    <RootNamespace>AATB_Main</RootNamespace>
+    <RootNamespace>nsAATB</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
-    <StartupObject>AATB.AATB_Main</StartupObject>
+    <StartupObject>nsAATB.clMain</StartupObject>
     <PlatformTarget>x64</PlatformTarget>
-    <AssemblyVersion>5.8.2.1</AssemblyVersion>
-    <FileVersion>5.8.2.1</FileVersion>
-    <Version>$(VersionPrefix)5.8.2</Version>
+    <AssemblyVersion>6.2.4.1</AssemblyVersion>
+    <FileVersion>6.2.4.1</FileVersion>
+    <Version>$(VersionPrefix)6.2.4</Version>
     <Platforms>AnyCPU;x64</Platforms>
     <AssemblyName>aatb</AssemblyName>
     <Authors>Chris Cantwell</Authors>
@@ -43,6 +43,10 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ini-parser-new" Version="2.6.2" />
   </ItemGroup>
 
 </Project>

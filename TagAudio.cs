@@ -50,10 +50,11 @@ namespace nsAATB
                         ExternalProgram = "NeroAacTag.exe";
                         ExternalArguments = "-meta:title=" + DBLQ + Dir.TitleList[TrackNumber - 1] + DBLQ
                                           + " -meta:artist=" + DBLQ + Dir.ArtistList[TrackNumber - 1] + DBLQ
+                                          + " -meta:genre=" + DBLQ + Dir.Genre + DBLQ
                                           + " -meta:album=" + DBLQ + Dir.Album + DBLQ
                                           + " -meta:year=" + DBLQ + Dir.ConcertDate + DBLQ
                                           + " -meta:track=" + TrackNumberStr
-                                          + SPACE + DBLQ + CompFilePath + DBLQ;
+                                           + SPACE + DBLQ + CompFilePath + DBLQ;
                         break;
 
                     case OGG:
@@ -61,6 +62,7 @@ namespace nsAATB
                         ExternalArguments = "--write " + DBLQ + CompFilePath + DBLQ
                                           + " -t TITLE=" + DBLQ + Dir.TitleList[TrackNumber - 1] + DBLQ
                                           + " -t ARTIST=" + DBLQ + Dir.ArtistList[TrackNumber - 1] + DBLQ
+                                          + " -t GENRE=" + DBLQ + Dir.Genre + DBLQ
                                           + " -t ALBUM=" + DBLQ + Dir.Album + DBLQ
                                           + " -t DATE=" + DBLQ + Dir.ConcertDate + DBLQ
                                           + " -t TRACKNUMBER=" + TrackNumberStr;
@@ -88,6 +90,7 @@ namespace nsAATB
                         ExternalArguments = "--preserve-modtime"
                                           + " --set-tag=TITLE=" + DBLQ + Dir.TitleList[TrackNumber - 1] + DBLQ
                                           + " --set-tag=ARTIST=" + DBLQ + Dir.ArtistList[TrackNumber - 1] + DBLQ
+                                          + " --set-tag=GENRE=" + DBLQ + Dir.Genre + DBLQ
                                           + " --set-tag=ALBUM=" + DBLQ + Dir.Album + DBLQ
                                           + " --set-tag=DATE=" + DBLQ + Dir.ConcertDate + DBLQ
                                           + " --set-tag=TRACKNUMBER=" + TrackNumberStr

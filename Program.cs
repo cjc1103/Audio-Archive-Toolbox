@@ -65,8 +65,8 @@ namespace nsAATB
             MD5 = "md5", ALLMD5 = "*.md5",
             FFP = "ffp", ALLFFP = "*.ffp",
             SHNRPT = "shntool.txt", ALLSHNRPT = "*.shntool.txt",
-            INFOTXTdefault = "info.txt",
-            INFOCUEdefault = "info.cue",
+            INFOTXTdefault = ".txt",
+            INFOCUEdefault = ".cue",
             NEW = "new",
             LIVE = "Live Recording",
             COMMERCIAL = "Commercial Recording",
@@ -89,7 +89,6 @@ namespace nsAATB
             // configuration ini file located in c:\Program Files\Audio Archive Toolbox
             ProgramDir = "C:\\Program Files\\Audio Archive Toolbox\\",
             ConfigurationFileName = "aatb_config.ini",
-            ConfigurationFilePath = ProgramDir + ConfigurationFileName,
             // regular expression for date format yyyy-mm-dd
             DateFormat = "((19|20)\\d{2}-\\d{2}-\\d{2})";
         static readonly string[]
@@ -163,7 +162,8 @@ namespace nsAATB
             UseCurrentDirInfo = false,
             Verbose = false,
             VerifyAudio = false,
-            WriteLogMessage = true;
+            WriteLogMessage = true,
+            CaseSensitive = true;
         static bool[,]
             // combined audio format and bitrate flag array
             // size must be at least equal to [AudioFormats, AudioBitrates]
@@ -192,16 +192,13 @@ namespace nsAATB
             LogFilePath = RootDir + BACKSLASH + LOGNAME;
             Log = new clLog(LogFilePath);
 
-            // check to see if command line contains inidebug flag
-            //if (argv.Contains("--inidebug")) bool IniDebug = true;
-            
             // read configuration file data
-            IniData ConfigData = ReadConfiguration(ConfigurationFilePath);
+            IniData ConfigData = ReadConfiguration(ConfigurationFileName, ProgramDir);
 
             // get user defined variables from configuration file data, if present
             GetIniData(ConfigData);
 
-            // expand command line with macro definitions from configuration file data, if present
+            // expand command line argv with macro definitions from configuration file data, if present
             ExpandedCommandLineArgs = ExpandCommandLineMacros(ConfigData, argv);
 
             // check arguments exist

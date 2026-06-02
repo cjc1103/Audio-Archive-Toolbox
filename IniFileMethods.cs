@@ -1,49 +1,50 @@
 ﻿using IniParser;
 using IniParser.Model;
+using Windows.Media.Capture;
 
 namespace nsAATB
 {
     public partial class clMain
     {
-        static IniData ReadConfiguration(string ConfigurationFilePath)
+        static IniData ReadConfiguration(string ConfigurationFileName,
+                                         string RootDir)
         {
-            /* read configuration ini file
+            /* Reads configuration file and returns data structure with configuration data
              * Inputs
-             *   ConfigurationFilePath path to configuration file
-             * Outputs
-             *   ConfigData            data structure containing entire ini file
+             *   ConfigurationFileName   name of the configuration file (including extension)
+             *   RootDir                 root directory where the configuration file is located
+             * Output
+             *   ConfigData              data structure containing the configuration data read from the file
+             *                           if file is not found or empty, then null is returned
              */
-
             var FileIniData = new FileIniDataParser();
+            string ConfigurationFilePath;
             IniData ConfigData = null;
 
+            // build filepaths
+            ConfigurationFilePath = RootDir + ConfigurationFileName;
             // set configuration options
             FileIniData.Parser.Configuration.SkipInvalidLines = true;
             // default comment string
             FileIniData.Parser.Configuration.CommentString = "#";
 
-            if (File.Exists(ConfigurationFilePath))
+            // read configuration file
+            try
             {
-                try
-                {
-                    ConfigData = FileIniData.ReadFile(ConfigurationFilePath);
-                }
-                catch (Exception)
-                {
-                    Log.WriteLine("*** Error reading configuration file or incorrect format: \n"
-                        + "    " + ConfigurationFilePath);
-                }
+                ConfigData = FileIniData.ReadFile(ConfigurationFilePath);
+                Log.WriteLine("Using configuration file: " + ConfigurationFileName);
             }
-            else
-                Log.WriteLine("*** Configuration file does not exist: \n"
-                    + "    " + ConfigurationFilePath);
+            catch (Exception)
+            {
+                Log.WriteLine("Using default configuration");
+            }
 
             return ConfigData;
         } // end ReadConfiguration
 
         static string[] ExpandCommandLineMacros(IniData ConfigData, string[] InputCommandLineList)
         {
-            /* expands the command line to include macros defined in the configuration file
+            /* expands the input command line to include macros defined in the configuration file
              *
              * Inputs
              *   ConfigData          parsed data from configuration ini file
@@ -57,47 +58,49 @@ namespace nsAATB
             string[] ExpandedCommandLineList = null;
             bool KeyFound;
 
-            // method is only valid for non empty input command line
-            if (InputCommandLineList.Length > 0)
+            // if configuration data is available, then expand command line macros
+            if (ConfigData != null)
             {
-                if (ConfigData != null)
-                {
-                    // Get the SectionData from the section "Macros"
-                    KeyDataCollection MacroKeys = ConfigData["Macros"];
+                // Get the SectionData from the section "Macros"
+                KeyDataCollection MacroKeys = ConfigData["Macros"];
 
-                    // iterate through all keys in collection
-                    // if arg equals key name then return key value
-                    foreach (string CommandSubstring in InputCommandLineList)
+                // iterate through all keys in collection
+                // if arg equals key name then return key value
+                foreach (string CommandSubstring in InputCommandLineList)
+                {
+                    // Split each substring s into arguments and options, delimited by '='
+                    // ignore opt here, as the macro value will be substituted if found
+                    (arg, opt) = SplitString(EQUALS, CommandSubstring);
+                    KeyFound = false;
+                    foreach (KeyData key in MacroKeys)
                     {
-                        // Split each substring s into arguments and options, delimited by '='
-                        // ignore opt here, as the macro value will be substituted if found
-                        (arg, opt) = SplitString(EQUALS, CommandSubstring);
-                        KeyFound = false;
-                        foreach (KeyData key in MacroKeys)
+                        // if key is found, expand command line with key value
+                        if (key.KeyName == arg)
                         {
-                            // if key is found, expand command line with key value
-                            if (key.KeyName == arg)
-                            {
-                                ExpandedCommandLine += key.Value + SPACE;
-                                KeyFound = true;
-                                break;
-                            }
+                            ExpandedCommandLine += key.Value + SPACE;
+                            KeyFound = true;
+                            break;
                         }
-                        // if key is not found, concatenate substring to expanded command line
-                        if (!KeyFound)
-                            ExpandedCommandLine += CommandSubstring + SPACE;
                     }
+                    // if key is not found, concatenate substring to expanded command line
+                    if (!KeyFound)
+                        ExpandedCommandLine += CommandSubstring + SPACE;
                 }
-                else
-                    // no configuaton data - ini file not found or empty
-                    // output will be set to the input command line without substitutions
-                    ExpandedCommandLineList = InputCommandLineList;
+            }
+            else
+            {
+                // no configuraton data - ini file not found or empty
+                // output will be set to the input command line without substitutions
+                // if input command line is null, then expanded command line will also be null
+                ExpandedCommandLineList = InputCommandLineList;
             }
 
-            // convert expanded command line string to list
-            // arguments are separated in command line by a space
             if (ExpandedCommandLine != null)
+            {
+                // convert non-empty expanded command line string to list
+                // arguments are separated in command line by a space
                 ExpandedCommandLineList = ExpandedCommandLine.Split(SPACE, StringSplitOptions.RemoveEmptyEntries);
+            }
 
             return ExpandedCommandLineList;
         } //end ExpandCommandLineMacros

@@ -141,7 +141,7 @@ namespace nsAATB
             return (BaseName1 == BaseName2);
         } // end BaseNamesAreEqual
 
-        static string GetDataAfterSearchTerm(string SearchTerm, string[] DataList)
+        static string GetDataAfterSearchTerm(string SearchTerm, string[] DataList, bool CaseSensitive)
         {
             /* Returns data after the first instance of the search term in list
              * Search term is considered case insensitive
@@ -157,8 +157,11 @@ namespace nsAATB
 
             for (i = 0; i < DataList.Length; i++)
             {
-                // search for pattern in string
-                PatternMatch = Regex.Match(DataList[i], @SearchTerm, RegexOptions.IgnoreCase);
+                // search for pattern in string, using case sensitive flag
+                if (CaseSensitive)
+                    PatternMatch = Regex.Match(DataList[i], @SearchTerm);
+                else
+                    PatternMatch = Regex.Match(DataList[i], @SearchTerm, RegexOptions.IgnoreCase);
                 // check that there are characters in data string after search term
                 if (PatternMatch.Success
                     && (DataList[i].Length > SearchTerm.Length))

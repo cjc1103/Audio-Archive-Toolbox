@@ -93,8 +93,9 @@ namespace nsAATB
             // initialize counters
             TrackNumber = 0;
             // get start line number - search for the first instance of keyword
+            // "Set " "Track " "Disc " signifying a track or set list
             // if not found (-1) set start line number to 6 to skip header information
-            StartLineNumber = GetLineNumberOfSearchTerm(0, "^(Set|Track|Disc)", DataList);
+            StartLineNumber = GetLineNumberOfSearchTerm(0, "^(Set |Track |Disc )", DataList);
             if (StartLineNumber == -1) StartLineNumber = 6;
             // get end line number - search for "End" at beginning of line
             // if not found (-1) set end line number to length of list

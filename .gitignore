@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/InnoSetup/Microsoft .NET/dotnet-runtime-8.0.12-win-x64.exe
+/InnoSetup/Utilities/aatb_config.ini
+/aatb_config.ini
